@@ -1,0 +1,24 @@
+[package]
+name = "ivygate-server"
+version = "0.1.0"
+authors = ["Braden McDorman <bmcdorman@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clang = { version = "1.0", features = [ "clang_10_0" ] }
+tokio = { version = "1", features = ["full"] }
+hyper = { version = "0.14", features = ["full"] }
+tokio-tungstenite = "*"
+tungstenite = "0.13"
+futures-util = { version = "0.3", default-features = false }
+log = "0.4"
+env_logger = "0.7"
+async-trait = "0.1"
+meio = "0.86"
+anyhow = "1.0"
+derive_more = "0.99"
+lazy_static = "1.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
