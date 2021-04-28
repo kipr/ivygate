@@ -8,6 +8,7 @@ use std::net::TcpStream;
 mod inc;
 mod fs;
 mod proto;
+mod backing;
 
 use proto::*;
 
@@ -60,7 +61,7 @@ async fn accept_connection(mut websocket: WebSocket<TcpStream>) -> anyhow::Resul
           Ok(session) => {
             handle_iter += 1;
             files.insert(handle_iter, session);
-            websocket.write_res(req.reply(OpenRes::success(handle_iter)))
+            websocket.write_res(req.reply(OpenRes::success(handle_iter, )))
           },
           Err(e) => websocket.write_res(req.reply(OpenRes::error(e)))
         }

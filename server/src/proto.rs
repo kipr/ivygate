@@ -7,34 +7,51 @@ use derive_more::*;
 
 use std::fmt::Display;
 
-#[derive(Serialize, Deserialize)]
-pub struct OpenReq {
-  pub path: PathBuf
+use uuid::Uuid;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct OpenProjectReq {
+  pub uuid: Uuid,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct UpdateReq {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CloseProjectReq {
+  pub uuid: Uuid,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct OpenFileReq {
+  pub project: Uuid,
+  pub path: PathBuf,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateFileReq {
   pub handle: u64,
   pub code: Option<String>
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct CloseReq {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CloseFileReq {
   pub handle: u64
 }
 
-#[derive(From, Serialize, Deserialize)]
+#[derive(Debug, From, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ReqKind {
   #[from]
-  Open(OpenReq),
+  OpenProject(OpenProjectReq),
   #[from]
-  Update(UpdateReq),
+  CloseProject(CloseProjectReq),
   #[from]
-  Close(CloseReq)
+  OpenFile(OpenFileReq),
+  #[from]
+  UpdateFile(UpdateFileReq),
+  #[from]
+  CloseFile(CloseFileReq)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Req {
   pub id: u64,
   pub kind: ReqKind
@@ -49,18 +66,64 @@ impl Req {
   }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct OpenRes {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct OpenProjectRes {
   pub success: bool,
-  pub error: Option<String>,
-  pub handle: Option<u64>
+  pub error: Option<String>
 }
 
-impl OpenRes {
-  pub fn success(handle: u64) -> Self {
+impl OpenProjectRes {
+  pub fn success() -> Self {
     Self {
       success: true,
       error: None,
+    }
+  }
+
+  pub fn error<E: Display>(error: E) -> Self {
+    Self {
+      success: false,
+      error: Some(error.to_string()),
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CloseProjectRes {
+  pub success: bool,
+  pub error: Option<String>
+}
+
+impl CloseProjectRes {
+  pub fn success() -> Self {
+    Self {
+      success: true,
+      error: None,
+    }
+  }
+
+  pub fn error<E: Display>(error: E) -> Self {
+    Self {
+      success: false,
+      error: Some(error.to_string()),
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct OpenFileRes {
+  pub success: bool,
+  pub error: Option<String>,
+  pub contents: Option<String>,
+  pub handle: Option<u64>
+}
+
+impl OpenFileRes {
+  pub fn success<C: Into<String>>(handle: u64, contents: C) -> Self {
+    Self {
+      success: true,
+      error: None,
+      contents: Some(contents.into()),
       handle: Some(handle)
     }
   }
@@ -69,19 +132,20 @@ impl OpenRes {
     Self {
       success: false,
       error: Some(error.to_string()),
+      contents: None,
       handle: None
     }
   }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct UpdateRes {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateFileRes {
   pub success: bool,
   pub error: Option<String>,
   pub messages: Option<Vec<Message>>
 }
 
-impl UpdateRes {
+impl UpdateFileRes {
   pub fn success(messages: Vec<Message>) -> Self {
     Self {
       success: true,
@@ -99,13 +163,13 @@ impl UpdateRes {
   }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct CloseRes {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CloseFileRes {
   pub success: bool,
   pub error: Option<String>
 }
 
-impl CloseRes {
+impl CloseFileRes {
   pub fn success() -> Self {
     Self {
       success: true,
@@ -121,18 +185,22 @@ impl CloseRes {
   }
 }
 
-#[derive(From, Serialize, Deserialize)]
+#[derive(Debug, From, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ResKind {
   #[from]
-  Open(OpenRes),
+  OpenProject(OpenProjectRes),
   #[from]
-  Update(UpdateRes),
+  CloseProject(CloseProjectRes),
   #[from]
-  Close(CloseRes)
+  OpenFile(OpenFileRes),
+  #[from]
+  UpdateFile(UpdateFileRes),
+  #[from]
+  CloseFile(CloseFileRes)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Res {
   pub id: u64,
   pub kind: ResKind
@@ -144,7 +212,8 @@ impl Res {
   }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Msg {
   Req(Req),
   Res(Res)

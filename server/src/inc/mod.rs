@@ -10,6 +10,7 @@ pub mod clang;
 use derive_more::*;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Severity {
   Error,
   Warning,

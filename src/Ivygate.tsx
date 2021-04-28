@@ -3,6 +3,8 @@ import * as monaco from 'monaco-editor';
 import styled from 'styled-components';
 import { StyleProps } from './style';
 
+import server from './server';
+
 import('monaco-themes/themes/Monokai.json')
   .then(data => {
       monaco.editor.defineTheme('monokai', data as any);
@@ -61,6 +63,12 @@ class Ivygate extends React.PureComponent<Props, State> {
     });
   }
 
+  private handle_?: number;
+
+  componentDidMount() {
+    server.open('')
+  }
+
   componentDidUpdate() {
     if (!this.editor_) return;
 
@@ -71,6 +79,14 @@ class Ivygate extends React.PureComponent<Props, State> {
     if (code !== model.getValue()) model.setValue(code);
 
     monaco.editor.setModelLanguage(model, language);
+
+    let markers: monaco.editor.IMarkerData[] = [];
+
+    monaco.editor.setModelMarkers(model, '', []);
+  }
+
+  componentWillUnmount() {
+    server.close();
   }
 
   render() {
