@@ -1,12 +1,4 @@
-import * as React from 'react';
-import * as ReactDom from 'react-dom';
+export * from './Ivygate';
+export { default as Ivygate } from './Ivygate';
 
-import Ivygate from './Ivygate';
-
-const code = `
-int main() {
-  return 0;
-}
-`;
-
-ReactDom.render(<Ivygate code={code} language='cpp' />, document.getElementById('root'))
+export { default as Message } from './Message';

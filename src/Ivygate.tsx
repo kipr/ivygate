@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as monaco from 'monaco-editor';
-import styled from 'styled-components';
+import { styled } from 'styletron-react';
 import { StyleProps } from './style';
 
 import server from './server';
 
-import('monaco-themes/themes/Monokai.json')
+import('monaco-themes/themes/Blackboard.json')
   .then(data => {
-      monaco.editor.defineTheme('monokai', data as any);
-      monaco.editor.setTheme('monokai');
+      monaco.editor.defineTheme('blackboard', data as any);
+      monaco.editor.setTheme('blackboard');
   });
 
 (self as any).MonacoEnvironment = {
@@ -59,7 +59,8 @@ class Ivygate extends React.PureComponent<Props, State> {
     const { code, language } = props;
     this.editor_ = monaco.editor.create(this.ref_, {
       value: code,
-      language
+      language,
+      automaticLayout: true
     });
   }
 
@@ -86,7 +87,7 @@ class Ivygate extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount() {
-    server.close();
+    server.close(0);
   }
 
   render() {
@@ -98,7 +99,7 @@ class Ivygate extends React.PureComponent<Props, State> {
   }
 }
 
-export default styled(Ivygate)`
-  width: 100%;
-  height: 100%;
-`;
+export default styled(Ivygate, {
+  width: '100%',
+  height: '100%',
+});

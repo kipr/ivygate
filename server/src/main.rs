@@ -9,6 +9,7 @@ mod inc;
 mod fs;
 mod proto;
 mod backing;
+mod test;
 
 use proto::*;
 

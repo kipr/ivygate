@@ -1,4 +1,4 @@
-import * as message from './message';
+import Message from './Message';
 
 export namespace Proto {
   
@@ -48,7 +48,7 @@ export namespace Proto {
     type: 'update';
     success: boolean;
     error?: string;
-    messages?: message.Message[];
+    messages?: Message[];
   }
 
   export namespace UpdateRes {
@@ -111,6 +111,7 @@ class Server {
   private iter_ = 0;
   private pending_: { [id: number]: ResolveReject } = {};
   private socket_: WebSocket;
+  private queued_: Proto.Req[] = [];
 
   connect(url: string) {
     this.socket_ = new WebSocket(url);
@@ -128,7 +129,7 @@ class Server {
   }
 
   update(handle: number) {
-    return this.request<message.Message[]>({
+    return this.request<Message[]>({
       type: 'update',
       handle
     });
@@ -141,12 +142,15 @@ class Server {
     });
   }
 
-  request<T>(req: Proto.ReqKind): Promise<T> {
-    if (this.socket_.readyState != WebSocket.OPEN) return null;
-    
+  request<T>(reqKind: Proto.ReqKind): Promise<T> {
     ++this.iter_;
 
-    this.socket_.send(JSON.stringify(req));
+    const req: Proto.Req = { id: this.iter_, kind: reqKind };
+    if (this.socket_ && this.socket_.readyState === WebSocket.OPEN) {
+      this.socket_.send(JSON.stringify(req));
+    } else {
+      this.queued_.push(req);
+    }
     
     return new Promise<T>((resolve, reject) => {
       this.pending_[this.iter_] = { resolve, reject };
@@ -154,6 +158,11 @@ class Server {
   }
 
   private onOpen_ = (ev: Event) => {
+    for (let i = 0; i < this.queued_.length; ++i) {
+      const req = this.queued_[i];
+      this.socket_.send(JSON.stringify(req));
+    }
+    this.queued_ = [];
   };
 
   private onMessage_ = (ev: MessageEvent) => {
@@ -173,6 +182,7 @@ class Server {
     }
 
     this.pending_ = {};
+    this.socket_ = undefined;
   };
 }
 
