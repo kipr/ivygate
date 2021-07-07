@@ -8,24 +8,9 @@ use uuid::Uuid;
 use std::path::PathBuf;
 
 mod simple;
+mod aws;
 
-#[derive(Debug, Serialize, Deserialize)]
-pub enum Ident {
-  Username(String),
-  Email(String)
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct User {
-  ident: Ident,
-  password: String
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectBrief {
-  uuid: Uuid,
-  name: String,
-}
+use crate::proto::{User, ProjectBrief};
 
 #[async_trait]
 pub trait Project {

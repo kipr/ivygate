@@ -1,4 +1,4 @@
-use super::{Backing, UserBacking, Project, ProjectBrief, User, Ident};
+use super::{Backing, UserBacking, Project};
 
 use async_trait::async_trait;
 
@@ -8,6 +8,8 @@ use uuid::Uuid;
 use serde::{Serialize, Deserialize};
 
 use crate::fs::{Folder, File, Entry};
+
+use crate::proto::{User, Ident, ProjectBrief};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Manifest {

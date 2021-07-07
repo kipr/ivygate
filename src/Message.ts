@@ -2,7 +2,7 @@ import * as monaco from 'monaco-editor';
 
 
 
-interface Message {
+export interface Message {
   file?: string;
   severity: Message.Severity;
   ranges: Message.Range[];

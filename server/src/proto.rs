@@ -10,6 +10,54 @@ use std::fmt::Display;
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum Ident {
+  Username(String),
+  Email(String)
+}
+
+impl Ident {
+  pub fn username<S: Into<String>>(username: S) -> Self {
+    Self::Username(username.into())
+  }
+
+  pub fn email<S: Into<String>>(email: S) -> Self {
+    Self::Email(email.into())
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct User {
+  pub ident: Ident,
+  pub password: String
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ProjectBrief {
+  pub uuid: Uuid,
+  pub name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginReq {
+  user: User
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ListProjectsReq {
+
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateProjectReq {
+  pub name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DeleteProjectReq {
+  pub uuid: Uuid
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct OpenProjectReq {
   pub uuid: Uuid,
 }
@@ -17,6 +65,19 @@ pub struct OpenProjectReq {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CloseProjectReq {
   pub uuid: Uuid,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateFileReq {
+  pub project: Uuid,
+  pub path: PathBuf,
+  pub contents: Option<String>
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DeleteFileReq {
+  pub project: Uuid,
+  pub path: PathBuf,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -40,9 +101,21 @@ pub struct CloseFileReq {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ReqKind {
   #[from]
+  LoginReq(LoginReq),
+  #[from]
+  ListProjectsReq(ListProjectsReq),
+  #[from]
+  CreateProject(CreateProjectReq),
+  #[from]
+  DeleteProject(DeleteProjectReq),
+  #[from]
   OpenProject(OpenProjectReq),
   #[from]
   CloseProject(CloseProjectReq),
+  #[from]
+  CreateFile(CreateFileReq),
+  #[from]
+  DeleteFile(DeleteFileReq),
   #[from]
   OpenFile(OpenFileReq),
   #[from]
@@ -62,6 +135,103 @@ impl Req {
     Res {
       id: self.id,
       kind: kind.into()
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginRes {
+  pub success: bool,
+  pub error: Option<String>
+}
+
+impl LoginRes {
+  pub fn success() -> Self {
+    Self {
+      success: true,
+      error: None,
+    }
+  }
+
+  pub fn error<E: Display>(error: E) -> Self {
+    Self {
+      success: false,
+      error: Some(error.to_string()),
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ListProjectsRes {
+  pub success: bool,
+  pub projects: Option<Vec<ProjectBrief>>,
+  pub error: Option<String>
+}
+
+impl ListProjectsRes {
+  pub fn success(projects: Vec<ProjectBrief>) -> Self {
+    Self {
+      success: true,
+      projects: Some(projects),
+      error: None,
+    }
+  }
+
+  pub fn error<E: Display>(error: E) -> Self {
+    Self {
+      success: false,
+      projects: None,
+      error: Some(error.to_string()),
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateFileRes {
+  pub success: bool,
+  pub uuid: Option<Uuid>,
+  pub error: Option<String>
+}
+
+impl CreateFileRes {
+  pub fn success(uuid: Uuid) -> Self {
+    Self {
+      success: true,
+      uuid: Some(uuid),
+      error: None,
+    }
+  }
+
+  pub fn error<E: Display>(error: E) -> Self {
+    Self {
+      success: false,
+      uuid: None,
+      error: Some(error.to_string()),
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DeleteFileRes {
+  pub success: bool,
+  pub contents: Option<String>,
+  pub error: Option<String>
+}
+
+impl DeleteFileRes {
+  pub fn success<S: Into<String>>(contents: S) -> Self {
+    Self {
+      success: true,
+      contents: Some(contents.into()),
+      error: None,
+    }
+  }
+
+  pub fn error<E: Display>(error: E) -> Self {
+    Self {
+      success: false,
+      contents: None,
+      error: Some(error.to_string()),
     }
   }
 }
@@ -189,9 +359,17 @@ impl CloseFileRes {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ResKind {
   #[from]
+  Login(LoginRes),
+  #[from]
+  ListProjects(ListProjectsRes),
+  #[from]
   OpenProject(OpenProjectRes),
   #[from]
   CloseProject(CloseProjectRes),
+  #[from]
+  CreateFile(CreateFileRes),
+  #[from]
+  DeleteFile(DeleteFileRes),
   #[from]
   OpenFile(OpenFileRes),
   #[from]

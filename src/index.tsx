@@ -1,4 +1,4 @@
 export * from './Ivygate';
-export { default as Ivygate } from './Ivygate';
+export * from './Ivygate';
 
-export { default as Message } from './Message';
+export * from './Message';

@@ -1,6 +1,6 @@
 {
   "name": "ivygate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Botball IDE",
   "main": "./dist/index.js",
   "repository": "git@github.com:kipr/ivygate.git",

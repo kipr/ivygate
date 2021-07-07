@@ -4,6 +4,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from './style';
 
 import server from './server';
+import { Message } from './Message';
 
 import('monaco-themes/themes/Blackboard.json')
   .then(data => {
@@ -32,6 +33,8 @@ import('monaco-themes/themes/Blackboard.json')
 export interface IvygateProps extends StyleProps {
   code: string;
   language: string;
+  messages?: Message[];
+  onCodeChange: (code: string) => void;
 }
 
 interface IvygateState {
@@ -41,7 +44,21 @@ interface IvygateState {
 type Props = IvygateProps;
 type State = IvygateState;
 
-class Ivygate extends React.PureComponent<Props, State> {
+const clamp = (min: number, value: number, max: number) => Math.min(max, Math.max(min, value));
+
+
+const clampRange = <A extends monaco.IRange, B extends monaco.IRange>(a: A, b: B): monaco.IRange => ({
+  startColumn: clamp(a.startColumn, b.startColumn, a.endColumn),
+  startLineNumber: clamp(a.startLineNumber, b.startLineNumber, a.endLineNumber),
+  endColumn: clamp(a.startColumn, b.endColumn, a.endColumn),
+  endLineNumber: clamp(a.startLineNumber, b.endLineNumber, a.endLineNumber),
+});
+
+/* const intersect = <A extends monaco.IRange, B extends monaco.IRange>(a: A, b: B) => {
+  if (b.startLineNumber > a.endLineNumber || b.endLineNumber < a.startLineNumber)
+};*/
+
+export class Ivygate extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }
@@ -55,6 +72,8 @@ class Ivygate extends React.PureComponent<Props, State> {
     if (this.editor_) this.editor_.dispose();
     this.ref_ = ref;
 
+    if (!this.ref_) return;
+
     const { props } = this;
     const { code, language } = props;
     this.editor_ = monaco.editor.create(this.ref_, {
@@ -62,6 +81,9 @@ class Ivygate extends React.PureComponent<Props, State> {
       language,
       automaticLayout: true
     });
+
+    const model = this.editor_.getModel() as monaco.editor.ITextModel;
+    model.onDidChangeContent(this.onContentChange_);
   }
 
   private handle_?: number;
@@ -70,36 +92,62 @@ class Ivygate extends React.PureComponent<Props, State> {
     server.open('')
   }
 
-  componentDidUpdate() {
+  private guard_ = false;
+
+  private onContentChange_ = (event: monaco.editor.IModelContentChangedEvent) => {
+    
+    const model = this.editor_.getModel() as monaco.editor.ITextModel;
+    
+    // TODO: Update markers when text changes
+    /*let nextMarkers = monaco.editor.getModelMarkers({});
+    
+    for (const change of event.changes) {
+      for (let i = 0; i < nextMarkers.length; ++i) {
+        const marker = nextMarkers[i];
+        
+      }
+      change.range.startLineNumber
+    }*/
+    
+    this.guard_ = true;
+    this.props.onCodeChange(model.getLinesContent().join('\n'));
+  };
+
+  componentWillReceiveProps(nextProps: Props) {
+
     if (!this.editor_) return;
 
-    const { props } = this;
-    const { code, language } = props;
+    const { code, language, messages } = nextProps;
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
-    if (code !== model.getValue()) model.setValue(code);
+
+    if (!this.guard_ && code !== model.getValue()) model.setValue(code);
+    this.guard_ = false;
 
     monaco.editor.setModelLanguage(model, language);
 
-    let markers: monaco.editor.IMarkerData[] = [];
+    const monacoMessages = (messages || []).map(Message.toMonaco).reduce((a, b) => [ ...a, ...b ], []);
+    console.log('asdasd', monacoMessages);
+    monaco.editor.setModelMarkers(model, '', monacoMessages);
+  }
 
-    monaco.editor.setModelMarkers(model, '', []);
+  componentDidUpdate() {
+    if (!this.editor_) return;
   }
 
   componentWillUnmount() {
     server.close(0);
   }
 
+  revealLineInCenter(line: number) {
+    this.editor_.revealLineInCenter(line, monaco.editor.ScrollType.Smooth);
+  }
+
   render() {
     const { props } = this;
     const { style, className } = props;
     return (
-      <div style={style} className={className} ref={this.bindRef_} />
+      <div style={{ width: '100%', height: '100%', ...style }} className={className} ref={this.bindRef_} />
     );
   }
 }
-
-export default styled(Ivygate, {
-  width: '100%',
-  height: '100%',
-});
