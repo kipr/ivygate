@@ -2,9 +2,9 @@
 
 Next generation Botball code editor. In active development.
 
-## Running
+## Install and compile
 
 ```.sh
 yarn install
-yarn run start
+tsc
 ```
