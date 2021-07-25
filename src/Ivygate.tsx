@@ -127,7 +127,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
     monaco.editor.setModelLanguage(model, language);
 
     const monacoMessages = (messages || []).map(Message.toMonaco).reduce((a, b) => [ ...a, ...b ], []);
-    console.log('asdasd', monacoMessages);
     monaco.editor.setModelMarkers(model, '', monacoMessages);
   }
 
