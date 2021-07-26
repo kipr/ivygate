@@ -6,6 +6,10 @@
   "repository": "git@github.com:kipr/ivygate.git",
   "author": "Braden McDorman",
   "license": "GPL3",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "yarn run build"
+  },
   "dependencies": {
     "monaco": "^1.201704190613.0",
     "monaco-editor": "^0.23.0",
