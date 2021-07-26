@@ -6,6 +6,9 @@
   "repository": "git@github.com:kipr/ivygate.git",
   "author": "Braden McDorman",
   "license": "GPL3",
+  "files": [
+    "./dist/"
+  ],
   "scripts": {
     "build": "tsc",
     "prepare": "yarn run build"
