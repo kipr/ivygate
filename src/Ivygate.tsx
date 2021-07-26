@@ -34,6 +34,7 @@ export interface IvygateProps extends StyleProps {
   code: string;
   language: string;
   messages?: Message[];
+  autocomplete: boolean;
   onCodeChange: (code: string) => void;
 }
 
@@ -75,8 +76,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
     if (!this.ref_) return;
 
     const { props } = this;
-    const { code, language } = props;
+    const { code, language, autocomplete } = props;
     this.editor_ = monaco.editor.create(this.ref_, {
+      ...Ivygate.getAutocompleteEditorOptions(autocomplete),
       value: code,
       language,
       automaticLayout: true
@@ -117,7 +119,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     if (!this.editor_) return;
 
-    const { code, language, messages } = nextProps;
+    const { code, language, messages, autocomplete } = nextProps;
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
 
@@ -128,6 +130,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     const monacoMessages = (messages || []).map(Message.toMonaco).reduce((a, b) => [ ...a, ...b ], []);
     monaco.editor.setModelMarkers(model, '', monacoMessages);
+
+    if (autocomplete !== this.props.autocomplete) {
+      this.editor_.updateOptions(Ivygate.getAutocompleteEditorOptions(autocomplete));
+    }
   }
 
   componentDidUpdate() {
@@ -140,6 +146,18 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   revealLineInCenter(line: number) {
     this.editor_.revealLineInCenter(line, monaco.editor.ScrollType.Smooth);
+  }
+
+  private static getAutocompleteEditorOptions(autocomplete: boolean): monaco.editor.IEditorOptions {
+    return {
+      autoClosingBrackets: autocomplete ? 'languageDefined' : 'never',
+      autoClosingOvertype: autocomplete ? 'always' : 'never',
+      autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
+      autoSurround: autocomplete ? 'languageDefined': 'never',
+      suggest: {
+        showWords: autocomplete,
+      }
+    };
   }
 
   render() {
