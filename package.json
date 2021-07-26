@@ -1,11 +1,18 @@
 {
   "name": "ivygate",
-  "version": "1.0.2",
+  "version": "0.1.0",
   "description": "Botball IDE",
   "main": "./dist/index.js",
   "repository": "git@github.com:kipr/ivygate.git",
   "author": "Braden McDorman",
-  "license": "GPL3",
+  "license": "GPL-3.0-only",
+  "files": [
+    "./dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "yarn run build"
+  },
   "dependencies": {
     "monaco": "^1.201704190613.0",
     "monaco-editor": "^0.23.0",
