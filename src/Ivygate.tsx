@@ -6,11 +6,11 @@ import { StyleProps } from './style';
 import server from './server';
 import { Message } from './Message';
 
-import('monaco-themes/themes/Blackboard.json')
-  .then(data => {
-      monaco.editor.defineTheme('blackboard', data as any);
-      monaco.editor.setTheme('blackboard');
-  });
+// import('monaco-themes/themes/Blackboard.json')
+//   .then(data => {
+//       monaco.editor.defineTheme('blackboard', data as any);
+//       monaco.editor.setTheme('blackboard');
+//   });
 
 (self as any).MonacoEnvironment = {
 	getWorkerUrl: function (_moduleId: any, label: string) {
@@ -81,6 +81,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
       ...Ivygate.getAutocompleteEditorOptions(autocomplete),
       value: code,
       language,
+      theme: 'vs-dark',
       automaticLayout: true
     });
 
