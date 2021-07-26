@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "repository": "git@github.com:kipr/ivygate.git",
   "author": "Braden McDorman",
-  "license": "GPL3",
+  "license": "GPL-3.0-only",
   "files": [
     "./dist/"
   ],
