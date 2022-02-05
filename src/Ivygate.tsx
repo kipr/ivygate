@@ -64,7 +64,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     super(props);
   }
 
-  private editor_: monaco.editor.IEditor;
+  editor_: monaco.editor.IEditor;
 
   private ref_: HTMLDivElement;
   private bindRef_ = (ref: HTMLDivElement) => {
@@ -87,6 +87,11 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
+  }
+
+  formatCode() {
+    this.editor_.trigger('anyString', 'editor.action.formatDocument', null);
+    //  "editor.action.reindentlines",
   }
 
   private handle_?: number;
@@ -165,7 +170,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
     const { props } = this;
     const { style, className } = props;
     return (
-      <div style={{ width: '100%', height: '100%', ...style }} className={className} ref={this.bindRef_} />
+      <>
+        <button onClick={ () => this.formatCode }>Format</button>
+        <div style={{ width: '100%', height: '100%', ...style }} className={className} ref={this.bindRef_} />
+      </>
     );
   }
 }
