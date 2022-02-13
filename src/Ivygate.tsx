@@ -6,6 +6,8 @@ import { StyleProps } from './style';
 import server from './server';
 import { Message } from './Message';
 
+import format from './c-indent';
+
 // import('monaco-themes/themes/Blackboard.json')
 //   .then(data => {
 //       monaco.editor.defineTheme('blackboard', data as any);
@@ -64,7 +66,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     super(props);
   }
 
-  editor_: monaco.editor.IEditor;
+  private editor_: monaco.editor.ICodeEditor;
 
   private ref_: HTMLDivElement;
   private bindRef_ = (ref: HTMLDivElement) => {
@@ -90,8 +92,18 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   formatCode() {
-    this.editor_.trigger('anyString', 'editor.action.formatDocument', null);
-    //  "editor.action.reindentlines",
+    this.editor_.getAction('editor.action.formatDocument').run()
+  }
+
+  changeFormatter(formattingFunction: (code: string, tabSize: number, insertSpaces: boolean) => string): void {
+    monaco.languages.registerDocumentFormattingEditProvider('c', {
+      provideDocumentFormattingEdits(model, options) {
+        return [{
+          range: model.getFullModelRange(),
+          text: formattingFunction(model.getValue(), options.tabSize, options.insertSpaces)
+        }];
+      }
+    });
   }
 
   private handle_?: number;
@@ -121,11 +133,16 @@ export class Ivygate extends React.PureComponent<Props, State> {
     this.props.onCodeChange(model.getLinesContent().join('\n'));
   };
 
-  componentWillReceiveProps(nextProps: Props) {
+  // TODO: change this to a memoization helper
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
 
     if (!this.editor_) return;
 
-    const { code, language, messages, autocomplete } = nextProps;
+    const { code, language, messages, autocomplete } = nextProps; 
+
+    if (language === 'c') {
+      this.changeFormatter(format);
+    }
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
 
@@ -170,10 +187,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     const { props } = this;
     const { style, className } = props;
     return (
-      <>
-        <button onClick={ () => this.formatCode }>Format</button>
-        <div style={{ width: '100%', height: '100%', ...style }} className={className} ref={this.bindRef_} />
-      </>
+      <div style={{ width: '100%', height: '100%', ...style }} className={className} ref={this.bindRef_} />
     );
   }
 }
