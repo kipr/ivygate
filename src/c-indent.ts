@@ -49,8 +49,7 @@ function format(code: string, tabSize: number, insertSpaces: boolean): string {
     indentStr = '\t';
   }
 
-  // first, trim off any extra lines or space at the top
-  let linesOfCode = code.trim().split('\n');
+  let linesOfCode = code.split('\n');
   let indentedCode = '';
   linesOfCode.forEach((line) => {
     let newline = line.trim();
