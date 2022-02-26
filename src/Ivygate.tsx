@@ -6,6 +6,8 @@ import { StyleProps } from './style';
 import server from './server';
 import { Message } from './Message';
 
+import format from './c-indent';
+
 // import('monaco-themes/themes/Blackboard.json')
 //   .then(data => {
 //       monaco.editor.defineTheme('blackboard', data as any);
@@ -64,7 +66,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     super(props);
   }
 
-  private editor_: monaco.editor.IEditor;
+  private editor_: monaco.editor.ICodeEditor;
 
   private ref_: HTMLDivElement;
   private bindRef_ = (ref: HTMLDivElement) => {
@@ -87,6 +89,21 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
+  }
+
+  formatCode() {
+    this.editor_.getAction('editor.action.formatDocument').run()
+  }
+
+  changeFormatter(formattingFunction: (code: string, tabSize: number, insertSpaces: boolean) => string): void {
+    monaco.languages.registerDocumentFormattingEditProvider('c', {
+      provideDocumentFormattingEdits(model, options) {
+        return [{
+          range: model.getFullModelRange(),
+          text: formattingFunction(model.getValue(), options.tabSize, options.insertSpaces)
+        }];
+      }
+    });
   }
 
   private handle_?: number;
@@ -116,11 +133,16 @@ export class Ivygate extends React.PureComponent<Props, State> {
     this.props.onCodeChange(model.getLinesContent().join('\n'));
   };
 
-  componentWillReceiveProps(nextProps: Props) {
+  // TODO: change this to a memoization helper
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
 
     if (!this.editor_) return;
 
-    const { code, language, messages, autocomplete } = nextProps;
+    const { code, language, messages, autocomplete } = nextProps; 
+
+    if (language === 'c') {
+      this.changeFormatter(format);
+    }
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
 
