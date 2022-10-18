@@ -17,18 +17,18 @@ import format from './c-indent';
 (self as any).MonacoEnvironment = {
 	getWorkerUrl: function (_moduleId: any, label: string) {
 		if (label === 'json') {
-			return './json.worker.bundle.js';
+			return '/json.worker.bundle.js';
 		}
 		if (label === 'css' || label === 'scss' || label === 'less') {
-			return './css.worker.bundle.js';
+			return '/css.worker.bundle.js';
 		}
 		if (label === 'html' || label === 'handlebars' || label === 'razor') {
-			return './html.worker.bundle.js';
+			return '/html.worker.bundle.js';
 		}
 		if (label === 'typescript' || label === 'javascript') {
-			return './ts.worker.bundle.js';
+			return '/ts.worker.bundle.js';
 		}
-		return './editor.worker.bundle.js';
+		return '/editor.worker.bundle.js';
 	}
 };
 
