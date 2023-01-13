@@ -67,6 +67,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   private editor_: monaco.editor.ICodeEditor;
+  get editor() { return this.editor_; }
 
   private ref_: HTMLDivElement;
   private bindRef_ = (ref: HTMLDivElement) => {
