@@ -7,9 +7,13 @@
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "dist",
-    "lib": [ "ES6", "WebWorker" ]
+    "lib": [ "ES6", "WebWorker" ],
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }
