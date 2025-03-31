@@ -7,7 +7,9 @@
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "dist",
-    "lib": [ "ES6", "WebWorker" ],
+    "lib": [ "dom","ES6", "WebWorker" ],
+    "skipLibCheck": true,
+    "types": ["react", "react-dom"]
   },
   "include": [
     "src/**/*"
