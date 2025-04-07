@@ -187,7 +187,7 @@ const SectionText = styled('span', {
 
 const SectionTitleText = styled('span', {
     paddingRight: '5px',
-    fontWeight: '500',
+    fontWeight: 500,
 });
 
 
