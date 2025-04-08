@@ -339,14 +339,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   async componentDidMount(): Promise<void> {
     console.log("FileExplorer mounted!");
-    // console.log("FileExplorer state: ", this.state);
     console.log("FileExplorer compDidMount props.propUserShown: ", this.props.propUserShown);
-    await this.props.onReloadProjects(this.props.propUserShown);
     console.log("FileExplorer props: ", this.props);
-
-
     if (this.props.propUserShown !== undefined) {
-
+      await this.props.onReloadProjects(this.props.propUserShown);
       if (this.props.propUserShown.userName !== '') {
         console.log("FileExplorer componentDidMount propUserShown: ", this.props.propUserShown);
         console.log("FileExplorer componentDidMount propsSelectedProjectName: ", this.props.propsSelectedProjectName);
