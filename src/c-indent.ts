@@ -68,6 +68,8 @@ function format(code: string, tabSize: number, insertSpaces: boolean): string {
     
     indentedCode += newline;
   });
+  // remove the extra newline added at the end
+  indentedCode = indentedCode.substring(0,indentedCode.length - 1);
 
   return indentedCode;
 }
