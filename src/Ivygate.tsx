@@ -680,6 +680,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     // Create Monaco editor with correct language and theme
     this.editor_ = monaco.editor.create(this.ref_, {
       // ...Ivygate.getAutocompleteEditorOptions(autocomplete),
+      fontSize: 16,
       value: code,
       language: language,
       theme: this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme',

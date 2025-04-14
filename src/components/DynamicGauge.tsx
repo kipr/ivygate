@@ -65,7 +65,7 @@ export class DynamicGauge extends React.Component<Props, State> {
         } = this.props;
 
         return (
-            <div style={{ ...this.props.style,width: '280px', textAlign: 'center', }}>
+            <div style={{ ...this.props.style,width: '480px', textAlign: 'center', }}>
                 <GaugeComponent
                     value={value}
                     minValue={minValue}

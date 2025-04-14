@@ -131,11 +131,12 @@ const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   borderBottom: `3px solid ${props.theme.borderColor}`,
-  padding: '0.5px'
+  padding: '0.5px',
+  justifyContent: 'space-between',
 }));
 
 const ProjectTitle = styled('h2', {
-  fontSize: '1.2em',
+  fontSize: '1.5em',
   marginBottom: '0px',
   textAlign: 'left',
   paddingRight: '20px',
@@ -144,16 +145,18 @@ const ProjectTitle = styled('h2', {
 const AddProjectButtonContainer = styled('div', (props: ThemeProps & { selected: boolean }) => ({
   borderRadius: '5px',
   cursor: 'pointer',
-  marginTop: '10px',
-  padding: '5px 5px 30px 5px',
-  height: '5px',
-  fontSize: '12px',
+  marginTop: '18px',
+  
+  padding: '3px 5px 3px 5px',
+  height: '30px',
+  fontSize: '1em',
   alignItems: 'right',
   ':hover': {
-    cursor: 'pointer',
-    backgroundColor: props.theme.hoverOptionBackground
+      cursor: 'pointer',
+      backgroundColor: props.theme.hoverOptionBackground
   },
 }));
+
 
 const AddProjectItemIcon = styled(FontAwesomeIcon, {
   paddingLeft: '3px',
@@ -169,6 +172,7 @@ const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) =>
   flexWrap: 'wrap',
   cursor: 'pointer',
   padding: '5px',
+  fontSize: '1.44em',
   width: '100%',
   boxSizing: 'border-box',
   textOverflow: 'ellipsis',
@@ -182,6 +186,7 @@ const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) =>
 const FileTypeTitleContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
   transition: 'background-color 0.2s, opacity 0.2s',
+  fontSize: '1.2em',
   padding: `5px`,
   fontWeight: 400,
   userSelect: 'none',
@@ -222,6 +227,7 @@ const IndividualFile = styled('div', (props: ThemeProps & { selected: boolean, }
   borderRadius: '5px',
   cursor: 'pointer',
   width: '97%',
+  fontSize: '1.15em',
   backgroundColor: (props.selected) ? props.theme.selectedFileBackground : props.theme.unselectedBackground,
   padding: '3px',
   ':hover': {
@@ -282,7 +288,7 @@ const SectionName = styled('span', (props: ThemeProps & { selected: boolean }) =
     backgroundColor: props.theme.hoverOptionBackground
   },
   width: '100%',
-
+  fontSize: '1.44em',
   backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
   boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
   transition: 'background-color 0.2s, opacity 0.2s',
@@ -1133,7 +1139,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
           }}
         >
-          <h2 style={{ marginLeft: '6px' }}>Explorer</h2>
+          <h2 style={{ marginLeft: '6px', fontSize: '1.728em' }}>Explorer</h2>
           <UsersContainer theme={theme}>
             {userSections}
           </UsersContainer>

@@ -8,7 +8,6 @@ import { styled } from 'styletron-react';
 import { Motors, Servos, Sensors, MotorView, ServoType, DEFAULT_SENSORS, DEFAULT_MOTORS, } from './types/motorServoSensorTypes';
 import DynamicGauge from './components/DynamicGauge';
 import ComboBox from './components/ComboBox';
-import MiniComboBox from './components/MiniComboBox';
 import ResizeableComboBox from './components/ResizeableComboBox';
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
@@ -73,6 +72,7 @@ const MotorServoSensorContainer = styled('div', (props: ThemeProps) => ({
     margin: '5px',
     zIndex: 1,
     paddingBottom: '10px',
+
 }));
 
 const SectionsColumn = styled('div', (props: ThemeProps) => ({
@@ -109,11 +109,6 @@ const StyledResizeableComboBox = styled(ResizeableComboBox, {
 });
 
 
-const StyledMiniComboBox = styled(MiniComboBox, {
-    flex: '1 0',
-    padding: '3px',
-    width: '80%',
-});
 const SettingContainer = styled('div', (props: ThemeProps) => ({
     display: 'flex',
     flexDirection: 'row',
@@ -156,7 +151,10 @@ const ViewContainer = styled('div', (props: ThemeProps) => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: `2px`,
-    width: '40%',
+    width: '10em',
+
+
+
 }));
 
 
@@ -175,19 +173,23 @@ const ControlContainer = styled('div', {
     //flex: '1 0',
     alignItems: 'center',
     justifyContent: 'space-between',
+
+    height: '2.5em'
 });
 const SectionInfoText = styled('span', {
     paddingRight: '5px',
-    fontSize: '14px',
+    fontSize: '1.2em',
 });
 const SectionText = styled('span', {
     paddingRight: '5px',
+    fontSize: '1.2em'
 
 });
 
 const SectionTitleText = styled('span', {
     paddingRight: '5px',
     fontWeight: 500,
+    fontSize: '1.44em'
 });
 
 
@@ -209,6 +211,7 @@ const SectionName = styled('span', (props: ThemeProps & SectionProps & { selecte
         backgroundColor: props.theme.hoverOptionBackground
     },
     width: '100%',
+    fontSize: '1.44em',
 
     backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
     boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
@@ -356,7 +359,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     async componentDidMount(): Promise<void> {
         console.log("IVYGATE MOTOSERVOSENSORDISPLAY MOUNTED");
- 
+
         console.log("MotorServoSensorDisplay props: ", this.props);
         console.log("MotorServoSensorDisplay state: ", this.state);
 
@@ -392,7 +395,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
-        if(prevState.shownServoValue !== this.state.shownServoValue){
+        if (prevState.shownServoValue !== this.state.shownServoValue) {
             console.log("MotorServoSensorDisplay compDidUpdate state shownServoValue CHANGED from: ", prevState.shownServoValue);
             console.log("MotorServoSensorDisplay compDidUpdate state shownServoValue CHANGED to: ", this.state.shownServoValue);
 
@@ -602,7 +605,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     private onSectionSelect_ = (section: "Motor" | "Servo" | "Sensor") => {
         console.log("Section selected: ", section);
-        if(section === "Servo"){
+        if (section === "Servo") {
             console.log("Setting shownServoValue to: ", this.state.servoPositions[0].value);
             this.setState({
                 shownServoValue: this.state.servoPositions[0].value,
@@ -645,33 +648,34 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             return (
                 <SectionsColumn theme={theme}>
 
-                    <SectionTitleContainer theme={theme}>
-                        <SectionText>{LocalizedString.lookup(tr('Motors'), locale)}</SectionText>
+                    <SettingContainer style={{justifyContent:'flex-end'}}theme={theme}>
                         <ViewContainer theme={theme}>
-                            <SectionInfoText style={{ fontSize: '10px' }}>{LocalizedString.lookup(tr('View:'), locale)}</SectionInfoText>
-                            <StyledMiniComboBox
+                            <SectionInfoText style={{ fontSize: '1.2em' }}>{LocalizedString.lookup(tr('View:'), locale)}</SectionInfoText>
+                            <StyledResizeableComboBox
                                 options={VIEW_OPTIONS}
                                 index={VIEW_OPTIONS.findIndex(opt => opt.data === shownMotorView)}
                                 onSelect={this.onMotorViewSelect_}
                                 theme={theme}
-                                style={{ padding: '1px' }}
-                                minimal={true}
+                                mainWidth={'1em'}
+                                mainHeight={'1.2em'}
+                                mainFontSize={'1em'}
 
                             />
                         </ViewContainer>
-                    </SectionTitleContainer>
+                    </SettingContainer>
+
 
                     <SettingContainer theme={theme}>
                         <ControlContainer >
-                            <SectionInfoText>{LocalizedString.lookup(tr('Motor Port:'), locale)}</SectionInfoText>
+                            <SectionInfoText style={{ fontSize: '1.44em' }}>{LocalizedString.lookup(tr('Motor Port:'), locale)}</SectionInfoText>
                             <StyledResizeableComboBox
                                 options={MOTOR_OPTIONS}
                                 index={MOTOR_OPTIONS.findIndex(opt => opt.data === shownMotor)}
                                 onSelect={this.onMotorSelect_}
                                 theme={theme}
-                                mainWidth={100}
-                                mainHeight={20}
-                                mainFontSize={14}
+                                mainWidth={'8.3em'}
+                                mainHeight={'1.2em'}
+                                mainFontSize={'1em'}
 
                             />
                         </ControlContainer>
@@ -707,22 +711,17 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             const { theme } = this.props;
             return (
                 <SectionsColumn theme={theme}>
-
-                    <SectionTitleContainer theme={theme}>
-                        <SectionText>{LocalizedString.lookup(tr('Servos'), locale)}</SectionText>
-                    </SectionTitleContainer>
-
                     <SettingContainer theme={theme}>
-                        <ControlContainer >
-                            <SectionInfoText>{LocalizedString.lookup(tr('Servo Port:'), locale)}</SectionInfoText>
+                        <ControlContainer style={{marginTop:'0.9em'}}>
+                            <SectionInfoText style={{ fontSize: '1.44em' }}>{LocalizedString.lookup(tr('Servo Port:'), locale)}</SectionInfoText>
                             <StyledResizeableComboBox
                                 options={SERVO_OPTIONS}
                                 index={SERVO_OPTIONS.findIndex(opt => opt.data === shownServo)}
                                 onSelect={this.onServoSelect_}
                                 theme={theme}
-                                mainWidth={100}
-                                mainHeight={20}
-                                mainFontSize={14}
+                                mainWidth={'8.3em'}
+                                mainHeight={'1.2em'}
+                                mainFontSize={'1em'}
 
                             />
                         </ControlContainer>
@@ -913,7 +912,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     overflowY: 'scroll',
                 }}
             >
-                <h2 style={{ marginLeft: '6px' }}>Motors, Servos and Sensors</h2>
+                <h2 style={{ marginLeft: '6px', fontSize: '1.728em' }}>Motors, Servos and Sensors</h2>
                 <MotorServoSensorContainer theme={theme} style={{ marginBottom: '10px' }}>
                     <SectionName theme={theme} selected={selectedSection === "Motor"} onClick={() => this.onSectionSelect_("Motor")}>
                         Motor
