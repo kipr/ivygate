@@ -289,7 +289,7 @@ const VIEW_OPTIONS: ComboBox.Option[] = (() => {
     return ret;
 })();
 export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorServoSensorDisplayReduxSideLayoutProps, State> {
-
+    private newMotorRef: React.MutableRefObject<Motors | undefined>;
     constructor(props: Props & MotorServoSensorDisplayReduxSideLayoutProps) {
         super(props);
 
@@ -351,11 +351,11 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             ],
             sensorValues: DEFAULT_SENSORS,
         };
-
+        this.newMotorRef = React.createRef<Motors | undefined>();
 
     }
 
-    private newMotorRef: React.MutableRefObject<Motors | undefined>;
+  
 
     async componentDidMount(): Promise<void> {
         console.log("IVYGATE MOTOSERVOSENSORDISPLAY MOUNTED");
@@ -364,6 +364,8 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay state: ", this.state);
 
         this.newMotorRef.current = Motors.MOTOR0;
+
+        console.log("newMotorRef: ", this.newMotorRef.current);
 
         console.log("MotorServoSensorDisplay compDidMount this.props.getMotorPositions(): ", this.props.getMotorPositions());
         if (this.props.getMotorPositions() !== undefined) {
