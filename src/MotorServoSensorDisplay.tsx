@@ -15,6 +15,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
     getMotorPositions: () => { [key: string]: number };
     storeServoPositions: (servoPositions: ServoType[]) => void;
     getServoPositions: () => ServoType[];
+    stopMotor: (motor: Motors) => void;
 }
 interface SectionProps {
     selected?: boolean;
@@ -584,6 +585,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 shownMotorValue: 0,
             }, () => {
                 this.props.storeMotorPositions(this.state.motorPositions);
+                this.props.stopMotor(this.newMotorRef.current);
             });
         }
     }
