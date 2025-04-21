@@ -3,20 +3,22 @@ import { GaugeComponent } from 'react-gauge-component';
 import { DARK, ThemeProps } from '../theme';
 import { StyleProps } from '../style';
 import { SubArc } from 'react-gauge-component';
-interface DynamicGaugeProps extends ThemeProps,StyleProps{
-  initialValue?: number;
-  minValue?: number;
-  maxValue?: number;
-  margins?: { top: number; bottom: number; left: number; right: number };
-  arcColors?: string[];
-  arcLimits?: { limit: number }[];
-  changeValue?: number;
-  subArcs?: SubArc[];
-  onDialChange?: (value: number) => void;
+interface DynamicGaugeProps extends ThemeProps, StyleProps {
+    initialValue?: number;
+    minValue?: number;
+    maxValue?: number;
+    margins?: { top: number; bottom: number; left: number; right: number };
+    arcColors?: string[];
+    arcLimits?: { limit: number }[];
+    changeValue?: number;
+    subArcs?: SubArc[];
+    customTickValueConfig?: {};
+    customTickLineConfig?: {};
+    onDialChange?: (value: number) => void;
 }
 
 interface DynamicGaugeState {
-  value: number;
+    value: number;
 }
 
 type Props = DynamicGaugeProps;
@@ -33,7 +35,7 @@ export class DynamicGauge extends React.Component<Props, State> {
 
     componentDidMount(): void {
         console.log("DyanmicGauge props: ", this.props);
-        if(this.props.changeValue) {
+        if (this.props.changeValue) {
             this.setState({ value: this.props.changeValue });
         }
     }
@@ -43,7 +45,7 @@ export class DynamicGauge extends React.Component<Props, State> {
         console.log("DyanmicGauge prevState: ", prevState);
         console.log("DyanmicGauge state: ", this.state);
 
-        if(prevProps.changeValue !== this.props.changeValue) {
+        if (prevProps.changeValue !== this.props.changeValue) {
             console.log("DyanmicGauge changeValue CHANGED: ", this.props.changeValue);
             this.setState({ value: this.props.changeValue });
         }
@@ -55,33 +57,43 @@ export class DynamicGauge extends React.Component<Props, State> {
     };
 
     render() {
+        const defaultMargins = { top: 0.07 , bottom: 0.02, left: 0.07, right: 0.07 };
         const { value } = this.state;
         const {
             minValue = 0,
             maxValue = 100,
-            margins = { top:0.05, bottom: 0.01, left: 0.05, right: 0.05 },
+            margins,
             arcColors = ['#FF4E4E', '#2BDE3F'],
             arcLimits = [{ limit: 0 }, { limit: 1500 }]
         } = this.props;
 
         return (
-            <div style={{ ...this.props.style,width: '480px', textAlign: 'center', }}>
+            <div style={{ ...this.props.style, width: '95%', textAlign: 'center' }}>
                 <GaugeComponent
                     value={value}
                     minValue={minValue}
                     maxValue={maxValue}
                     type="semicircle"
+                    marginInPercent={this.props.margins ? margins : defaultMargins}
                     arc={{
+                        padding: 0.005,
+                        cornerRadius: 1,
                         subArcs: this.props.subArcs
                     }}
                     labels={{
-                        valueLabel: { formatTextValue: (val) => `${val}` },
+                        valueLabel: { hide: true },
                         tickLabels: {
-                            ticks: [{value:0}],
+                            ticks: [{ value: 0 }],
+                            defaultTickValueConfig: this.props.customTickValueConfig? this.props.customTickValueConfig : {},
+                            defaultTickLineConfig: this.props.customTickLineConfig? this.props.customTickLineConfig : {}
                         }
                     }}
-                    
+
+
                 />
+                <div style={{fontSize: '2.5em', paddingBottom: '0.5em'}}>
+                    {value}
+                </div>
 
                 {/* Dynamic Control for Moving the Pointer */}
                 <input
@@ -92,8 +104,8 @@ export class DynamicGauge extends React.Component<Props, State> {
                     onChange={this.handleChange}
                     style={{ width: '80%' }}
                 />
-               Current Value: {value}
-               
+
+
             </div>
         );
     }
