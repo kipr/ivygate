@@ -17,6 +17,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
     getServoPositions: () => ServoType[];
     stopMotor: (motor: Motors) => void;
     stopAllMotors: () => void;
+    //enableServo: (servo: Servos, enable: boolean | undefined) => void;
 }
 interface SectionProps {
     selected?: boolean;
@@ -57,6 +58,9 @@ interface MotorServoSensorDisplayState {
         button: number
     };
 
+    customTickValueConfig?: {};
+    customTickLineConfig?: {};
+
 }
 interface ClickProps {
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -82,6 +86,7 @@ const SectionsColumn = styled('div', (props: ThemeProps) => ({
     display: 'flex',
     flexDirection: 'column',
     border: `3px solid ${props.theme.borderColor}`,
+    height: '80%',
     marginBottom: '6px',
 }));
 
@@ -216,7 +221,8 @@ const SectionName = styled('span', (props: ThemeProps & SectionProps & { selecte
     fontSize: '1.44em',
 
     backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
-    boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
+    boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : '0px 10px 13px -6px rgba(255, 105, 180, 0.1), 0px 1px 31px 0px rgba(135, 206, 250, 0.08), 0px 8px 38px 7px rgba(144, 238, 144, 0.1)',
+
     transition: 'background-color 0.2s, opacity 0.2s',
     padding: `5px`,
     fontWeight: props.selected ? 400 : undefined,
@@ -306,14 +312,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             motorSubArcs: [
                 {
                     limit: 0,
-                    color: '#FF4E4E',
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                     tooltip: {
                         text: 'Reverse'
                     }
                 },
                 {
                     limit: 1500,
-                    color: '#2BDE3F',
+                    color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
                     tooltip: {
                         text: 'Forward'
                     }
@@ -347,17 +353,39 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             servoMaxValue: 2047,
             servoSubArcs: [
                 {
+                    limit: 100,
+                    //color: '#AD4C4B'
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                    tooltip: {
+                        text: 'Warning! Could damage servo in this range'
+                    }
+                },
+                {
+                    limit: 1947,
+                    color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
+                },
+                {
                     limit: 2047,
-                    color: '#2BDE3F',
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                    tooltip: {
+                        text: 'Warning! Could damage servo in this range'
+                    }
                 }
             ],
             sensorValues: DEFAULT_SENSORS,
+            customTickValueConfig: {
+                style: { fontSize: '1.2em', fill: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000' },
+            },
+            customTickLineConfig: {
+                color: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000',
+                length: 11
+            }
         };
         this.newMotorRef = React.createRef<Motors | undefined>();
 
     }
 
-  
+
 
     async componentDidMount(): Promise<void> {
         console.log("IVYGATE MOTOSERVOSENSORDISPLAY MOUNTED");
@@ -399,6 +427,56 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
+        if (prevProps.theme !== this.props.theme) {
+            console.log("MotorServoSensorDisplay compDidUpdate props theme CHANGED from: ", prevProps.theme);
+            this.setState({
+                motorSubArcs: [
+                    {
+                        limit: 0,
+                        color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                        tooltip: {
+                            text: 'Reverse'
+                        }
+                    },
+                    {
+                        limit: 1500,
+                        color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
+                        tooltip: {
+                            text: 'Forward'
+                        }
+                    }
+                ],
+                servoSubArcs: [
+                    {
+                        limit: 100,
+                        //color: '#AD4C4B'
+                        color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                        tooltip: {
+                            text: 'Warning! Could damage servo in this range'
+                        }
+                    },
+                    {
+                        limit: 1947,
+                        color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
+                    },
+                    {
+                        limit: 2047,
+                        color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                        tooltip: {
+                            text: 'Warning! Could damage servo in this range'
+                        }
+                    }
+
+                ],
+                customTickValueConfig: {
+                    style: { fontSize: '1.2em', fill: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000' },
+                },
+                customTickLineConfig: {
+                    color: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000',
+                    length: 11
+                }
+            })
+        }
         if (prevState.shownServoValue !== this.state.shownServoValue) {
             console.log("MotorServoSensorDisplay compDidUpdate state shownServoValue CHANGED from: ", prevState.shownServoValue);
             console.log("MotorServoSensorDisplay compDidUpdate state shownServoValue CHANGED to: ", this.state.shownServoValue);
@@ -557,7 +635,25 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         }, () => {
             console.log("After set state servoPositions: ", this.state.servoPositions);
             this.props.storeServoPositions(this.state.servoPositions);
+            //this.props.enableServo(servo, this.state.servoPositions.find(servoObj => servoObj.name === servo)?.enable);
         });
+    };
+
+    private disableAllServos_ = () => {
+        console.log("Disable all servos");
+        this.setState((prevState) => {
+            const updatedServoPositions = prevState.servoPositions.map((servo) =>
+                ({ ...servo, enable: false })
+            );
+
+            return {
+                servoPositions: updatedServoPositions,
+            };
+        }, () => {
+            console.log("After set state servoPositions: ", this.state.servoPositions);
+            this.props.storeServoPositions(this.state.servoPositions);
+        });
+
     };
 
     private stopAllMotors_ = () => {
@@ -592,22 +688,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         }
     }
 
-    private disableAllServos_ = () => {
-        console.log("Disable all servos");
-        this.setState((prevState) => {
-            const updatedServoPositions = prevState.servoPositions.map((servo) =>
-                ({ ...servo, enable: false })
-            );
 
-            return {
-                servoPositions: updatedServoPositions,
-            };
-        }, () => {
-            console.log("After set state servoPositions: ", this.state.servoPositions);
-            this.props.storeServoPositions(this.state.servoPositions);
-        });
-
-    };
 
     private onSectionSelect_ = (section: "Motor" | "Servo" | "Sensor") => {
         console.log("Section selected: ", section);
@@ -654,7 +735,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             return (
                 <SectionsColumn theme={theme}>
 
-                    <SettingContainer style={{justifyContent:'flex-end'}}theme={theme}>
+                    <SettingContainer style={{ justifyContent: 'flex-end' }} theme={theme}>
                         <ViewContainer theme={theme}>
                             <SectionInfoText style={{ fontSize: '1.2em' }}>{LocalizedString.lookup(tr('View:'), locale)}</SectionInfoText>
                             <StyledResizeableComboBox
@@ -689,18 +770,21 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     </SettingContainer>
 
 
-                    <SettingContainer theme={theme}>
+                    <SettingContainer theme={theme} >
                         <DynamicGauge
                             minValue={motorMinValue}
                             maxValue={motorMaxValue}
                             initialValue={0}
                             theme={theme}
+                            margins={{ top: 0.095, bottom: 0.02, left: 0.07, right: 0.07 }}
                             onDialChange={this.onMotorChange_}
                             changeValue={this.state.shownMotorValue}
+                            customTickValueConfig={this.state.customTickValueConfig}
+                            customTickLineConfig={this.state.customTickLineConfig}
                             subArcs={motorSubArcs}
                         />
                     </SettingContainer>
-                    <SettingContainer theme={theme} style={{ padding: '1px', paddingBottom: '5px' }}>
+                    <SettingContainer theme={theme}>
                         <StopButton onClick={() => this.stopAllMotors_()} theme={theme}>
                             {LocalizedString.lookup(tr('Stop All Motors'), locale)}
                         </StopButton>
@@ -718,7 +802,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             return (
                 <SectionsColumn theme={theme}>
                     <SettingContainer theme={theme}>
-                        <ControlContainer style={{marginTop:'0.9em'}}>
+                        <ControlContainer style={{ marginTop: '0.9em' }}>
                             <SectionInfoText style={{ fontSize: '1.44em' }}>{LocalizedString.lookup(tr('Servo Port:'), locale)}</SectionInfoText>
                             <StyledResizeableComboBox
                                 options={SERVO_OPTIONS}
@@ -735,7 +819,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     </SettingContainer>
 
 
-                    <SettingContainer theme={theme}>
+                    <SettingContainer theme={theme} >
                         <DynamicGauge
                             minValue={servoMinValue}
                             maxValue={servoMaxValue}
@@ -743,10 +827,12 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                             theme={theme}
                             onDialChange={this.onServoChange_}
                             changeValue={this.state.shownServoValue}
+                            customTickValueConfig={this.state.customTickValueConfig}
+                            customTickLineConfig={this.state.customTickLineConfig}
                             subArcs={servoSubArcs}
                         />
                     </SettingContainer>
-                    <SettingContainer theme={theme} style={{ padding: '1px', paddingBottom: '5px' }}>
+                    <SettingContainer theme={theme} style={{ padding: '1px', paddingBottom: '5px', }}>
                         <EnableButton onClick={() => this.flipEnableServo_(shownServo)} theme={theme} $enabled={this.state.servoPositions.find(servo => servo.name === shownServo)?.enable}>
                             {this.state.servoPositions.find(servo => servo.name === shownServo)?.enable
                                 ? LocalizedString.lookup(tr('Disable Servo'), locale)
