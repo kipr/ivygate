@@ -11,12 +11,15 @@ import ComboBox from './components/ComboBox';
 import ResizeableComboBox from './components/ResizeableComboBox';
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
+    propedSensorValues?: {};
+
     storeMotorPositions: (motorPositions: { [key: string]: number }) => void;
     getMotorPositions: () => { [key: string]: number };
     storeServoPositions: (servoPositions: ServoType[]) => void;
     getServoPositions: () => ServoType[];
     stopMotor: (motor: Motors) => void;
     stopAllMotors: () => void;
+    sensorDisplayShown: (visible: boolean) => void;
     //enableServo: (servo: Servos, enable: boolean | undefined) => void;
 }
 interface SectionProps {
@@ -419,6 +422,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     componentWillUnmount(): void {
         console.log("MotorServoSensorDisplay UNMOUNTED");
+        this.props.sensorDisplayShown(false);
     }
 
     async componentDidUpdate(prevProps: Props, prevState: State): Promise<void> {
@@ -427,6 +431,10 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
+        if (prevProps.propedSensorValues !== this.props.propedSensorValues) {
+            //console.log("MotorServoSensorDisplay compDidUpdate props propedSensorValues CHANGED from: ", prevProps.propedSensorValues, "to: ", this.props.propedSensorValues);
+
+        }
         if (prevProps.theme !== this.props.theme) {
             console.log("MotorServoSensorDisplay compDidUpdate props theme CHANGED from: ", prevProps.theme);
             this.setState({
@@ -692,6 +700,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     private onSectionSelect_ = (section: "Motor" | "Servo" | "Sensor") => {
         console.log("Section selected: ", section);
+        if (section === "Sensor") {
+            this.props.sensorDisplayShown(true);
+
+        }
+        else {
+            this.props.sensorDisplayShown(false);
+        }
+
         if (section === "Servo") {
             console.log("Setting shownServoValue to: ", this.state.servoPositions[0].value);
             this.setState({
@@ -701,7 +717,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         this.setState({
             selectedSection: section,
         }, () => {
-            console.log("Section selected: ", this.state.selectedSection);
+            //console.log("Section selected: ", this.state.selectedSection);
         })
     };
 
@@ -849,14 +865,16 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         };
         const sensorSection = () => {
             const { theme } = this.props;
+
             return (
+
                 <SectionsColumn theme={theme} style={{ paddingBottom: '10px' }}>
 
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText>{LocalizedString.lookup(tr('Analog Sensors'), locale)}</SectionTitleText>
                     </SectionTitleContainer>
                     <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
+                        {/* {Object.entries(this.state.sensorValues)
                             .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ANALOG")) // Filter only "DIGITAL" entries
                             .map(([sensorCategory, categoryValue], index) => (
                                 typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
@@ -872,7 +890,11 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                         <SectionInfoText>{categoryValue}</SectionInfoText>
                                     </SensorContainer>
                                 )
-                            ))}
+                            ))} */}
+                        <SensorContainer theme={theme}>
+                            <SectionText>{`Analog 0:`}</SectionText>
+                            <SectionInfoText>{`${this.props.propedSensorValues}`}</SectionInfoText>
+                        </SensorContainer>
                     </SensorTypeContainer>
 
                     <ContainerSeparator theme={theme} />
