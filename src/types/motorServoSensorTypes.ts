@@ -131,13 +131,13 @@ export const DEFAULT_SENSORS: {
   accelerometers: { [key: string]: number };
   gyroscopes: { [key: string]: number };
   magnetometers: { [key: string]: number };
-  button: number;
+  Button: number;
 } = {
   analogs: DEFAULT_ANALOG_SENSORS,
   digitals: DEFAULT_DIGITAL_SENSORS,
   accelerometers: DEFAULT_ACCELEROMETER_SENSORS,
   gyroscopes: DEFAULT_GYROSCOPE_SENSORS,
   magnetometers: DEFAULT_MAGNETOMETER_SENSORS,
-  button: 0,
+  Button: 0,
 
 };
