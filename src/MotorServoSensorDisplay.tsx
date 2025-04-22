@@ -4,11 +4,12 @@ import LocalizedString from './util/LocalizedString';
 import { ThemeProps } from './theme';
 import { StyleProps } from './style';
 import { styled } from 'styletron-react';
-
+import { Fa } from "./components/Fa";
 import { Motors, Servos, Sensors, MotorView, ServoType, DEFAULT_SENSORS, DEFAULT_MOTORS, } from './types/motorServoSensorTypes';
 import DynamicGauge from './components/DynamicGauge';
 import ComboBox from './components/ComboBox';
 import ResizeableComboBox from './components/ResizeableComboBox';
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
     propedSensorValues?: {};
@@ -20,6 +21,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
     stopMotor: (motor: Motors) => void;
     stopAllMotors: () => void;
     sensorDisplayShown: (visible: boolean) => void;
+    sensorSelection: (section: 'Analog' | 'Digital' | 'Accelerometer' | 'Gyroscope' | 'Magnetometer' | 'Button') => void;
     //enableServo: (servo: Servos, enable: boolean | undefined) => void;
 }
 interface SectionProps {
@@ -58,9 +60,10 @@ interface MotorServoSensorDisplayState {
         accelerometers: { [key: string]: number }
         gyroscopes: { [key: string]: number }
         magnetometers: { [key: string]: number }
-        button: number
+        Button: number
     };
 
+    selectedSensorSection: 'Analog' | 'Digital' | 'Accelerometer' | 'Gyroscope' | 'Magnetometer' | 'Button';
     customTickValueConfig?: {};
     customTickLineConfig?: {};
 
@@ -150,7 +153,9 @@ const SensorContainer = styled('div', (props: ThemeProps) => ({
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'center',
+    alignItems: 'space-between',
+    height: '20%',
+   justifyContent: 'flex-start',
     //  padding: '3px',
 }));
 
@@ -167,6 +172,13 @@ const ViewContainer = styled('div', (props: ThemeProps) => ({
 
 }));
 
+const DropIcon = styled(Fa, {
+    position: 'relative',
+    width: '15px',
+    left: '3%',
+    top: '50%',
+    transform: 'translateY(-50%)',
+});
 
 const SectionTitleContainer = styled('div', (props: ThemeProps) => ({
     display: 'flex',
@@ -196,11 +208,20 @@ const SectionText = styled('span', {
 
 });
 
-const SectionTitleText = styled('span', {
+const SectionTitleText = styled('span', (props: ThemeProps & { selected: boolean }) => ({
+
+    ':hover': {
+        cursor: 'pointer',
+        backgroundColor: props.theme.hoverOptionBackground
+    },
+    backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
+    boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
+    transition: 'background-color 0.2s, opacity 0.2s',
     paddingRight: '5px',
     fontWeight: 500,
-    fontSize: '1.44em'
-});
+    fontSize: '1.44em',
+    width: '100%',
+}));
 
 
 const SettingInfoSubtext = styled(SectionInfoText, {
@@ -376,6 +397,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 }
             ],
             sensorValues: DEFAULT_SENSORS,
+            selectedSensorSection: null,
             customTickValueConfig: {
                 style: { fontSize: '1.2em', fill: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000' },
             },
@@ -431,8 +453,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
+        if (prevState.selectedSensorSection !== this.state.selectedSensorSection) {
+            console.log("MotorServoSensorDisplay compDidUpdate state selectedSensorSection CHANGED from: ", prevState.selectedSensorSection);
+            console.log("MotorServoSensorDisplay compDidUpdate state selectedSensorSection CHANGED to: ", this.state.selectedSensorSection);
+
+
+        }
         if (prevProps.propedSensorValues !== this.props.propedSensorValues) {
-            //console.log("MotorServoSensorDisplay compDidUpdate props propedSensorValues CHANGED from: ", prevProps.propedSensorValues, "to: ", this.props.propedSensorValues);
+            console.log("MotorServoSensorDisplay compDidUpdate props propedSensorValues CHANGED from: ", prevProps.propedSensorValues, "to: ", this.props.propedSensorValues);
 
         }
         if (prevProps.theme !== this.props.theme) {
@@ -513,6 +541,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         }
 
     }
+
+    private setSensorSelection(section: 'Analog' | 'Digital' | 'Accelerometer' | 'Gyroscope' | 'Magnetometer' | 'Button') {
+        console.log("setSensorSelection: ", section);
+        if (this.state.selectedSensorSection !== section) {
+            this.props.sensorSelection(section);
+            this.setState({
+                selectedSensorSection: section,
+            });
+        }
+        else {
+            this.props.sensorSelection(null);
+            this.setState({
+                selectedSensorSection: null,
+            });
+        }
+    };
 
     private onMotorSelect_ = (index: number, option: ComboBox.Option) => {
         console.log("Motor selected: ", option.data);
@@ -721,6 +765,156 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         })
     };
 
+    renderSensor = (sensor: string) => {
+        const { theme, propedSensorValues } = this.props;
+        switch (sensor) {
+            case 'Analog':
+                return (
+                    <SensorTypeContainer theme={theme}>
+
+                        {Object.entries(this.state.sensorValues.analogs).map(([key, value], index) => (
+                            <SensorContainer key={`analog-${key}`} theme={theme}>
+                                <SectionText>{`${key}:`}</SectionText>
+                                <SectionInfoText>
+                                    {/* If propedSensorValues exists and has a value for this index, use it */}
+                                    {propedSensorValues && propedSensorValues[index] !== undefined ?
+                                        propedSensorValues[index] :
+                                        value}
+                                </SectionInfoText>
+                            </SensorContainer>
+                        ))}
+                        {/* {Object.entries(this.state.sensorValues)
+                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ANALOG")) // Filter only "DIGITAL" entries
+                            .map(([sensorCategory, categoryValue], index) => (
+                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
+                                    Object.entries(categoryValue).map(([sensor, value]) => (
+                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
+                                            <SectionText>{`${sensor}:`}</SectionText>
+                                            <SectionInfoText>{value}</SectionInfoText>
+                                        </SensorContainer>
+                                    ))
+                                ) : (
+                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
+                                        <SectionText>{`${sensorCategory}:`}</SectionText>
+                                        <SectionInfoText>{categoryValue}</SectionInfoText>
+                                    </SensorContainer>
+                                )
+                            ))} */}
+                        {/* <SensorContainer theme={theme}>
+                            <SectionText>{`Analog 0:`}</SectionText>
+                            <SectionInfoText>{`${this.props.propedSensorValues}`}</SectionInfoText>
+                        </SensorContainer> */}
+                    </SensorTypeContainer>
+                );
+            case 'Digital':
+                return (
+                    <SensorTypeContainer theme={theme}>
+                        {Object.entries(this.state.sensorValues)
+                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("DIGITAL")) // Filter only "DIGITAL" entries
+                            .map(([sensorCategory, categoryValue], index) => (
+                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
+                                    Object.entries(categoryValue).map(([sensor, value]) => (
+                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
+                                            <SectionText>{`${sensor}:`}</SectionText>
+                                            <SectionInfoText>{value}</SectionInfoText>
+                                        </SensorContainer>
+                                    ))
+                                ) : (
+                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
+                                        <SectionText>{`${sensorCategory}:`}</SectionText>
+                                        <SectionInfoText>{categoryValue}</SectionInfoText>
+                                    </SensorContainer>
+                                )
+                            ))}
+                    </SensorTypeContainer>
+                );
+            case 'Accelerometer':
+                return (<SensorTypeContainer theme={theme}>
+                    {Object.entries(this.state.sensorValues)
+                        .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ACCELEROMETER"))
+                        .map(([sensorCategory, categoryValue], index) => (
+                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
+                                Object.entries(categoryValue).map(([sensor, value]) => (
+                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
+                                        <SectionText>{`${sensor}:`}</SectionText>
+                                        <SectionInfoText>{value}</SectionInfoText>
+                                    </SensorContainer>
+                                ))
+                            ) : (
+                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
+                                    <SectionText>{`${sensorCategory}:`}</SectionText>
+                                    <SectionInfoText>{categoryValue}</SectionInfoText>
+                                </SensorContainer>
+                            )
+                        ))}
+                </SensorTypeContainer>
+                );
+            case 'Gyroscope':
+                return (<SensorTypeContainer theme={theme}>
+                    {Object.entries(this.state.sensorValues)
+                        .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("GYROSCOPE"))
+                        .map(([sensorCategory, categoryValue], index) => (
+                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
+                                Object.entries(categoryValue).map(([sensor, value]) => (
+                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
+                                        <SectionText>{`${sensor}:`}</SectionText>
+                                        <SectionInfoText>{value}</SectionInfoText>
+                                    </SensorContainer>
+                                ))
+                            ) : (
+                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
+                                    <SectionText>{`${sensorCategory}:`}</SectionText>
+                                    <SectionInfoText>{categoryValue}</SectionInfoText>
+                                </SensorContainer>
+                            )
+                        ))}
+                </SensorTypeContainer>
+                );
+            case 'Magnetometer':
+                return (<SensorTypeContainer theme={theme}>
+                    {Object.entries(this.state.sensorValues)
+                        .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("MAGNETOMETER"))
+                        .map(([sensorCategory, categoryValue], index) => (
+                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
+                                Object.entries(categoryValue).map(([sensor, value]) => (
+                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
+                                        <SectionText>{`${sensor}:`}</SectionText>
+                                        <SectionInfoText>{value}</SectionInfoText>
+                                    </SensorContainer>
+                                ))
+                            ) : (
+                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
+                                    <SectionText>{`${sensorCategory}:`}</SectionText>
+                                    <SectionInfoText>{categoryValue}</SectionInfoText>
+                                </SensorContainer>
+                            )
+                        ))}
+                </SensorTypeContainer>);
+            case 'Button':
+                return (<SensorTypeContainer theme={theme}>
+                    {Object.entries(this.state.sensorValues)
+                        .filter(([sensorCategory]) => sensorCategory.includes("Button"))
+                        .map(([sensorCategory, categoryValue], index) => (
+                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
+                                Object.entries(categoryValue).map(([sensor, value]) => (
+                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
+                                        <SectionText>{`${sensor}:`}</SectionText>
+                                        <SectionInfoText>{value}</SectionInfoText>
+                                    </SensorContainer>
+                                ))
+                            ) : (
+                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
+                                    <SectionText>{`${sensorCategory}:`}</SectionText>
+                                    <SectionInfoText>{categoryValue}</SectionInfoText>
+                                </SensorContainer>
+                            )
+                        ))}
+                </SensorTypeContainer>);
+
+
+        };
+    };
+
     render() {
         const { props } = this;
         const {
@@ -863,157 +1057,85 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SectionsColumn>
             );
         };
+
+
         const sensorSection = () => {
             const { theme } = this.props;
-
+            const { selectedSensorSection } = this.state;
             return (
 
                 <SectionsColumn theme={theme} style={{ paddingBottom: '10px' }}>
 
                     <SectionTitleContainer theme={theme}>
-                        <SectionTitleText>{LocalizedString.lookup(tr('Analog Sensors'), locale)}</SectionTitleText>
+                        <SectionTitleText
+                            theme={theme}
+                            onClick={() => this.setSensorSelection('Analog')}
+                            selected={selectedSensorSection === 'Analog'}>
+                            {LocalizedString.lookup(tr('Analog Sensors'), locale)}
+                            <DropIcon icon={selectedSensorSection === 'Analog' ? faCaretUp : faCaretDown} />
+                        </SectionTitleText>
+
                     </SectionTitleContainer>
-                    <SensorTypeContainer theme={theme}>
-                        {/* {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ANALOG")) // Filter only "DIGITAL" entries
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))} */}
-                        <SensorContainer theme={theme}>
-                            <SectionText>{`Analog 0:`}</SectionText>
-                            <SectionInfoText>{`${this.props.propedSensorValues}`}</SectionInfoText>
-                        </SensorContainer>
-                    </SensorTypeContainer>
+                    {selectedSensorSection === 'Analog' && this.renderSensor('Analog')}
 
                     <ContainerSeparator theme={theme} />
 
 
                     <SectionTitleContainer theme={theme}>
-                        <SectionTitleText>{LocalizedString.lookup(tr('Digital Sensors'), locale)}</SectionTitleText>
+                        <SectionTitleText
+                            theme={theme}
+                            onClick={() => this.setSensorSelection('Digital')}
+                            selected={selectedSensorSection === 'Digital'}>
+                            {LocalizedString.lookup(tr('Digital Sensors'), locale)}
+                            <DropIcon icon={selectedSensorSection === 'Digital' ? faCaretUp : faCaretDown} />
+                        </SectionTitleText>
                     </SectionTitleContainer>
-                    <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("DIGITAL")) // Filter only "DIGITAL" entries
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))}
-                    </SensorTypeContainer>
-
+                    {selectedSensorSection === 'Digital' && this.renderSensor('Digital')}
+                    <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
-                        <SectionTitleText>{LocalizedString.lookup(tr('Accelerometers'), locale)}</SectionTitleText>
+                        <SectionTitleText
+                            theme={theme}
+                            onClick={() => this.setSensorSelection('Accelerometer')}
+                            selected={selectedSensorSection === 'Accelerometer'}>
+                            {LocalizedString.lookup(tr('Accelerometers'), locale)}
+                            <DropIcon icon={selectedSensorSection === 'Accelerometer' ? faCaretUp : faCaretDown} />
+                        </SectionTitleText>
                     </SectionTitleContainer>
-                    <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ACCELEROMETER"))
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))}
-                    </SensorTypeContainer>
-
+                    {selectedSensorSection === 'Accelerometer' && this.renderSensor('Accelerometer')}
+                    <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
-                        <SectionTitleText>{LocalizedString.lookup(tr('Gyroscope'), locale)}</SectionTitleText>
+                        <SectionTitleText
+                            theme={theme}
+                            onClick={() => this.setSensorSelection('Gyroscope')}
+                            selected={selectedSensorSection === 'Gyroscope'}>
+                            {LocalizedString.lookup(tr('Gyroscopes'), locale)}
+                            <DropIcon icon={selectedSensorSection === 'Gyroscope' ? faCaretUp : faCaretDown} />
+                        </SectionTitleText>
                     </SectionTitleContainer>
-                    <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("GYROSCOPE"))
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))}
-                    </SensorTypeContainer>
-
+                    {selectedSensorSection === 'Gyroscope' && this.renderSensor('Gyroscope')}
+                    <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
-                        <SectionTitleText>{LocalizedString.lookup(tr('Magnetometer'), locale)}</SectionTitleText>
+                        <SectionTitleText
+                            theme={theme}
+                            onClick={() => this.setSensorSelection('Magnetometer')}
+                            selected={selectedSensorSection === 'Magnetometer'}>
+                            {LocalizedString.lookup(tr('Magnetometers'), locale)}
+                            <DropIcon icon={selectedSensorSection === 'Magnetometer' ? faCaretUp : faCaretDown} />
+                        </SectionTitleText>
                     </SectionTitleContainer>
-                    <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("MAGNETOMETER"))
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))}
-                    </SensorTypeContainer>
-
+                    {selectedSensorSection === 'Magnetometer' && this.renderSensor('Magnetometer')}
+                    <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
-                        <SectionTitleText>{LocalizedString.lookup(tr('Buttons'), locale)}</SectionTitleText>
+                        <SectionTitleText
+                            theme={theme}
+                            onClick={() => this.setSensorSelection('Button')}
+                            selected={selectedSensorSection === 'Button'}>
+                            {LocalizedString.lookup(tr('Buttons'), locale)}
+                            <DropIcon icon={selectedSensorSection === 'Button' ? faCaretUp : faCaretDown} />
+                        </SectionTitleText>
                     </SectionTitleContainer>
-                    <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.includes("button"))
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))}
-                    </SensorTypeContainer>
+                    {selectedSensorSection === 'Button' && this.renderSensor('Button')}
+                    <ContainerSeparator theme={theme} />
 
                 </SectionsColumn>
             );
