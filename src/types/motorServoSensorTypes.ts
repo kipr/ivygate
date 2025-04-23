@@ -122,22 +122,41 @@ export type Sensors = {
   accelerometers: AccelerometerSensors;
   gyroscopes: GyroscopeSensors;
   magnetometers: MagnetometerSensors;
-  button: number;
+  Button: number;
 }
 
+export type SensorValues = {
+  Analogs: { [key: string]: number };
+  Digitals: { [key: string]: number };
+  Accelerometers: { [key: string]: number };
+  Gyroscopes: { [key: string]: number };
+  Magnetometers: { [key: string]: number };
+  Button: number;
+}
+export type SensorSelection = {
+  Analog: "Analog";
+  Digital: "Digital";
+  Accelerometer: "Accelerometer";
+  Gyroscope: "Gyroscope";
+  Magnetometer: "Magnetometer";
+  Button: "Button";
+}
+
+export type SensorSelectionKey = keyof SensorSelection;
+
 export const DEFAULT_SENSORS: {
-  analogs: { [key: string]: number };
-  digitals: { [key: string]: number };
-  accelerometers: { [key: string]: number };
-  gyroscopes: { [key: string]: number };
-  magnetometers: { [key: string]: number };
+  Analogs: { [key: string]: number };
+  Digitals: { [key: string]: number };
+  Accelerometers: { [key: string]: number };
+  Gyroscopes: { [key: string]: number };
+  Magnetometers: { [key: string]: number };
   Button: number;
 } = {
-  analogs: DEFAULT_ANALOG_SENSORS,
-  digitals: DEFAULT_DIGITAL_SENSORS,
-  accelerometers: DEFAULT_ACCELEROMETER_SENSORS,
-  gyroscopes: DEFAULT_GYROSCOPE_SENSORS,
-  magnetometers: DEFAULT_MAGNETOMETER_SENSORS,
+  Analogs: DEFAULT_ANALOG_SENSORS,
+  Digitals: DEFAULT_DIGITAL_SENSORS,
+  Accelerometers: DEFAULT_ACCELEROMETER_SENSORS,
+  Gyroscopes: DEFAULT_GYROSCOPE_SENSORS,
+  Magnetometers: DEFAULT_MAGNETOMETER_SENSORS,
   Button: 0,
 
 };
