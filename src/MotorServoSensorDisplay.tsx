@@ -897,17 +897,15 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SensorTypeContainer>);
             case 'Button':
                 return (<SensorTypeContainer theme={theme}>
-                    {Object.entries(this.state.sensorValues.Button).map(([key, value], index) => (
-                        <SensorContainer key={`button-${key}`} theme={theme}>
-                            <SectionText>{`${key}:`}</SectionText>
+                     <SensorContainer theme={theme}>
+                            <SectionText>{"Button: "}</SectionText>
                             <SectionInfoText>
                                 {/* If propedSensorValues exists and has a value for this index, use it */}
                                 {propedButtonValues && propedButtonValues !== undefined ?
-                                    propedButtonValues[index] :
-                                    value}
+                                    propedButtonValues[0] :
+                                    0}
                             </SectionInfoText>
                         </SensorContainer>
-                    ))}
                 </SensorTypeContainer>);
 
 
