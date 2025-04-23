@@ -14,6 +14,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
     propedSensorValues?: SensorValues;
     propedDigitalValues?: number;
+    propedButtonValues?: number;
 
     storeMotorPositions: (motorPositions: { [key: string]: number }) => void;
     getMotorPositions: () => { [key: string]: number };
@@ -773,7 +774,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
     };
 
     renderSensor = (sensor: string) => {
-        const { theme, propedSensorValues, propedDigitalValues } = this.props;
+        const { theme, propedSensorValues, propedDigitalValues, propedButtonValues } = this.props;
         switch (sensor) {
             case 'Analog':
                 return (
@@ -896,23 +897,17 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SensorTypeContainer>);
             case 'Button':
                 return (<SensorTypeContainer theme={theme}>
-                    {Object.entries(this.state.sensorValues)
-                        .filter(([sensorCategory]) => sensorCategory.includes("Button"))
-                        .map(([sensorCategory, categoryValue], index) => (
-                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                Object.entries(categoryValue).map(([sensor, value]) => (
-                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensor}:`}</SectionText>
-                                        <SectionInfoText>{value}</SectionInfoText>
-                                    </SensorContainer>
-                                ))
-                            ) : (
-                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                    <SectionText>{`${sensorCategory}:`}</SectionText>
-                                    <SectionInfoText>{categoryValue}</SectionInfoText>
-                                </SensorContainer>
-                            )
-                        ))}
+                    {Object.entries(this.state.sensorValues.Button).map(([key, value], index) => (
+                        <SensorContainer key={`button-${key}`} theme={theme}>
+                            <SectionText>{`${key}:`}</SectionText>
+                            <SectionInfoText>
+                                {/* If propedSensorValues exists and has a value for this index, use it */}
+                                {propedButtonValues && propedButtonValues !== undefined ?
+                                    propedButtonValues[index] :
+                                    value}
+                            </SectionInfoText>
+                        </SensorContainer>
+                    ))}
                 </SensorTypeContainer>);
 
 
