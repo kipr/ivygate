@@ -844,7 +844,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Gyroscope':
                 return (<SensorTypeContainer theme={theme}>
-                   {Object.entries(this.state.sensorValues.Accelerometers).map(([key, value], index) => (
+                   {Object.entries(this.state.sensorValues.Gyroscopes).map(([key, value], index) => (
                         <SensorContainer key={`gyro-${key}`} theme={theme}>
                             <SectionText>{`${key}:`}</SectionText>
                             <SectionInfoText>
@@ -860,7 +860,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Magnetometer':
                 return (<SensorTypeContainer theme={theme}>
-                   {Object.entries(this.state.sensorValues.Accelerometers).map(([key, value], index) => (
+                   {Object.entries(this.state.sensorValues.Magnetometers).map(([key, value], index) => (
                         <SensorContainer key={`magneto-${key}`} theme={theme}>
                             <SectionText>{`${key}:`}</SectionText>
                             <SectionInfoText>
