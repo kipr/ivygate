@@ -5,14 +5,14 @@ import { ThemeProps } from './theme';
 import { StyleProps } from './style';
 import { styled } from 'styletron-react';
 import { Fa } from "./components/Fa";
-import { Motors, Servos, Sensors, MotorView, ServoType, DEFAULT_SENSORS, DEFAULT_MOTORS, } from './types/motorServoSensorTypes';
+import { Motors, Servos, SensorSelectionKey, MotorView, ServoType, SensorValues,DEFAULT_SENSORS, DEFAULT_MOTORS, } from './types/motorServoSensorTypes';
 import DynamicGauge from './components/DynamicGauge';
 import ComboBox from './components/ComboBox';
 import ResizeableComboBox from './components/ResizeableComboBox';
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
-    propedSensorValues?: {};
+    propedSensorValues?: SensorValues;
 
     storeMotorPositions: (motorPositions: { [key: string]: number }) => void;
     getMotorPositions: () => { [key: string]: number };
@@ -21,7 +21,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
     stopMotor: (motor: Motors) => void;
     stopAllMotors: () => void;
     sensorDisplayShown: (visible: boolean) => void;
-    sensorSelection: (section: 'Analog' | 'Digital' | 'Accelerometer' | 'Gyroscope' | 'Magnetometer' | 'Button') => void;
+    sensorSelections: (selectedSensors: SensorSelectionKey[]) => void;
     //enableServo: (servo: Servos, enable: boolean | undefined) => void;
 }
 interface SectionProps {
@@ -55,15 +55,15 @@ interface MotorServoSensorDisplayState {
     servoSubArcs: { limit: number, color: string, tooltip?: { text: string } }[];
 
     sensorValues: {
-        analogs: { [key: string]: number }
-        digitals: { [key: string]: number }
-        accelerometers: { [key: string]: number }
-        gyroscopes: { [key: string]: number }
-        magnetometers: { [key: string]: number }
-        Button: number
+        Analogs: { [key: string]: number };
+        Digitals: { [key: string]: number };
+        Accelerometers: { [key: string]: number };
+        Gyroscopes: { [key: string]: number };
+        Magnetometers: { [key: string]: number };
+        Button: number;
     };
 
-    selectedSensorSection: 'Analog' | 'Digital' | 'Accelerometer' | 'Gyroscope' | 'Magnetometer' | 'Button';
+    selectedSensors: SensorSelectionKey[] | null;
     customTickValueConfig?: {};
     customTickLineConfig?: {};
 
@@ -397,7 +397,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 }
             ],
             sensorValues: DEFAULT_SENSORS,
-            selectedSensorSection: null,
+            selectedSensors: [],
             customTickValueConfig: {
                 style: { fontSize: '1.2em', fill: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000' },
             },
@@ -453,9 +453,9 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
-        if (prevState.selectedSensorSection !== this.state.selectedSensorSection) {
-            console.log("MotorServoSensorDisplay compDidUpdate state selectedSensorSection CHANGED from: ", prevState.selectedSensorSection);
-            console.log("MotorServoSensorDisplay compDidUpdate state selectedSensorSection CHANGED to: ", this.state.selectedSensorSection);
+        if (prevState.selectedSensors !== this.state.selectedSensors) {
+            console.log("MotorServoSensorDisplay compDidUpdate state selectedSensors CHANGED from: ", prevState.selectedSensors);
+            console.log("MotorServoSensorDisplay compDidUpdate state selectedSensors CHANGED to: ", this.state.selectedSensors);
 
 
         }
@@ -544,16 +544,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     private setSensorSelection(section: 'Analog' | 'Digital' | 'Accelerometer' | 'Gyroscope' | 'Magnetometer' | 'Button') {
         console.log("setSensorSelection: ", section);
-        if (this.state.selectedSensorSection !== section) {
-            this.props.sensorSelection(section);
+        const { selectedSensors } = this.state;
+        if (selectedSensors && selectedSensors.includes(section)) {
+         
+            const updated = selectedSensors.filter(s => s !== section);
             this.setState({
-                selectedSensorSection: section,
+                selectedSensors: updated.length > 0 ? updated : [],
+            }, () => {
+                this.props.sensorSelections(this.state.selectedSensors);
             });
-        }
-        else {
-            this.props.sensorSelection(null);
+        } else {
+            
+            const updated = [...(selectedSensors || []), section];
             this.setState({
-                selectedSensorSection: null,
+                selectedSensors: updated,
+            }, () => {
+                this.props.sensorSelections(this.state.selectedSensors);
             });
         }
     };
@@ -772,13 +778,13 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 return (
                     <SensorTypeContainer theme={theme}>
 
-                        {Object.entries(this.state.sensorValues.analogs).map(([key, value], index) => (
+                        {Object.entries(this.state.sensorValues.Analogs).map(([key, value], index) => (
                             <SensorContainer key={`analog-${key}`} theme={theme}>
                                 <SectionText>{`${key}:`}</SectionText>
                                 <SectionInfoText>
                                     {/* If propedSensorValues exists and has a value for this index, use it */}
-                                    {propedSensorValues && propedSensorValues[index] !== undefined ?
-                                        propedSensorValues[index] :
+                                    {propedSensorValues.Analogs && propedSensorValues.Analogs[index] !== undefined ?
+                                        propedSensorValues.Analogs[index] :
                                         value}
                                 </SectionInfoText>
                             </SensorContainer>
@@ -809,23 +815,17 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             case 'Digital':
                 return (
                     <SensorTypeContainer theme={theme}>
-                        {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("DIGITAL")) // Filter only "DIGITAL" entries
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))}
+                         {Object.entries(this.state.sensorValues.Digitals).map(([key, value], index) => (
+                            <SensorContainer key={`digital-${key}`} theme={theme}>
+                                <SectionText>{`${key}:`}</SectionText>
+                                <SectionInfoText>
+                                    {/* If propedSensorValues exists and has a value for this index, use it */}
+                                    {propedSensorValues.Digitals && propedSensorValues.Digitals[index] !== undefined ?
+                                        propedSensorValues.Digitals[index] :
+                                        value}
+                                </SectionInfoText>
+                            </SensorContainer>
+                        ))}
                     </SensorTypeContainer>
                 );
             case 'Accelerometer':
@@ -1061,22 +1061,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
         const sensorSection = () => {
             const { theme } = this.props;
-            const { selectedSensorSection } = this.state;
+            const { selectedSensors } = this.state;
             return (
-
+                console.log("Sensor section selectedSensors: ", selectedSensors),
                 <SectionsColumn theme={theme} style={{ paddingBottom: '10px' }}>
 
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText
                             theme={theme}
                             onClick={() => this.setSensorSelection('Analog')}
-                            selected={selectedSensorSection === 'Analog'}>
+                            selected={selectedSensors.includes('Analog')}>
                             {LocalizedString.lookup(tr('Analog Sensors'), locale)}
-                            <DropIcon icon={selectedSensorSection === 'Analog' ? faCaretUp : faCaretDown} />
+                            <DropIcon icon={selectedSensors.includes('Analog') ? faCaretUp : faCaretDown} />
                         </SectionTitleText>
 
                     </SectionTitleContainer>
-                    {selectedSensorSection === 'Analog' && this.renderSensor('Analog')}
+                    {selectedSensors.includes('Analog') && this.renderSensor('Analog')}
 
                     <ContainerSeparator theme={theme} />
 
@@ -1085,56 +1085,56 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                         <SectionTitleText
                             theme={theme}
                             onClick={() => this.setSensorSelection('Digital')}
-                            selected={selectedSensorSection === 'Digital'}>
+                            selected={selectedSensors.includes('Digital')}>
                             {LocalizedString.lookup(tr('Digital Sensors'), locale)}
-                            <DropIcon icon={selectedSensorSection === 'Digital' ? faCaretUp : faCaretDown} />
+                            <DropIcon icon={selectedSensors.includes('Digital') ? faCaretUp : faCaretDown} />
                         </SectionTitleText>
                     </SectionTitleContainer>
-                    {selectedSensorSection === 'Digital' && this.renderSensor('Digital')}
+                    {selectedSensors.includes('Digital') && this.renderSensor('Digital')}
                     <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText
                             theme={theme}
                             onClick={() => this.setSensorSelection('Accelerometer')}
-                            selected={selectedSensorSection === 'Accelerometer'}>
+                            selected={selectedSensors.includes('Accelerometer')}>
                             {LocalizedString.lookup(tr('Accelerometers'), locale)}
-                            <DropIcon icon={selectedSensorSection === 'Accelerometer' ? faCaretUp : faCaretDown} />
+                            <DropIcon icon={selectedSensors.includes('Accelerometer') ? faCaretUp : faCaretDown} />
                         </SectionTitleText>
                     </SectionTitleContainer>
-                    {selectedSensorSection === 'Accelerometer' && this.renderSensor('Accelerometer')}
+                    {selectedSensors.includes('Accelerometer') && this.renderSensor('Accelerometer')}
                     <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText
                             theme={theme}
                             onClick={() => this.setSensorSelection('Gyroscope')}
-                            selected={selectedSensorSection === 'Gyroscope'}>
+                            selected={selectedSensors.includes('Gyroscope')}>
                             {LocalizedString.lookup(tr('Gyroscopes'), locale)}
-                            <DropIcon icon={selectedSensorSection === 'Gyroscope' ? faCaretUp : faCaretDown} />
+                            <DropIcon icon={selectedSensors.includes('Gyroscope') ? faCaretUp : faCaretDown} />
                         </SectionTitleText>
                     </SectionTitleContainer>
-                    {selectedSensorSection === 'Gyroscope' && this.renderSensor('Gyroscope')}
+                    {selectedSensors.includes('Gyroscope') && this.renderSensor('Gyroscope')}
                     <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText
                             theme={theme}
                             onClick={() => this.setSensorSelection('Magnetometer')}
-                            selected={selectedSensorSection === 'Magnetometer'}>
+                            selected={selectedSensors.includes('Magnetometer')}>
                             {LocalizedString.lookup(tr('Magnetometers'), locale)}
-                            <DropIcon icon={selectedSensorSection === 'Magnetometer' ? faCaretUp : faCaretDown} />
+                            <DropIcon icon={selectedSensors.includes('Magnetometer') ? faCaretUp : faCaretDown} />
                         </SectionTitleText>
                     </SectionTitleContainer>
-                    {selectedSensorSection === 'Magnetometer' && this.renderSensor('Magnetometer')}
+                    {selectedSensors.includes('Magnetometer') && this.renderSensor('Magnetometer')}
                     <ContainerSeparator theme={theme} />
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText
                             theme={theme}
                             onClick={() => this.setSensorSelection('Button')}
-                            selected={selectedSensorSection === 'Button'}>
+                            selected={selectedSensors.includes('Button')}>
                             {LocalizedString.lookup(tr('Buttons'), locale)}
-                            <DropIcon icon={selectedSensorSection === 'Button' ? faCaretUp : faCaretDown} />
+                            <DropIcon icon={selectedSensors.includes('Button') ? faCaretUp : faCaretDown} />
                         </SectionTitleText>
                     </SectionTitleContainer>
-                    {selectedSensorSection === 'Button' && this.renderSensor('Button')}
+                    {selectedSensors.includes('Button') && this.renderSensor('Button')}
                     <ContainerSeparator theme={theme} />
 
                 </SectionsColumn>
