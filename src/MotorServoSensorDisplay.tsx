@@ -775,6 +775,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     renderSensor = (sensor: string) => {
         const { theme, propedSensorValues, propedDigitalValues, propedButtonValues } = this.props;
+        console.log("renderSensor: ", sensor);
         switch (sensor) {
             case 'Analog':
                 return (
