@@ -13,8 +13,13 @@ import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
     propedSensorValues?: SensorValues;
+    propedAnalogValues?: number;
     propedDigitalValues?: number;
+    propedAccelValues?: number;
+    propedGyroValues?: number;
+    propedMagnetoValues?: number;
     propedButtonValues?: number;
+
 
     storeMotorPositions: (motorPositions: { [key: string]: number }) => void;
     getMotorPositions: () => { [key: string]: number };
@@ -774,7 +779,16 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
     };
 
     renderSensor = (sensor: string) => {
-        const { theme, propedSensorValues, propedDigitalValues, propedButtonValues } = this.props;
+        const {
+            theme,
+            propedSensorValues,
+            propedAnalogValues,
+            propedDigitalValues,
+            propedAccelValues,
+            propedGyroValues,
+            propedMagnetoValues,
+            propedButtonValues
+        } = this.props;
         console.log("renderSensor: ", sensor);
         switch (sensor) {
             case 'Analog':
@@ -792,27 +806,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 </SectionInfoText>
                             </SensorContainer>
                         ))}
-                        {/* {Object.entries(this.state.sensorValues)
-                            .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ANALOG")) // Filter only "DIGITAL" entries
-                            .map(([sensorCategory, categoryValue], index) => (
-                                typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                    Object.entries(categoryValue).map(([sensor, value]) => (
-                                        <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                            <SectionText>{`${sensor}:`}</SectionText>
-                                            <SectionInfoText>{value}</SectionInfoText>
-                                        </SensorContainer>
-                                    ))
-                                ) : (
-                                    <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensorCategory}:`}</SectionText>
-                                        <SectionInfoText>{categoryValue}</SectionInfoText>
-                                    </SensorContainer>
-                                )
-                            ))} */}
-                        {/* <SensorContainer theme={theme}>
-                            <SectionText>{`Analog 0:`}</SectionText>
-                            <SectionInfoText>{`${this.props.propedSensorValues}`}</SectionInfoText>
-                        </SensorContainer> */}
+
                     </SensorTypeContainer>
                 );
             case 'Digital':
@@ -823,9 +817,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 <SectionText>{`${key}:`}</SectionText>
                                 <SectionInfoText>
                                     {/* If propedSensorValues exists and has a value for this index, use it */}
-                                    {/* {propedSensorValues.Digitals && propedSensorValues.Digitals[index] !== undefined ?
-                                        propedSensorValues.Digitals[index] :
-                                        value} */}
+
                                     {propedDigitalValues && propedDigitalValues[index] !== undefined ?
                                         propedDigitalValues[index] :
                                         value}
@@ -836,77 +828,62 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Accelerometer':
                 return (<SensorTypeContainer theme={theme}>
-                    {Object.entries(this.state.sensorValues)
-                        .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("ACCELEROMETER"))
-                        .map(([sensorCategory, categoryValue], index) => (
-                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                Object.entries(categoryValue).map(([sensor, value]) => (
-                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensor}:`}</SectionText>
-                                        <SectionInfoText>{value}</SectionInfoText>
-                                    </SensorContainer>
-                                ))
-                            ) : (
-                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                    <SectionText>{`${sensorCategory}:`}</SectionText>
-                                    <SectionInfoText>{categoryValue}</SectionInfoText>
-                                </SensorContainer>
-                            )
-                        ))}
+                    {Object.entries(this.state.sensorValues.Accelerometers).map(([key, value], index) => (
+                        <SensorContainer key={`accel-${key}`} theme={theme}>
+                            <SectionText>{`${key}:`}</SectionText>
+                            <SectionInfoText>
+                                {/* If propedSensorValues exists and has a value for this index, use it */}
+
+                                {propedAccelValues && propedAccelValues[index] !== undefined ?
+                                    propedAccelValues[index] :
+                                    value}
+                            </SectionInfoText>
+                        </SensorContainer>
+                    ))}
                 </SensorTypeContainer>
                 );
             case 'Gyroscope':
                 return (<SensorTypeContainer theme={theme}>
-                    {Object.entries(this.state.sensorValues)
-                        .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("GYROSCOPE"))
-                        .map(([sensorCategory, categoryValue], index) => (
-                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                Object.entries(categoryValue).map(([sensor, value]) => (
-                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensor}:`}</SectionText>
-                                        <SectionInfoText>{value}</SectionInfoText>
-                                    </SensorContainer>
-                                ))
-                            ) : (
-                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                    <SectionText>{`${sensorCategory}:`}</SectionText>
-                                    <SectionInfoText>{categoryValue}</SectionInfoText>
-                                </SensorContainer>
-                            )
-                        ))}
+                   {Object.entries(this.state.sensorValues.Accelerometers).map(([key, value], index) => (
+                        <SensorContainer key={`gyro-${key}`} theme={theme}>
+                            <SectionText>{`${key}:`}</SectionText>
+                            <SectionInfoText>
+                                {/* If propedSensorValues exists and has a value for this index, use it */}
+
+                                {propedGyroValues && propedGyroValues[index] !== undefined ?
+                                    propedGyroValues[index] :
+                                    value}
+                            </SectionInfoText>
+                        </SensorContainer>
+                    ))}
                 </SensorTypeContainer>
                 );
             case 'Magnetometer':
                 return (<SensorTypeContainer theme={theme}>
-                    {Object.entries(this.state.sensorValues)
-                        .filter(([sensorCategory]) => sensorCategory.toUpperCase().includes("MAGNETOMETER"))
-                        .map(([sensorCategory, categoryValue], index) => (
-                            typeof categoryValue === 'object' && !Array.isArray(categoryValue) ? (
-                                Object.entries(categoryValue).map(([sensor, value]) => (
-                                    <SensorContainer key={`${sensorCategory}-${sensor}-${index}`} theme={theme}>
-                                        <SectionText>{`${sensor}:`}</SectionText>
-                                        <SectionInfoText>{value}</SectionInfoText>
-                                    </SensorContainer>
-                                ))
-                            ) : (
-                                <SensorContainer key={`${sensorCategory}-${index}`} theme={theme}>
-                                    <SectionText>{`${sensorCategory}:`}</SectionText>
-                                    <SectionInfoText>{categoryValue}</SectionInfoText>
-                                </SensorContainer>
-                            )
-                        ))}
+                   {Object.entries(this.state.sensorValues.Accelerometers).map(([key, value], index) => (
+                        <SensorContainer key={`magneto-${key}`} theme={theme}>
+                            <SectionText>{`${key}:`}</SectionText>
+                            <SectionInfoText>
+                                {/* If propedSensorValues exists and has a value for this index, use it */}
+
+                                {propedMagnetoValues && propedMagnetoValues[index] !== undefined ?
+                                    propedMagnetoValues[index] :
+                                    value}
+                            </SectionInfoText>
+                        </SensorContainer>
+                    ))}
                 </SensorTypeContainer>);
             case 'Button':
                 return (<SensorTypeContainer theme={theme}>
-                     <SensorContainer theme={theme}>
-                            <SectionText>{"Button: "}</SectionText>
-                            <SectionInfoText>
-                                {/* If propedSensorValues exists and has a value for this index, use it */}
-                                {propedButtonValues && propedButtonValues !== undefined ?
-                                    propedButtonValues[0] :
-                                    0}
-                            </SectionInfoText>
-                        </SensorContainer>
+                    <SensorContainer theme={theme}>
+                        <SectionText>{"Button: "}</SectionText>
+                        <SectionInfoText>
+                            {/* If propedSensorValues exists and has a value for this index, use it */}
+                            {propedButtonValues && propedButtonValues !== undefined ?
+                                propedButtonValues[0] :
+                                0}
+                        </SectionInfoText>
+                    </SensorContainer>
                 </SensorTypeContainer>);
 
 
