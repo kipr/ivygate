@@ -5,7 +5,7 @@ import { ThemeProps } from './theme';
 import { StyleProps } from './style';
 import { styled } from 'styletron-react';
 import { Fa } from "./components/Fa";
-import { Motors, Servos, SensorSelectionKey, MotorView, ServoType, SensorValues,DEFAULT_SENSORS, DEFAULT_MOTORS, } from './types/motorServoSensorTypes';
+import { Motors, Servos, SensorSelectionKey, MotorView, ServoType, SensorValues, DEFAULT_SENSORS, DEFAULT_MOTORS, } from './types/motorServoSensorTypes';
 import DynamicGauge from './components/DynamicGauge';
 import ComboBox from './components/ComboBox';
 import ResizeableComboBox from './components/ResizeableComboBox';
@@ -13,6 +13,7 @@ import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
     propedSensorValues?: SensorValues;
+    propedDigitalValues?: number;
 
     storeMotorPositions: (motorPositions: { [key: string]: number }) => void;
     getMotorPositions: () => { [key: string]: number };
@@ -155,7 +156,7 @@ const SensorContainer = styled('div', (props: ThemeProps) => ({
     alignContent: 'center',
     alignItems: 'space-between',
     height: '20%',
-   justifyContent: 'flex-start',
+    justifyContent: 'flex-start',
     //  padding: '3px',
 }));
 
@@ -546,7 +547,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("setSensorSelection: ", section);
         const { selectedSensors } = this.state;
         if (selectedSensors && selectedSensors.includes(section)) {
-         
+
             const updated = selectedSensors.filter(s => s !== section);
             this.setState({
                 selectedSensors: updated.length > 0 ? updated : [],
@@ -554,7 +555,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 this.props.sensorSelections(this.state.selectedSensors);
             });
         } else {
-            
+
             const updated = [...(selectedSensors || []), section];
             this.setState({
                 selectedSensors: updated,
@@ -772,7 +773,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
     };
 
     renderSensor = (sensor: string) => {
-        const { theme, propedSensorValues } = this.props;
+        const { theme, propedSensorValues, propedDigitalValues } = this.props;
         switch (sensor) {
             case 'Analog':
                 return (
@@ -815,13 +816,16 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             case 'Digital':
                 return (
                     <SensorTypeContainer theme={theme}>
-                         {Object.entries(this.state.sensorValues.Digitals).map(([key, value], index) => (
+                        {Object.entries(this.state.sensorValues.Digitals).map(([key, value], index) => (
                             <SensorContainer key={`digital-${key}`} theme={theme}>
                                 <SectionText>{`${key}:`}</SectionText>
                                 <SectionInfoText>
                                     {/* If propedSensorValues exists and has a value for this index, use it */}
-                                    {propedSensorValues.Digitals && propedSensorValues.Digitals[index] !== undefined ?
+                                    {/* {propedSensorValues.Digitals && propedSensorValues.Digitals[index] !== undefined ?
                                         propedSensorValues.Digitals[index] :
+                                        value} */}
+                                    {propedDigitalValues && propedDigitalValues[index] !== undefined ?
+                                        propedDigitalValues[index] :
                                         value}
                                 </SectionInfoText>
                             </SensorContainer>
