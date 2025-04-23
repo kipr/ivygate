@@ -271,6 +271,8 @@ const StopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
             }
             : {},
     color: props.theme.noButtonColor.textColor,
+    fontSize: '1.2em',
+    fontWeight: 500,
     textShadow: props.theme.noButtonColor.textShadow,
     boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
     ':active': props.onClick && !props.disabled
@@ -291,6 +293,8 @@ const EnableButton = styled(Button, (props: ThemeProps & ClickProps & { $enabled
             }
             : {},
     color: props.$enabled ? props.theme.noButtonColor.textColor : props.theme.yesButtonColor.textColor,
+    fontSize: '1.2em',
+    fontWeight: 500,
     textShadow: props.$enabled ? props.theme.noButtonColor.textShadow : props.theme.yesButtonColor.textShadow,
     boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
     ':active': props.onClick && !props.disabled
@@ -460,6 +464,9 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
+        if(prevState.shownMotorView !== this.state.shownMotorView) {
+
+        }
         if (prevState.selectedSensors !== this.state.selectedSensors) {
             console.log("MotorServoSensorDisplay compDidUpdate state selectedSensors CHANGED from: ", prevState.selectedSensors);
             console.log("MotorServoSensorDisplay compDidUpdate state selectedSensors CHANGED to: ", this.state.selectedSensors);
@@ -472,23 +479,44 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         }
         if (prevProps.theme !== this.props.theme) {
             console.log("MotorServoSensorDisplay compDidUpdate props theme CHANGED from: ", prevProps.theme);
-            this.setState({
-                motorSubArcs: [
-                    {
-                        limit: 0,
-                        color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
-                        tooltip: {
-                            text: 'Reverse'
-                        }
-                    },
-                    {
-                        limit: 1500,
-                        color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
-                        tooltip: {
-                            text: 'Forward'
-                        }
+            let newMotorSubArcs = [];
+            if(this.state.shownMotorView === MotorView.VELOCITY) {
+                newMotorSubArcs = [{
+                    limit: 0,
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                    tooltip: {
+                        text: 'Reverse'
                     }
-                ],
+                },
+                {
+                    limit: 1500,
+                    color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
+                    tooltip: {
+                        text: 'Forward'
+                    }
+                }];
+            }
+            else if (this.state.shownMotorView === MotorView.POWER) {
+                
+                newMotorSubArcs = [{
+                    limit: 0,
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
+                    tooltip: {
+                        text: 'Reverse'
+                    }
+                },
+                {
+                    limit: 100,
+                    color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
+                    tooltip: {
+                        text: 'Forward'
+                    }
+                }];
+            }
+            
+            
+            this.setState({
+                motorSubArcs: newMotorSubArcs,
                 servoSubArcs: [
                     {
                         limit: 100,
@@ -615,14 +643,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 newMotorLimits = { motorMinValue: -1500, motorMaxValue: 1500 };
                 newMotorSubArcs = [{
                     limit: 0,
-                    color: '#FF4E4E',
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                     tooltip: {
                         text: 'Reverse'
                     }
                 },
                 {
                     limit: 1500,
-                    color: '#2BDE3F',
+                    color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
                     tooltip: {
                         text: 'Forward'
                     }
@@ -632,14 +660,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 newMotorLimits = { motorMinValue: -100, motorMaxValue: 100 };
                 newMotorSubArcs = [{
                     limit: 0,
-                    color: '#FF4E4E',
+                    color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                     tooltip: {
                         text: 'Reverse'
                     }
                 },
                 {
                     limit: 100,
-                    color: '#2BDE3F',
+                    color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
                     tooltip: {
                         text: 'Forward'
                     }
@@ -800,8 +828,8 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 <SectionText>{`${key}:`}</SectionText>
                                 <SectionInfoText>
                                     {/* If propedSensorValues exists and has a value for this index, use it */}
-                                    {propedSensorValues.Analogs && propedSensorValues.Analogs[index] !== undefined ?
-                                        propedSensorValues.Analogs[index] :
+                                    {propedAnalogValues && propedAnalogValues[index] !== undefined ?
+                                        propedAnalogValues[index] :
                                         value}
                                 </SectionInfoText>
                             </SensorContainer>
