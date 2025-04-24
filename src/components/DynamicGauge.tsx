@@ -21,7 +21,7 @@ interface DynamicGaugeProps extends ThemeProps, StyleProps {
 interface DynamicGaugeState {
     value: number;
     isEditing: boolean;
-    draftValue: string;
+    draftValue: number;
 }
 interface ClickProps {
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -41,7 +41,7 @@ const GaugeValue = styled('div', (props: ThemeProps & ClickProps) => ({
         backgroundColor: props.theme.hoverOptionBackground
     },
     backgroundColor: props.theme.unselectedBackground,
-    
+
     width: '6ch',
     height: '100%',
     padding: '0.3em',
@@ -73,7 +73,7 @@ export class DynamicGauge extends React.Component<Props, State> {
         this.state = {
             value: props.initialValue,
             isEditing: false,
-            draftValue: this.props.changeValue.toString()
+            draftValue: this.props.changeValue
         };
     }
 
@@ -91,12 +91,15 @@ export class DynamicGauge extends React.Component<Props, State> {
 
         if (prevProps.changeValue !== this.props.changeValue) {
             console.log("DyanmicGauge changeValue CHANGED: ", this.props.changeValue);
-             this.setState({ draftValue: String(this.props.changeValue) });
+            this.setState({ draftValue: this.props.changeValue });
         }
     }
     handleChange = (e) => {
         const value = e.target.value;
-        this.setState({ draftValue: value });
+        if (value <= this.props.maxValue && value >= this.props.minValue) {
+
+            this.setState({ draftValue: value });
+        }
     };
 
     handleSliderChange = (e) => {
@@ -128,7 +131,7 @@ export class DynamicGauge extends React.Component<Props, State> {
     }
     handleClick = (e) => {
         e.stopPropagation();
-        this.setState({ isEditing: true, draftValue: this.props.changeValue.toString() });
+        this.setState({ isEditing: true, draftValue: this.props.changeValue });
     }
     render() {
         const defaultMargins = { top: 0.07, bottom: 0.02, left: 0.07, right: 0.07 };
@@ -166,7 +169,7 @@ export class DynamicGauge extends React.Component<Props, State> {
 
                     style={{ width: '100%', height: '100%' }}
                 />
- 
+
 
                 {/* Input gauge value number */}
                 {isEditing ? (
