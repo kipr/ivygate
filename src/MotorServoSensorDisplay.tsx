@@ -74,6 +74,7 @@ interface MotorServoSensorDisplayState {
     customTickValueConfig?: {};
     customTickLineConfig?: {};
 
+
 }
 interface ClickProps {
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -261,8 +262,31 @@ const SectionName = styled('span', (props: ThemeProps & SectionProps & { selecte
 }));
 
 
+const MotorStopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
+
+    backgroundColor: !props.disabled ? props.theme.noButtonColor.standard : 'lightgrey',
+    border: !props.disabled ? `1px solid ${props.theme.noButtonColor.border}` : '1px solid lightgrey',
+    ':hover':
+        props.onClick && !props.disabled
+            ? {
+                pointer: 'cursor',
+                backgroundColor: props.theme.noButtonColor.hover
+            }
+            : { pointer: 'not-allowed' },
+    color: props.theme.noButtonColor.textColor,
+    fontSize: '1.2em',
+    fontWeight: 500,
+    textShadow: props.theme.noButtonColor.textShadow,
+    boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+    ':active': props.onClick && !props.disabled
+        ? {
+            boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+            transform: 'translateY(1px, 1px)',
+        }
+        : {},
+}));
 const StopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
-    backgroundColor: props.theme.noButtonColor.standard,
+    backgroundColor: !props.disabled ? props.theme.noButtonColor.standard : 'lightgrey',
     border: `1px solid ${props.theme.noButtonColor.border}`,
     ':hover':
         props.onClick && !props.disabled
@@ -285,7 +309,7 @@ const StopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
 
 const EnableButton = styled(Button, (props: ThemeProps & ClickProps & { $enabled?: boolean }) => ({
     backgroundColor: props.$enabled ? props.theme.noButtonColor.standard : props.theme.yesButtonColor.standard,
-    border: `1px solid ${props.theme.noButtonColor.border}`,
+    border: props.$enabled ? `1px solid ${props.theme.noButtonColor.border}` : `1px solid ${props.theme.yesButtonColor.border}`,
     ':hover':
         props.onClick && !props.disabled
             ? {
@@ -342,6 +366,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             shownMotorValue: 0,
             motorPositions: DEFAULT_MOTORS,
             shownMotorView: MotorView.VELOCITY,
+
             motorMinValue: -1500,
             motorMaxValue: 1500,
             motorSubArcs: [
@@ -464,7 +489,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("MotorServoSensorDisplay compDidUpdate prevState: ", prevState);
         console.log("MotorServoSensorDisplay compDidUpdate state: ", this.state);
 
-        if(prevState.shownMotorView !== this.state.shownMotorView) {
+        if (prevState.shownMotorView !== this.state.shownMotorView) {
 
         }
         if (prevState.selectedSensors !== this.state.selectedSensors) {
@@ -480,7 +505,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         if (prevProps.theme !== this.props.theme) {
             console.log("MotorServoSensorDisplay compDidUpdate props theme CHANGED from: ", prevProps.theme);
             let newMotorSubArcs = [];
-            if(this.state.shownMotorView === MotorView.VELOCITY) {
+            if (this.state.shownMotorView === MotorView.VELOCITY) {
                 newMotorSubArcs = [{
                     limit: 0,
                     color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
@@ -497,7 +522,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 }];
             }
             else if (this.state.shownMotorView === MotorView.POWER) {
-                
+
                 newMotorSubArcs = [{
                     limit: 0,
                     color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
@@ -513,8 +538,10 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     }
                 }];
             }
-            
-            
+
+
+
+
             this.setState({
                 motorSubArcs: newMotorSubArcs,
                 servoSubArcs: [
@@ -690,6 +717,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     [this.newMotorRef.current]: value,
                 },
                 shownMotorValue: value,
+
             }, () => {
                 this.props.storeMotorPositions(this.state.motorPositions);
             });
@@ -759,6 +787,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 [Motors.MOTOR3]: 0,
             },
             shownMotorValue: 0,
+
         }, () => {
             this.props.storeMotorPositions(this.state.motorPositions);
             this.props.stopAllMotors();
@@ -774,6 +803,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     [this.newMotorRef.current]: 0,
                 },
                 shownMotorValue: 0,
+                //motorRunning: ) ? false : true
             }, () => {
                 this.props.storeMotorPositions(this.state.motorPositions);
                 this.props.stopMotor(this.newMotorRef.current);
@@ -818,6 +848,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             propedButtonValues
         } = this.props;
         console.log("renderSensor: ", sensor);
+        console.log("renderSensor props: ", this.props);
         switch (sensor) {
             case 'Analog':
                 return (
@@ -872,7 +903,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Gyroscope':
                 return (<SensorTypeContainer theme={theme}>
-                   {Object.entries(this.state.sensorValues.Gyroscopes).map(([key, value], index) => (
+                    {Object.entries(this.state.sensorValues.Gyroscopes).map(([key, value], index) => (
                         <SensorContainer key={`gyro-${key}`} theme={theme}>
                             <SectionText>{`${key}:`}</SectionText>
                             <SectionInfoText>
@@ -888,7 +919,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Magnetometer':
                 return (<SensorTypeContainer theme={theme}>
-                   {Object.entries(this.state.sensorValues.Magnetometers).map(([key, value], index) => (
+                    {Object.entries(this.state.sensorValues.Magnetometers).map(([key, value], index) => (
                         <SensorContainer key={`magneto-${key}`} theme={theme}>
                             <SectionText>{`${key}:`}</SectionText>
                             <SectionInfoText>
@@ -998,12 +1029,12 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                         />
                     </SettingContainer>
                     <SettingContainer theme={theme}>
-                        <StopButton onClick={() => this.stopAllMotors_()} theme={theme}>
+                        <MotorStopButton disabled={!(Object.keys(this.state.motorPositions).some((key) => this.state.motorPositions[key] !== 0))} onClick={() => this.stopAllMotors_()} theme={theme}>
                             {LocalizedString.lookup(tr('Stop All Motors'), locale)}
-                        </StopButton>
-                        <StopButton onClick={() => this.stopCurrentMotor_()} theme={theme}>
+                        </MotorStopButton>
+                        <MotorStopButton disabled={Number(this.state.shownMotorValue) === 0} onClick={() => this.stopCurrentMotor_()} theme={theme} >
                             {LocalizedString.lookup(tr('Stop Current Motor'), locale)}
-                        </StopButton>
+                        </MotorStopButton>
 
                     </SettingContainer>
                 </SectionsColumn>
@@ -1046,18 +1077,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                         />
                     </SettingContainer>
                     <SettingContainer theme={theme} style={{ padding: '1px', paddingBottom: '5px', }}>
+
+                        <StopButton disabled={Object.values(this.state.servoPositions).every(
+                            (servo) => servo.enable === false
+                        )} onClick={() => this.disableAllServos_()} theme={theme}>
+                            {LocalizedString.lookup(tr('Disable All Servos'), locale)}
+                        </StopButton>
                         <EnableButton onClick={() => this.flipEnableServo_(shownServo)} theme={theme} $enabled={this.state.servoPositions.find(servo => servo.name === shownServo)?.enable}>
                             {this.state.servoPositions.find(servo => servo.name === shownServo)?.enable
                                 ? LocalizedString.lookup(tr('Disable Servo'), locale)
                                 : LocalizedString.lookup(tr('Enable Servo'), locale)}
                         </EnableButton>
 
-                        <StopButton onClick={() => this.disableAllServos_()} theme={theme}>
-                            {LocalizedString.lookup(tr('Disable All Servos'), locale)}
-                        </StopButton>
+
 
                     </SettingContainer>
-                </SectionsColumn>
+                </SectionsColumn >
             );
         };
 
@@ -1166,7 +1201,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     {selectedSection == "Servo" && servoSection()}
                     {selectedSection == "Sensor" && sensorSection()}
                 </MotorServoSensorContainer>
-            </SidePanel>
+            </SidePanel >
         );
     }
 }
