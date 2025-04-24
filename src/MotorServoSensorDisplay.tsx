@@ -21,7 +21,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
     propedButtonValues?: number;
 
 
-    storeMotorPositions: (motorPositions: { [key: string]: number }) => void;
+    storeMotorPositions: (view: 'Power' | 'Velocity', motorPositions: { [key: string]: number }) => void;
     getMotorPositions: () => { [key: string]: number };
     storeServoPositions: (servoPositions: ServoType[]) => void;
     getServoPositions: () => ServoType[];
@@ -287,7 +287,7 @@ const MotorStopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
 }));
 const StopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
     backgroundColor: !props.disabled ? props.theme.noButtonColor.standard : 'lightgrey',
-    border: `1px solid ${props.theme.noButtonColor.border}`,
+    border: !props.disabled ? `1px solid ${props.theme.noButtonColor.border}` : '1px solid lightgrey',
     ':hover':
         props.onClick && !props.disabled
             ? {
@@ -719,7 +719,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 shownMotorValue: value,
 
             }, () => {
-                this.props.storeMotorPositions(this.state.motorPositions);
+                this.props.storeMotorPositions(this.state.shownMotorView, this.state.motorPositions);
             });
         }
     };
@@ -789,7 +789,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             shownMotorValue: 0,
 
         }, () => {
-            this.props.storeMotorPositions(this.state.motorPositions);
+            this.props.storeMotorPositions(this.state.shownMotorView,this.state.motorPositions);
             this.props.stopAllMotors();
         });
     };
@@ -805,7 +805,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 shownMotorValue: 0,
                 //motorRunning: ) ? false : true
             }, () => {
-                this.props.storeMotorPositions(this.state.motorPositions);
+                this.props.storeMotorPositions(this.state.shownMotorView,this.state.motorPositions);
                 this.props.stopMotor(this.newMotorRef.current);
             });
         }
