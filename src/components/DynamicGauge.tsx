@@ -31,16 +31,39 @@ interface ClickProps {
 type Props = DynamicGaugeProps;
 type State = DynamicGaugeState;
 
+
+
 const GaugeValue = styled('div', (props: ThemeProps & ClickProps) => ({
     fontSize: '2.5em',
-    paddingBottom: '0.5em'
+    // paddingBottom: '0.5em',
+    ':hover': {
+        cursor: 'pointer',
+        backgroundColor: props.theme.hoverOptionBackground
+    },
+    backgroundColor: props.theme.unselectedBackground,
+    
+    width: '6ch',
+    height: '100%',
+    padding: '0.3em',
+    boxShadow: props.theme.themeName === 'DARK' ? '0px 0px 15px 3px rgba(0,0,0,0.4)' : '0px 0px 15px 3px rgba(175, 80, 128, 0.2)',
+    ':active': props.onClick && !props.disabled
+        ? {
+            boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+            transform: 'translateY(1px, 1px)',
+        }
+        : {},
+
+    marginBottom: '3%'
 
 }));
 
 const GaugeInput = styled('input', {
     fontSize: '2.5em',
-    paddingBottom: '0.5em',
+    marginBottom: '3%',
     width: '5ch',
+    textAlign: 'center',
+    height: '100%',
+    backgroundColor: 'lightgrey'
 });
 
 
@@ -68,7 +91,7 @@ export class DynamicGauge extends React.Component<Props, State> {
 
         if (prevProps.changeValue !== this.props.changeValue) {
             console.log("DyanmicGauge changeValue CHANGED: ", this.props.changeValue);
-            // this.setState({ value: this.props.changeValue });
+             this.setState({ draftValue: String(this.props.changeValue) });
         }
     }
     handleChange = (e) => {
@@ -93,7 +116,7 @@ export class DynamicGauge extends React.Component<Props, State> {
         this.setState({ isEditing: false });
     };
 
-     handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.currentTarget.blur(); // Triggers onBlur to commit
         }
@@ -120,7 +143,7 @@ export class DynamicGauge extends React.Component<Props, State> {
         } = this.props;
 
         return (
-            <div style={{ ...this.props.style, width: '95%', textAlign: 'center' }}>
+            <div style={{ ...this.props.style, display: 'flex', flexDirection: 'column', alignContent: 'center', width: '95%', textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
                 <GaugeComponent
                     value={Number(draftValue)}
                     minValue={minValue}
@@ -141,12 +164,11 @@ export class DynamicGauge extends React.Component<Props, State> {
                         }
                     }}
 
-
+                    style={{ width: '100%', height: '100%' }}
                 />
-                {/* <GaugeValue theme={theme} >
-                    {value}
-                </GaugeValue> */}
+ 
 
+                {/* Input gauge value number */}
                 {isEditing ? (
                     <GaugeInput
                         value={draftValue}
@@ -168,7 +190,7 @@ export class DynamicGauge extends React.Component<Props, State> {
                     min={minValue}
                     max={maxValue}
                     value={draftValue}
-                   
+
                     onChange={this.handleSliderChange}
                     style={{ width: '80%' }}
                 />
