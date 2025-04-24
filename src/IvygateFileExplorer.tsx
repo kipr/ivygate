@@ -382,7 +382,12 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   componentWillUnmount(): void {
     console.log("FILEEXPLORER UNMOUNTED");
-    this.props.onReloadProjects(this.props.propUserShown);
+    console.log("IvygateFileExplorer componentWillUnmount props.propUserShown: ", this.props.propUserShown);
+    if(this.props.propUserShown !== undefined) {
+      console.log("IvygateFileExplorer componentWillUnmount propUserShown: ", this.props.propUserShown);
+      this.props.onReloadProjects(this.props.propUserShown);
+    }
+    
   }
   async componentDidUpdate(prevProps: Props, prevState: State) {
     console.log("FileExplorer compDidUpdate prevProps: ", prevProps);
