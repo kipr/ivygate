@@ -125,6 +125,16 @@ export type Sensors = {
   Button: number;
 }
 
+export type SensorValue =
+  | AnalogSensors
+  | DigitalSensors
+  | AccelerometerSensors
+  | GyroscopeSensors
+  | MagnetometerSensors
+  | "Button";
+
+
+
 export type SensorValues = {
   Analogs: { [key: string]: number };
   Digitals: { [key: string]: number };
@@ -160,3 +170,34 @@ export const DEFAULT_SENSORS: {
   Button: 0,
 
 };
+
+export type MotorVelocities = {
+  [key in Motors]?: number;
+}
+
+export type MotorPositions = {
+  [key in Motors]?: number;
+}
+export type ServoPositions = {
+  [key in Servos]?: number;
+}
+export type GraphTypes = {
+  MotorVelocities?: MotorVelocities;
+  MotorPositions?: MotorPositions;
+
+
+}
+
+export type GraphSelection = {
+  MotorVelocities: "Motor Velocities";
+  MotorPositions: "Motor Positions";
+  ServoGraphs: "ServoGraphs";
+  AnalogGraphs: "AnalogGraphs";
+  DigitalGraphs: "DigitalGraphs";
+  AccelerometerGraphs: "AccelerometerGraphs";
+  GyroscopeGraphs: "GyroscopeGraphs";
+  MagnetometerGraphs: "MagnetometerGraphs";
+  ButtonGraphs: "ButtonGraphs";
+}
+
+export type GraphSelectionKey = keyof GraphSelection;
