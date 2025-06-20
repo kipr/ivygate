@@ -2,12 +2,12 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import { styled } from "styletron-react";
 import { Rectangle } from "../util/math";
-import { StyleProps } from "../style";
+import { StyleProps } from "./constants/style";
 import { AnyText } from "../util/StyledText";
 import { Color } from "../util/Color";
 import { Fa } from "./Fa";
-import { Text } from "./Text";
-import { ThemeProps } from "../theme";
+import { Text } from "./interface/Text";
+import { ThemeProps } from "./constants/theme";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; $width?: string; $height?: string }) => ({
