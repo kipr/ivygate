@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GaugeComponent } from 'react-gauge-component';
-import { DARK, ThemeProps } from '../theme';
-import { StyleProps } from '../style';
+import { DARK, ThemeProps } from './constants/theme';
+import { StyleProps } from './constants/style';
 import { styled } from 'styletron-react';
 import { SubArc } from 'react-gauge-component';
 interface DynamicGaugeProps extends ThemeProps, StyleProps {
@@ -16,6 +16,7 @@ interface DynamicGaugeProps extends ThemeProps, StyleProps {
     customTickValueConfig?: {};
     customTickLineConfig?: {};
     onDialChange?: (value: number) => void;
+    inputStyle?: React.CSSProperties;
 }
 
 interface DynamicGaugeState {
@@ -35,7 +36,6 @@ type State = DynamicGaugeState;
 
 const GaugeValue = styled('div', (props: ThemeProps & ClickProps) => ({
     fontSize: '2.5em',
-    // paddingBottom: '0.5em',
     ':hover': {
         cursor: 'pointer',
         backgroundColor: props.theme.hoverOptionBackground
@@ -78,19 +78,13 @@ export class DynamicGauge extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        console.log("DyanmicGauge props: ", this.props);
+       
         if (this.props.changeValue) {
             this.setState({ value: this.props.changeValue });
         }
     }
     componentDidUpdate(prevProps: Readonly<DynamicGaugeProps>, prevState: Readonly<DynamicGaugeState>, snapshot?: any): void {
-        console.log("DyanmicGauge prevProps: ", prevProps);
-        console.log("DyanmicGauge props: ", this.props);
-        console.log("DyanmicGauge prevState: ", prevState);
-        console.log("DyanmicGauge state: ", this.state);
-
         if (prevProps.changeValue !== this.props.changeValue) {
-            console.log("DyanmicGauge changeValue CHANGED: ", this.props.changeValue);
             this.setState({ draftValue: this.props.changeValue });
         }
     }
@@ -121,7 +115,7 @@ export class DynamicGauge extends React.Component<Props, State> {
 
     handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            e.currentTarget.blur(); // Triggers onBlur to commit
+            e.currentTarget.blur(); 
         }
     };
 
@@ -135,18 +129,17 @@ export class DynamicGauge extends React.Component<Props, State> {
     }
     render() {
         const defaultMargins = { top: 0.07, bottom: 0.02, left: 0.07, right: 0.07 };
-        const { value, isEditing, draftValue } = this.state;
+        const {isEditing, draftValue } = this.state;
         const {
             minValue = 0,
             maxValue = 100,
             margins,
-            arcColors = ['#FF4E4E', '#2BDE3F'],
-            arcLimits = [{ limit: 0 }, { limit: 1500 }],
-            theme
+            theme,
+            inputStyle,
         } = this.props;
 
         return (
-            <div style={{ ...this.props.style, display: 'flex', flexDirection: 'column', alignContent: 'center', width: '95%', textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ ...this.props.style,paddingTop: '10%', display: 'flex', flexDirection: 'column', alignContent: 'center', width: '95%', textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
                 <GaugeComponent
                     value={Number(draftValue)}
                     minValue={minValue}
@@ -188,14 +181,14 @@ export class DynamicGauge extends React.Component<Props, State> {
                 }
 
                 {/* Dynamic Control for Moving the Pointer */}
+
                 <input
                     type="range"
                     min={minValue}
                     max={maxValue}
                     value={draftValue}
-
                     onChange={this.handleSliderChange}
-                    style={{ width: '80%' }}
+                    style={inputStyle ? inputStyle : {width: '80%'}}
                 />
 
 
