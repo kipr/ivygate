@@ -19,7 +19,7 @@ import ProjectUploader from './ProjectUploader';
 
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
-  //
+  
   propsSelectedProjectName?: string;
   propFileName?: string;
   propProjectName?: string;
@@ -135,20 +135,13 @@ const ExtraFilesContainer = styled('div', (props: ThemeProps) => ({
   width: '98%',
   height: '2.25em',
   fontSize: '1em',
-  // marginRight: '14em',
-  // '@media (max-width: 850px)': {
-  //   width: '7.3rem',
-  // },
   border: `2px solid ${props.theme.borderColor}`,
 }));
 
 const ProjectContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
-
   flexDirection: 'column',
-  //
-
-  resize: 'horizontal',
+    resize: 'horizontal',
   position: 'relative',
   flex: '0 0 25rem',
   padding: '1px',
@@ -167,8 +160,8 @@ const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
   padding: '0.5px',
   fontSize: '1.2em',
   overflow: 'hidden',
-  flexWrap: 'nowrap', // stay in one row
-  gap: '1rem', // optional spacing
+  flexWrap: 'nowrap', 
+  gap: '1rem', 
 }));
 
 const ProjectTitle = styled('h2', {
@@ -197,24 +190,19 @@ const AddProjectButtonContainer = styled('div', (props: ThemeProps & { selected:
   flexDirection: 'row',
   marginTop: '1.9em',
   marginRight: '0.5em',
-  // gap: '10px',
+
   width: '100%',
   height: '1.6em',
   fontSize: '1em',
-  // '@media (max-width: 850px)': {
-  //   width: '7.3rem',
-  // },
-
   gap: '0.5rem',
-  flexShrink: 1,        // Let this part shrink
-  flexWrap: 'nowrap',   // Optional: wrap if necessary
+  flexShrink: 1,        
+  flexWrap: 'nowrap',  
   minWidth: 0,
 
 }));
 
 const AddProjectButton = styled('div', (props: ThemeProps & ClickProps) => ({
   display: 'flex',
-
   alignItems: 'center',
   justifyContent: 'center',
   gap: '6px',
@@ -223,9 +211,7 @@ const AddProjectButton = styled('div', (props: ThemeProps & ClickProps) => ({
   cursor: 'pointer',
   width: '97%',
   minWidth: '168px',
-  //inWidth: '5em',
   fontSize: 'clamp(1rem, 2vw, 1em)',
-
   padding: '3px',
   ':hover': {
     cursor: 'pointer',
@@ -356,8 +342,8 @@ const ExtraFileButton = styled('div', (props: ThemeProps & ClickProps & { select
     }
     : {},
 
-  flexShrink: 1,        // Let this part shrink
-  flexWrap: 'nowrap',   // Optional: wrap if necessary
+  flexShrink: 1,        
+  flexWrap: 'nowrap',   
 
 }));
 
@@ -387,7 +373,6 @@ const ContextMenuItem = styled('div', (props: ThemeProps) => ({
 const UsersContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
-  //overflowY: 'scroll',
   left: '4%',
   top: '4.8%',
   height: '100vh',
@@ -405,10 +390,8 @@ const SectionsColumn = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   flex: '0 0 50px',
-
   border: `3px solid ${props.theme.borderColor}`,
   height: '100vh',
-
 }));
 
 const SectionName = styled('div', (props: ThemeProps & { selected: boolean }) => ({
