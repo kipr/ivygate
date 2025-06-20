@@ -1,7 +1,7 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { ThemeProps } from '../theme';
-import { StyleProps } from '../style';
+import { ThemeProps } from './constants/theme';
+import { StyleProps } from './constants/style';
 import SensorPlot from './SensorPlot';
 import BooleanPlot from './BooleanPlot';
 //import { Spacer } from '../constants/common';
@@ -55,7 +55,7 @@ const Header = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   width: '100%',
   alignItems: 'center',
-  fontSize: '9pt',
+  fontSize: '0.9em',
   padding: `${props.theme.itemPadding * 2}px`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: `rgba(0, 0, 0, 0.1)`,
@@ -201,7 +201,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           <Header theme={theme} onClick={this.onTogglePlotClick_}>
             <Name>{name}</Name>
             <Spacer />
-            <span style={{ userSelect: 'none' }}>{headerValue}{unit}</span>
+            <span style={{fontSize: '1.2em', userSelect: 'none' }}>{headerValue}{unit}</span>
           </Header>
           {showPlot ? plot : undefined}
         </Container>
