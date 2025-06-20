@@ -1,10 +1,10 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { StyleProps } from '../style';
-import { ThemeProps } from '../theme';
+import { StyleProps } from './constants/style';
+import { ThemeProps } from './constants/theme';
 import { Vector2 } from '../util/math';
 import { Box2 } from '../util/geometry';
-import resizeListener, { ResizeListener } from './ResizeListener';
+import resizeListener, { ResizeListener } from './interface/ResizeListener';
 
 export interface BooleanPlotProps extends ThemeProps, StyleProps {
   value: boolean;
@@ -96,7 +96,7 @@ const Path = styled('path', {
 
 const Text = styled('div', {
   position: 'absolute',
-  fontSize: '8pt',
+  fontSize: '1em',
   paddingTop: '5px',
   opacity: 0.7,
   fontFamily: `'Roboto Mono', monospace`,
