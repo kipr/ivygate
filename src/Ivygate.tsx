@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as monaco from 'monaco-editor';
 import { styled } from 'styletron-react';
-import { StyleProps } from './style';
+import { StyleProps } from './components/constants/style';
 
 import server from './server';
 import { Message } from './Message';
@@ -205,7 +205,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/\?/, 'operator'],  // Highlight '?' as an operator (part of ternary operator)
           [/\s*delete\b/, { token: 'operator.special.delete' }],
           [/\s*new\b/, { token: 'keyword.new' }],
-         
+
           [/\s*this\b/, { token: 'variable.special.this.cpp' }],
           [/\*\s*\w+\s*(?=\()/, 'variable.function.pointer'],  // Function pointer match without capturing the *
           [/\b[a-zA-Z_][a-zA-Z0-9_]*(?=\s*\.)/, 'variable.instance'],
@@ -237,15 +237,15 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/#\s*endif\b/, { token: 'keyword.directive' }],
           [/#\s*ifndef\b/, { token: 'preprocessor.define', next: '@macroDef' }],
         ],
-        
+
         angleBracketState: [
           [/[^<>]+/, 'type'],  // Tokenize content inside the angle brackets as 'type'
           [/>/, 'delimiter.angle', '@pop'],  // When '>' is encountered, pop back to the root state
         ],
-        template:[
+        template: [
           [/\b(?:extern|typedef|struct|using|namespace|virtual|typename|public|private|auto|class|try|catch|throw|for|if|else|else if|while|switch|int|float|long|const|double|char|bool|void|operator|\?)\b/, 'keyword'],
-         
-          [/\</, { token: 'source'}],
+
+          [/\</, { token: 'source' }],
           [/\>/, { token: 'source', next: '@pop' }],
         ],
         defined: [
@@ -273,8 +273,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
         ],
 
 
-         nestedParens: [
+        nestedParens: [
           //[/\(/, 'delimiter.parenthesis', '@push'], // Handles deeper nesting
+                [/\b(?:long|double|return|void|operator|while|for|char|bool|int|string|\?)\b/, 'keyword.boldBlue'],
           [/"/, 'delimiter.quote', '@string_double'],
           [/'/, 'delimiter.quote', '@string_single'],
           [/\)/, 'test1', '@pop'],
@@ -527,12 +528,12 @@ export class Ivygate extends React.PureComponent<Props, State> {
         ],
       },
     });
-    
+
     // Define custom theme
     monaco.editor.defineTheme('ideLightTheme', {
       base: 'vs',
       inherit: true,
-     
+
       rules: [
         { token: 'root.curlyBracket', foreground: '#2751ff' }, //blue
         { token: 'root.parenthesis', foreground: '#ff0000' }, //blue
@@ -593,12 +594,24 @@ export class Ivygate extends React.PureComponent<Props, State> {
       ],
       colors: {
         'editor.background': '#fbfbfb',
-        'editor.foreground': '#D4D4D4',
+        //'editor.foreground': '#D4D4D4',
         'editorCursor.foreground': '#000000',
         'editor.lineHighlightBackground': '#F0F0F0',
         "editorBracketMatch.background": "#d8e2d8", // Light red highlight
         "editorBracketMatch.border": "#b9b9b9",  // Red border around matched brackets
         'editorBracketHighlight.foreground2': '#2b601d',
+
+        'editorHoverWidget.background': '#f4edeb',        // dark gray background
+        'editorHoverWidget.border': '#007ACC',            // bright blue border
+        'editorHoverWidget.foreground': '#000000',        // light gray text
+        'editorHoverWidget.highlightForeground': '#FFD700', // gold for highlights
+        'editorHoverWidget.statusBarBackground': '#e6d6d2', // darker gray status bar
+
+        'editorMarkerNavigation.background': '#f4edeb',
+        'editorMarkerNavigationError.background': '#B71C1C',
+        'editorMarkerNavigationWarning.background': '#FFA000',
+        'editorMarkerNavigationInfo.background': '#1976D2',
+        'editorMarkerNavigation.foreground': '#000000', // black text for better contrast
       }
     });
     monaco.editor.defineTheme('ideDarkTheme', {
@@ -679,11 +692,11 @@ export class Ivygate extends React.PureComponent<Props, State> {
     });
     monaco.languages.register({ id: 'customCpp' });
     monaco.languages.register({ id: 'customPython' });
-    monaco.languages.register({ id: 'plaintext' }); 
+    monaco.languages.register({ id: 'plaintext' });
 
     // Create Monaco editor with correct language and theme
     this.editor_ = monaco.editor.create(this.ref_, {
-      // ...Ivygate.getAutocompleteEditorOptions(autocomplete),
+
       fontSize: 16,
       value: code,
       language: language,
@@ -694,27 +707,29 @@ export class Ivygate extends React.PureComponent<Props, State> {
         enabled: true
       }
     });
-    // monaco.editor.setTheme('ideLightTheme');
 
-
-    // Log the tokens and check if EXTERN_C is recognized as macro.cpp
+    // console.log("Ivygate this.editor_: ", this.editor_.);
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
-    //monaco.editor.setModelLanguage(model, 'customCpp');
+
 
 
   }
 
   formatCode() {
+    console.log("Ivygate formatCode called");
+    const lang = this.editor_.getModel().getLanguageId();
+    console.log("Editor language is:", lang);
     this.editor_.getAction('editor.action.formatDocument').run()
   }
 
   changeFormatter(formattingFunction: (code: string, tabSize: number, insertSpaces: boolean) => string): void {
-    monaco.languages.registerDocumentFormattingEditProvider('c', {
+    console.log("Ivygate changeFormatter called");
+    monaco.languages.registerDocumentFormattingEditProvider('customCpp', {
       provideDocumentFormattingEdits(model, options) {
         return [{
           range: model.getFullModelRange(),
-          text: formattingFunction(model.getValue(), options.tabSize, options.insertSpaces)
+       text: formattingFunction(model.getValue(), options.tabSize, options.insertSpaces).replace(/\s+$/, '')
         }];
       }
     });
@@ -764,9 +779,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
     console.log("Ivygate compDidUpdate this.props: ", this.props);
     console.log("Ivygate compDidUpdate nextProps: ", nextProps);
 
-    if (language === 'c') {
+    if (language === 'customCpp' || language === 'customPython' || language === 'plaintext') {
       this.changeFormatter(format);
     }
+
 
     if (theme !== this.props.theme) {
 
@@ -777,12 +793,12 @@ export class Ivygate extends React.PureComponent<Props, State> {
     if (!this.guard_ && code !== model.getValue()) {
       model.setValue(nextProps.code);
       this.guard_ = false;
-  }
-  //
+    }
+    //
 
     monaco.editor.setModelLanguage(model, language);
 
-    const monacoMessages = (messages || []).map(Message.toMonaco).reduce((a, b) => [...a, ...b], []);
+    const monacoMessages = (this.props.messages || []).map(Message.toMonaco).reduce((a, b) => [...a, ...b], []);
     monaco.editor.setModelMarkers(model, '', monacoMessages);
 
     if (autocomplete !== this.props.autocomplete) {
@@ -795,6 +811,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   revealLineInCenter(line: number) {
+    console.log("Ivygate revealLineInCenter called for line: ", line);
     this.editor_.revealLineInCenter(line, monaco.editor.ScrollType.Smooth);
   }
 
