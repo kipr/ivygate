@@ -1,8 +1,8 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { StyleProps } from '../style';
-import { ThemeProps } from '../theme';
-import resizeListener, { ResizeListener } from './ResizeListener';
+import { StyleProps } from './constants/style';
+import { ThemeProps } from './constants/theme';
+import resizeListener, { ResizeListener } from './interface/ResizeListener';
 
 export interface Vector2 {
   x: number;
@@ -64,14 +64,15 @@ const Path = styled('path', {
   fill: 'transparent'
 });
 
-const Text = styled('div', {
+const Text = styled('div', ({theme}: ThemeProps) => ({
   position: 'absolute',
-  fontSize: '8pt',
+  fontSize: '1em',
   paddingTop: '5px',
   opacity: 0.7,
   fontFamily: `'Roboto Mono', monospace`,
-  userSelect: 'none'
-});
+  userSelect: 'none',
+  color: theme.textColor
+}));
 
 const PLOT_MARGIN = 25;
 
@@ -288,8 +289,8 @@ class SensorPlot extends React.PureComponent<Props, State> {
           {secondTicks}
           <Path strokeWidth={`2px`} d={pointPath} />
         </Svg>
-        {points.length > 0 ? <Text style={{ top: `${beginRealY}px`, left: '5px' }}>{-Math.round(points[0].y)}</Text> : undefined}
-        {points.length > 0 ? <Text style={{ top: `${endRealY}px`, right: '5px' }}>{-Math.round(points[points.length - 1].y)}</Text> : undefined}
+        {points.length > 0 ? <Text theme={theme}style={{ top: `${beginRealY}px`, left: '5px' }}>{-Math.round(points[0].y)}</Text> : undefined}
+        {points.length > 0 ? <Text theme={theme}style={{ top: `${endRealY}px`, right: '5px' }}>{-Math.round(points[points.length - 1].y)}</Text> : undefined}
       </Container>
     );
   }
