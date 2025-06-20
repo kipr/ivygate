@@ -3,20 +3,23 @@ import server from './server';
 import LocalizedString from './util/LocalizedString';
 import tr from './i18n';
 import { styled } from 'styletron-react';
-import { StyleProps } from './style';
-import { ThemeProps } from './theme';
+import { StyleProps } from './components/constants/style';
+import { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER } from './types/user';
-import { Project, BLANK_PROJECT } from './types/project';
+import { Project, BLANK_PROJECT, UploadedProject } from './types/project';
 import { InterfaceMode } from './types/interface';
 import { faFolderPlus, faFileCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import ProgrammingLanguage from './types/programmingLanguage';
-
+import ScrollArea from './components/interface/ScrollArea';
+import FileUploader from './FileUploader';
+import { FileInfo } from './types/fileInfo';
+import ProjectUploader from './ProjectUploader';
 
 
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
-//
+  //
   propsSelectedProjectName?: string;
   propFileName?: string;
   propProjectName?: string;
@@ -37,7 +40,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   propUsers: User[];
   propUserData: Project[];
 
-  onProjectSelected?: (user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage, fileType: string) => void;
+  onProjectSelected?: (user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage) => void;
   onFileSelected?: (user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage, fileType: string) => void;
   onUserSelected?: (user: User, loadUserData: boolean) => void;
   onAddNewProject?: (user: User) => void;
@@ -52,7 +55,9 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onDownloadFile?: (user: User, project: Project, fileName: string) => void;
   onRenameFile?: (user: User, project: Project, fileName: string) => void;
   onResetHighlightFlag?: () => void;
-  onReloadProjects?: (user: User) => void;
+  onReloadProjects?: (user: User) => Promise<void>;
+  onUploadFiles?: (user: User, project: Project, files: FileInfo[]) => void;
+  onUploadProject?: (user: User, project: UploadedProject) => void;
 }
 
 interface IvygateFileExplorerPrivateProps {
@@ -74,6 +79,8 @@ interface IvygateFileExplorerState {
   showUserContextMenu: boolean;
   showProjectContextMenu: boolean;
   showFileContextMenu: boolean;
+  showFileUploader: boolean;
+  showProjectUploader: boolean;
   currentUserSelected: boolean;
   activeLanguage: ProgrammingLanguage;
   contextMenuProject?: Project;
@@ -83,12 +90,16 @@ interface IvygateFileExplorerState {
   userDataFiles: [];
   projects: [] | null;
   users: string[];
+  uploadType: 'project' | 'include' | 'src' | 'data' | 'none';
 
 }
 
 type Props = IvygateFileExplorerProps & IvygateFileExplorerPrivateProps;
 type State = IvygateFileExplorerState;
-
+interface ClickProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
+}
 
 const FileExplorerContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -98,10 +109,12 @@ const FileExplorerContainer = styled('div', (props: ThemeProps) => ({
   top: '6%',
   zIndex: 1,
   flexDirection: 'column',
+  minWidth: '12vw',
   width: 'auto',
   height: '100vh',
   overflow: 'hidden',
- }));
+  paddingBottom: '2em'
+}));
 
 const Container = styled('ul', {
   display: 'flex',
@@ -113,13 +126,31 @@ const Container = styled('ul', {
   listStyleType: 'none',
 });
 
+const ExtraFilesContainer = styled('div', (props: ThemeProps) => ({
+  borderRadius: '5px',
+  cursor: 'pointer',
+  display: 'flex',
+  flexDirection: 'row',
+
+  width: '98%',
+  height: '2.25em',
+  fontSize: '1em',
+  // marginRight: '14em',
+  // '@media (max-width: 850px)': {
+  //   width: '7.3rem',
+  // },
+  border: `2px solid ${props.theme.borderColor}`,
+}));
+
 const ProjectContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
 
   flexDirection: 'column',
-    //overflowY: 'scroll',
+  //
+
+  resize: 'horizontal',
   position: 'relative',
-  flex: '0 0 350px',
+  flex: '0 0 25rem',
   padding: '1px',
   marginLeft: '3px',
   boxShadow: '4px 4px 4px rgba(0,0,0,0.2)',
@@ -130,39 +161,96 @@ const ProjectContainer = styled('div', (props: ThemeProps) => ({
 const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   borderBottom: `3px solid ${props.theme.borderColor}`,
   padding: '0.5px',
-  justifyContent: 'space-between',
+  fontSize: '1.2em',
+  overflow: 'hidden',
+  flexWrap: 'nowrap', // stay in one row
+  gap: '1rem', // optional spacing
 }));
 
 const ProjectTitle = styled('h2', {
-  fontSize: '1.5em',
-  marginBottom: '0px',
+  fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  flexShrink: 0,
   textAlign: 'left',
   paddingRight: '20px',
+  paddingBottom: '0.5em',
+});
+
+const AddProjectText = styled('div', {
+  fontSize: 'clamp(1rem, 2vw, 1em)',
+  textAlign: 'left',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+
 });
 
 const AddProjectButtonContainer = styled('div', (props: ThemeProps & { selected: boolean }) => ({
   borderRadius: '5px',
-  cursor: 'pointer',
-  marginTop: '18px',
-  
-  padding: '3px 5px 3px 5px',
-  height: '30px',
+  display: 'flex',
+  flexDirection: 'row',
+  marginTop: '1.9em',
+  marginRight: '0.5em',
+  // gap: '10px',
+  width: '100%',
+  height: '1.6em',
   fontSize: '1em',
-  alignItems: 'right',
-  ':hover': {
-      cursor: 'pointer',
-      backgroundColor: props.theme.hoverOptionBackground
-  },
+  // '@media (max-width: 850px)': {
+  //   width: '7.3rem',
+  // },
+
+  gap: '0.5rem',
+  flexShrink: 1,        // Let this part shrink
+  flexWrap: 'nowrap',   // Optional: wrap if necessary
+  minWidth: 0,
+
 }));
 
+const AddProjectButton = styled('div', (props: ThemeProps & ClickProps) => ({
+  display: 'flex',
+
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '6px',
+  listStyleType: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  width: '97%',
+  minWidth: '168px',
+  //inWidth: '5em',
+  fontSize: 'clamp(1rem, 2vw, 1em)',
+
+  padding: '3px',
+  ':hover': {
+    cursor: 'pointer',
+    backgroundColor: props.theme.hoverFileBackground
+  },
+  userSelect: 'none',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+  boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+  ':active': props.onClick && !props.disabled
+    ? {
+      boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+      transform: 'translateY(1px, 1px)',
+    }
+    : {},
+
+}));
 
 const AddProjectItemIcon = styled(FontAwesomeIcon, {
   paddingLeft: '3px',
   paddingRight: '5px',
-  alignItems: 'center',
-  height: '15px'
+  height: '1.4em',
+  '@media (max-width: 850px)': {
+    width: '1.2rem',
+  },
 });
 
 const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) => ({
@@ -177,6 +265,8 @@ const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) =>
   boxSizing: 'border-box',
   textOverflow: 'ellipsis',
   whiteSpace: 'normal',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
   borderRadius: '5px',
   ':hover': {
     cursor: 'pointer',
@@ -185,7 +275,6 @@ const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) =>
 }));
 const FileTypeTitleContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
-  transition: 'background-color 0.2s, opacity 0.2s',
   fontSize: '1.2em',
   padding: `5px`,
   fontWeight: 400,
@@ -195,7 +284,6 @@ const FileTypeTitleContainer = styled('div', (props: ThemeProps) => ({
 const FileTypeContainer = styled('span', (props: ThemeProps & { selected: boolean }) => ({
   width: '100%',
   backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
-  transition: 'background-color 0.2s, opacity 0.2s',
   padding: `5px`,
   border: `3px solid ${props.theme.borderColor}`,
   userSelect: 'none',
@@ -223,6 +311,7 @@ const FileItemIcon = styled(FontAwesomeIcon, {
 });
 
 const IndividualFile = styled('div', (props: ThemeProps & { selected: boolean, }) => ({
+
   listStyleType: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
@@ -234,6 +323,42 @@ const IndividualFile = styled('div', (props: ThemeProps & { selected: boolean, }
     cursor: 'pointer',
     backgroundColor: props.theme.hoverFileBackground
   },
+  userSelect: 'none',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+}));
+
+const ExtraFileButton = styled('div', (props: ThemeProps & ClickProps & { selected: boolean, }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '6px',
+  listStyleType: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  width: '97%',
+  minWidth: '6.8em',
+  fontSize: '1.15em',
+  backgroundColor: (props.selected) ? props.theme.selectedFileBackground : props.theme.unselectedBackground,
+  padding: '3px',
+  ':hover': {
+    cursor: 'pointer',
+    backgroundColor: props.theme.hoverFileBackground
+  },
+  userSelect: 'none',
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
+  boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+  ':active': props.onClick && !props.disabled
+    ? {
+      boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+      transform: 'translateY(1px, 1px)',
+    }
+    : {},
+
+  flexShrink: 1,        // Let this part shrink
+  flexWrap: 'nowrap',   // Optional: wrap if necessary
+
 }));
 
 const ContextMenu = styled('div', (props: ThemeProps & { x: number; y: number }) => ({
@@ -262,14 +387,18 @@ const ContextMenuItem = styled('div', (props: ThemeProps) => ({
 const UsersContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
-  overflowY: 'scroll',
+  //overflowY: 'scroll',
   left: '4%',
   top: '4.8%',
   height: '100vh',
   width: '95%',
   margin: '5px',
-  marginBottom: '55px', 
+  marginBottom: '55px',
   zIndex: 1,
+}));
+
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
 }));
 
 const SectionsColumn = styled('div', (props: ThemeProps) => ({
@@ -279,23 +408,25 @@ const SectionsColumn = styled('div', (props: ThemeProps) => ({
 
   border: `3px solid ${props.theme.borderColor}`,
   height: '100vh',
-  
+
 }));
 
-const SectionName = styled('span', (props: ThemeProps & { selected: boolean }) => ({
+const SectionName = styled('div', (props: ThemeProps & { selected: boolean }) => ({
   ':hover': {
     cursor: 'pointer',
     backgroundColor: props.theme.hoverOptionBackground
   },
   width: '100%',
   fontSize: '1.44em',
+  flexWrap: 'wrap',
+  alignItems: 'flex-start',
   backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
   boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
-  transition: 'background-color 0.2s, opacity 0.2s',
   padding: `5px`,
   fontWeight: props.selected ? 400 : undefined,
   userSelect: 'none',
- 
+  wordBreak: 'break-word',
+  overflowWrap: 'anywhere',
 }));
 
 export class IvygateFileExplorer extends React.PureComponent<Props, State> {
@@ -335,7 +466,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       contextMenuPosition: null,
       showUserContextMenu: false,
       showProjectContextMenu: false,
-      showFileContextMenu: false
+      showFileContextMenu: false,
+      showFileUploader: false,
+      showProjectUploader: false,
+      uploadType: 'none'
     };
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
@@ -365,14 +499,19 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           ({
             selectedUser: this.props.propUserShown,
             showProjects: true,
-            selectedProject: this.props.propUserData.find(
-              (project) => project.projectName === this.props.propsSelectedProjectName
-            ),
             projectName: this.props.propsSelectedProjectName,
             selectedFile: this.props.propFileName,
             activeLanguage: this.props.propActiveLanguage,
           }, () => {
             console.log("FileExplorer componentDidMount AFTER state: ", this.state);
+            if (this.props.propUserData !== undefined && this.props.propUserData.length > 0) {
+              console.log("FileExplorer componentDidMount propUserData: ", this.props.propUserData);
+              this.setState({
+                selectedProject: this.props.propUserData.find(
+                  (project) => project.projectName === this.props.propsSelectedProjectName
+                ),
+              });
+            }
           });
       }
 
@@ -383,11 +522,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   componentWillUnmount(): void {
     console.log("FILEEXPLORER UNMOUNTED");
     console.log("IvygateFileExplorer componentWillUnmount props.propUserShown: ", this.props.propUserShown);
-    if(this.props.propUserShown !== undefined) {
+    if (this.props.propUserShown !== undefined) {
       console.log("IvygateFileExplorer componentWillUnmount propUserShown: ", this.props.propUserShown);
       this.props.onReloadProjects(this.props.propUserShown);
     }
-    
+
   }
   async componentDidUpdate(prevProps: Props, prevState: State) {
     console.log("FileExplorer compDidUpdate prevProps: ", prevProps);
@@ -624,7 +763,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const menuWidth = 200;  // Adjust as needed
     const menuHeight = 185; // Adjust as needed
 
-    
+
 
     const adjustedX = Math.min(x, viewportWidth - menuWidth);
     const adjustedY = Math.min(y, viewportHeight - menuHeight);
@@ -754,6 +893,63 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
     );
   }
+
+  renderUploadFileView(uploadType: 'project' | 'include' | 'src' | 'data' | 'none') {
+    const { theme, locale } = this.props;
+    console.log("FileExplorer renderUploadFileView props: ", this.props);
+    console.log("FileExplorer renderUploadFileView state: ", this.state);
+    return (
+      <FileUploader
+        theme={theme}
+        onFileUpload={this.onFileUploadClose_}
+        onClose={() => this.onClose()}
+        locale={locale}
+        currentLanguage={this.state.activeLanguage}
+        uploadType={uploadType}
+      />
+
+
+    )
+  }
+
+  renderUploadProjectView() {
+    const { theme, locale } = this.props;
+    console.log("FileExplorer renderUploadProjectView props: ", this.props);
+    console.log("FileExplorer renderUploadProjectView state: ", this.state);
+    return (
+      <ProjectUploader
+        theme={theme}
+        onProjectUpload={this.onProjectUploadClose_}
+        onClose={() => this.onClose()}
+        locale={locale}
+        currentLanguage={this.state.activeLanguage}
+        uploadType={'project'}
+      />
+    );
+  }
+
+  private onFileUploadClose_ = (files: FileInfo[]) => {
+    console.log("FileExplorer onFileUploadClose_ file: ", files);
+    console.log("FileExplorer onFileUploadClose_ state: ", this.state);
+    console.log("FileExplorer onFileUploadClose_ props: ", this.props);
+
+    this.props.onUploadFiles(this.state.selectedUser, this.state.selectedProject, files);
+
+  };
+
+  private onProjectUploadClose_ = (project: UploadedProject) => {
+    console.log("FileExplorer onProjectUploadClose_ project: ", project);
+    console.log("FileExplorer onProjectUploadClose_ state: ", this.state);
+    console.log("FileExplorer onProjectUploadClose_ props: ", this.props);
+    this.setState({
+      showProjectUploader: false,
+
+
+    })
+    this.props.onUploadProject(this.state.selectedUser, project);
+
+  };
+
   /**
      * Right click handler for Users
      * @param event - right click event
@@ -809,6 +1005,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
       {
         selectedUser: prevState.selectedUser === user ? BLANK_USER : user,
+        selectedProject: this.state.selectedProject ? BLANK_PROJECT : prevState.selectedProject,
+
         showProjects: !this.state.showProjects
       }));
     this.props.onUserSelected(user, true);
@@ -842,7 +1040,19 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private handleProjectClick = async (project: Project, user: User, language: ProgrammingLanguage) => {
 
+    console.log("ivygate handleProjectclick passed in: ", project, " user: ", user, " language: ", language);
+    console.log("Ivygate handleProjectclick props: ", this.props);
+    console.log("ivygate handleProjectclick state: ", this.state);
+    if (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE) {
+      const mainFile = project.srcFolderFiles.find(file => file.includes('main.'));
 
+      this.props.onProjectSelected(user, project, mainFile, language,);
+      this.setState({
+        selectedFile: mainFile,
+      }, () => {
+        console.log("FileExplorer handleProjectClick state after setting selectedFile: ", this.state);
+      })
+    }
     this.setState((prevState) => (
 
       {
@@ -918,7 +1128,30 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           }
         });
         break;
+
+      case 'graphical':
+        this.setState({
+          activeLanguage: "graphical"
+        }, () => {
+          if (this.props.onFileSelected) {
+            this.props.onFileSelected(selectedUser, selectedProject, fileName, 'graphical' as ProgrammingLanguage, this.state.fileType);
+          }
+        })
+
     }
+  }
+
+  private onClose = () => {
+    console.log("FileExplorer onClose called");
+    const { showFileUploader, showProjectUploader } = this.state;
+    if (showFileUploader) {
+      this.setState({ showFileUploader: false });
+    }
+    if (showProjectUploader) {
+      this.setState({ showProjectUploader: false });
+    }
+
+
   }
 
   /**
@@ -967,6 +1200,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   renderProjects = (projects: Project[]) => {
     const { theme } = this.props;
 
+    console.log("FileExplorer renderProjects state: ", this.state);
+    console.log("FileExplorer renderProjects props: ", this.props);
+
+
     return (
       <ProjectContainer theme={theme} key={this.state.selectedUser.userName}>
         <ProjectHeaderContainer theme={theme}>
@@ -974,19 +1211,34 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <AddProjectButtonContainer
             theme={theme}
             selected={false}
-            onClick={() => this.addNewProject()}
+
           >
-            <AddProjectItemIcon icon={faFolderPlus} />
-            {LocalizedString.lookup(tr('Add Project'), this.props.locale)}
+            <AddProjectButton theme={theme} onClick={() => this.addNewProject()}>
+              <AddProjectItemIcon icon={faFolderPlus} />
+              <AddProjectText  >
+                {LocalizedString.lookup(tr('Create Project'), this.props.locale)}
+              </AddProjectText>
+            </AddProjectButton>
+            |
+            <AddProjectButton theme={theme} onClick={() => this.setState({ uploadType: 'project', showProjectUploader: true })}>
+              <AddProjectItemIcon icon={faFolderPlus} />
+              <AddProjectText >
+                {LocalizedString.lookup(tr('Upload Project'), this.props.locale)}
+              </AddProjectText>
+            </AddProjectButton>
           </AddProjectButtonContainer>
         </ProjectHeaderContainer>
         <ul>
           {projects.map((project) => (
-
+            console.log("FileExplorer renderProjects project: ", project.projectName),
+            console.log("this.state.selectedProject.projectName === project.projectName || this.props.propsSelectedProjectName === project.projectName: ", this.state.selectedProject.projectName === project.projectName || this.props.propsSelectedProjectName === project.projectName),
+            console.log("this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false: ", (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)),
             <Container key={project.projectName}>
               <ProjectItem
 
-                selected={this.state.selectedProject.projectName === project.projectName}
+                selected={this.state.selectedProject.projectName === project.projectName || this.props.propsSelectedProjectName === project.projectName
+                  && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+                }
 
                 onClick={() => this.handleProjectClick(project, this.state.selectedUser, project.projectLanguage)}
 
@@ -996,103 +1248,15 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               </ProjectItem>
 
               {this.state.selectedProject.projectName === project.projectName && this.state.showProjectFiles && (
-                this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
-                  <FileTypeContainer theme={theme} selected={false}>
-                    <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
-                      <FileTypeTitleContainer theme={theme}>
-                        Source Files
-                      </FileTypeTitleContainer>
-                      <FileContainer theme={theme}>
-                        {project.srcFolderFiles.map((file, i) => (
-                          <IndividualFile
-                            key={`src-${i}`}
-                            theme={theme}
-                            selected={this.state.selectedFile === file}
-                            onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
-                          >
-                            {file}
-                          </IndividualFile>
-                        ))}
-                        <IndividualFile theme={theme} selected={false} onClick={() => this.addNewFile(project.projectLanguage)}>
-                          <FileItemIcon icon={faFileCirclePlus} />
-                          {LocalizedString.lookup(tr('Add File'), this.props.locale)}
-                        </IndividualFile>
-                      </FileContainer>
-                    </FileTypeItem>
 
-                  </FileTypeContainer>
-                ) : this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
-                  <FileTypeContainer theme={theme} selected={false}>
-                    {project.projectLanguage != "python" && (
-                      <FileTypeItem theme={theme} key={`IncludeFileHeader-${project.projectName}`}>
-                        <FileTypeTitleContainer theme={theme} >
-                          Include Files
-                        </FileTypeTitleContainer>
-                        <FileContainer theme={theme}>
-                          {project.includeFolderFiles.map((file, i) => (
-                            <IndividualFile
-                              key={`include-${i}`}
-                              theme={theme}
-                              selected={this.state.selectedFile === file}
-                              onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
-                              {file}
-                            </IndividualFile>
-                          ))}
-                          <IndividualFile theme={theme} selected={false} onClick={() => this.addNewFile("h")}>
-                            <FileItemIcon icon={faFileCirclePlus} />
-                            {LocalizedString.lookup(tr('Add File'), this.props.locale)}
-                          </IndividualFile>
-                        </FileContainer>
-                      </FileTypeItem>
-                    )}
-
-                    <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
-                      <FileTypeTitleContainer theme={theme}>
-                        Source Files
-                      </FileTypeTitleContainer>
-                      <FileContainer theme={theme}>
-                        {project.srcFolderFiles.map((file, i) => (
-                          <IndividualFile
-                            key={`src-${i}`}
-                            theme={theme}
-                            selected={this.state.selectedFile === file}
-                            onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
-                            {file}
-                          </IndividualFile>
-                        ))}
-                        <IndividualFile theme={theme} selected={false} onClick={() => this.addNewFile(project.projectLanguage)}>
-                          <FileItemIcon icon={faFileCirclePlus} />
-                          {LocalizedString.lookup(tr('Add File'), this.props.locale)}
-                        </IndividualFile>
-                      </FileContainer>
-                    </FileTypeItem>
-
-                    <FileTypeItem theme={theme} key={`UserDataFileHeader-${project.projectName}`}>
-                      <FileTypeTitleContainer theme={theme}>
-                        User Data Files
-                      </FileTypeTitleContainer>
-                      <FileContainer theme={theme}>
-                        {project.dataFolderFiles.map((file, i) => (
-                          <IndividualFile
-                            key={`data-${i}`}
-                            theme={theme}
-                            selected={this.state.selectedFile === file}
-                            onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
-                            {file}
-                          </IndividualFile>
-                        ))}
-                        <IndividualFile
-                          theme={theme}
-                          selected={false}
-                          onClick={() => this.addNewFile("txt")}>
-                          <FileItemIcon icon={faFileCirclePlus} />
-                          {LocalizedString.lookup(tr('Add File'), this.props.locale)}
-                        </IndividualFile>
-                      </FileContainer>
-                    </FileTypeItem>
-                  </FileTypeContainer>
-                ) : null)
-
+                project.projectLanguage === "graphical" ? (
+                  this.graphicalView(project)
+                ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
+                  this.simpleView(project)
+                ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
+                  this.advancedView(project)
+                ) : null))
+              )
               }
             </Container>
           ))}
@@ -1100,6 +1264,200 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       </ProjectContainer>
     )
   }
+
+  graphicalView = (project: Project) => {
+    const { theme } = this.props;
+
+    return (<FileTypeContainer theme={theme} selected={false}>
+      <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
+        <FileTypeTitleContainer theme={theme}>
+          Source Files
+        </FileTypeTitleContainer>
+        <FileContainer theme={theme}>
+          {project.srcFolderFiles.map((file, i) => (
+
+            <IndividualFile
+              key={`src-${i}`}
+              theme={theme}
+              selected={
+                (this.state.selectedFile === file || this.props.propFileName === file)
+                && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+                && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
+              }
+              onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
+            >
+              {file}
+            </IndividualFile>
+          ))}
+
+        </FileContainer>
+      </FileTypeItem>
+
+    </FileTypeContainer>);
+
+  };
+
+  simpleView = (project: Project) => {
+    const { theme } = this.props;
+    console.log("FileExplorer simpleView state: ", this.state);
+    console.log("FileExplorer simpleView props: ", this.props);
+    return <FileTypeContainer theme={theme} selected={false}>
+      <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
+        <FileTypeTitleContainer theme={theme}>
+          Source Files
+        </FileTypeTitleContainer>
+        <FileContainer theme={theme}>
+          {project.srcFolderFiles.map((file, i) => (
+            console.log("File selected: ", (this.state.selectedFile === file || this.props.propFileName === file)
+              && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+              && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)),
+            console.log("(this.state.selectedFile === file || this.props.propFileName === file): ", (this.state.selectedFile === file || this.props.propFileName === file)),
+            console.log("this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false: ", (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)),
+            console.log("this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false: ", (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)),
+
+            <IndividualFile
+              key={`src-${i}`}
+              theme={theme}
+              selected={
+                (this.state.selectedFile === file || this.props.propFileName === file)
+                && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+                && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
+              }
+              onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
+            >
+              {file}
+            </IndividualFile>
+          ))}
+          <IndividualFile theme={theme} selected={false} onClick={() => this.addNewFile(project.projectLanguage)}>
+            <FileItemIcon icon={faFileCirclePlus} />
+            {LocalizedString.lookup(tr('Add File'), this.props.locale)}
+          </IndividualFile>
+        </FileContainer>
+      </FileTypeItem>
+
+    </FileTypeContainer>
+  };
+
+  advancedView = (project: Project) => {
+    const { theme } = this.props;
+    return (<FileTypeContainer theme={theme} selected={false}>
+      {project.projectLanguage != "python" && (
+        <FileTypeItem theme={theme} key={`IncludeFileHeader-${project.projectName}`}>
+          <FileTypeTitleContainer theme={theme} >
+            Include Files
+          </FileTypeTitleContainer>
+          <FileContainer theme={theme}>
+            {project.includeFolderFiles.map((file, i) => (
+              <IndividualFile
+                key={`include-${i}`}
+                theme={theme}
+                selected={
+                  (this.state.selectedFile === file || this.props.propFileName === file)
+                  && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+                  && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
+                }
+                onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
+                {file}
+              </IndividualFile>
+            ))}
+
+
+            <ExtraFilesContainer theme={theme}>
+              <ExtraFileButton theme={theme} selected={false} onClick={() => this.addNewFile("h")}>
+                <FileItemIcon icon={faFileCirclePlus} />
+                {LocalizedString.lookup(tr('Create File'), this.props.locale)}
+              </ExtraFileButton>
+              <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'include', showFileUploader: true })}>
+                <FileItemIcon icon={faFileCirclePlus} />
+                {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
+              </ExtraFileButton>
+            </ExtraFilesContainer>
+
+          </FileContainer>
+        </FileTypeItem>
+      )}
+
+      <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
+        <FileTypeTitleContainer theme={theme}>
+          Source Files
+        </FileTypeTitleContainer>
+        <FileContainer theme={theme}>
+          {project.srcFolderFiles.map((file, i) => (
+            console.log("FileExplorer renderProjects file: ", file),
+            console.log("(this.state.selectedFile === file || this.props.propFileName === file): ", (this.state.selectedFile === file || this.props.propFileName === file)),
+            console.log("this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false: ", (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)),
+            console.log("this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false: ", (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)),
+
+            console.log("render file:", file, {
+              selectedFile: this.state.selectedFile,
+              propFileName: this.props.propFileName,
+              userMatch: this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false,
+              selected:
+                (this.state.selectedFile === file || this.props.propFileName === file) &&
+                  this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false
+            }),
+            <IndividualFile
+              key={`src-${i}`}
+              theme={theme}
+              selected={
+                (this.state.selectedFile === file || this.props.propFileName === file)
+                && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+                && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
+              }
+              onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
+              {file}
+            </IndividualFile>
+          ))}
+
+          <ExtraFilesContainer theme={theme}>
+            <ExtraFileButton theme={theme} selected={false} onClick={() => this.addNewFile(project.projectLanguage)}>
+              <FileItemIcon icon={faFileCirclePlus} />
+              {LocalizedString.lookup(tr('Create File'), this.props.locale)}
+            </ExtraFileButton>
+            <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'src', showFileUploader: true })}>
+              <FileItemIcon icon={faFileCirclePlus} />
+              {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
+            </ExtraFileButton>
+          </ExtraFilesContainer>
+        </FileContainer>
+      </FileTypeItem>
+
+      <FileTypeItem theme={theme} key={`UserDataFileHeader-${project.projectName}`}>
+        <FileTypeTitleContainer theme={theme}>
+          User Data Files
+        </FileTypeTitleContainer>
+        <FileContainer theme={theme}>
+          {project.dataFolderFiles.map((file, i) => (
+            <IndividualFile
+              key={`data-${i}`}
+              theme={theme}
+              selected={
+                (this.state.selectedFile === file || this.props.propFileName === file)
+                && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
+                && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
+              }
+              onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
+              {file}
+            </IndividualFile>
+          ))}
+
+          <ExtraFilesContainer theme={theme}>
+            <ExtraFileButton
+              theme={theme}
+              selected={false}
+              onClick={() => this.addNewFile("txt")}>
+              <FileItemIcon icon={faFileCirclePlus} />
+              {LocalizedString.lookup(tr('Create File'), this.props.locale)}
+            </ExtraFileButton>
+            <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'data', showFileUploader: true })}>
+              <FileItemIcon icon={faFileCirclePlus} />
+              {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
+            </ExtraFileButton>
+          </ExtraFilesContainer>
+        </FileContainer>
+      </FileTypeItem>
+    </FileTypeContainer>)
+  };
 
   render() {
     if (!this.props.theme) {
@@ -1114,6 +1472,9 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       showUserContextMenu,
       showProjectContextMenu,
       showFileContextMenu,
+      showFileUploader,
+      showProjectUploader,
+      uploadType
 
     } = state;
 
@@ -1145,14 +1506,17 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           }}
         >
           <h2 style={{ marginLeft: '6px', fontSize: '1.728em' }}>Explorer</h2>
-          <UsersContainer theme={theme}>
-            {userSections}
-          </UsersContainer>
+          <StyledScrollArea theme={theme}>
+            <UsersContainer theme={theme}>
+              {userSections}
+            </UsersContainer>
+          </StyledScrollArea>
         </FileExplorerContainer>
         {showUserContextMenu && this.renderUserContextMenu()}
         {showProjectContextMenu && this.renderProjectContextMenu()}
         {showFileContextMenu && this.renderFileContextMenu()}
-
+        {showFileUploader && this.renderUploadFileView(uploadType)}
+        {showProjectUploader && this.renderUploadProjectView()}
 
       </div >
     );
