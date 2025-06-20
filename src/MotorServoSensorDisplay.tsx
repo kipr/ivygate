@@ -1,8 +1,8 @@
 import * as React from 'react';
 import tr from './i18n';
 import LocalizedString from './util/LocalizedString';
-import { ThemeProps } from './theme';
-import { StyleProps } from './style';
+import { ThemeProps } from './components/constants/theme';
+import { StyleProps } from './components/constants/style';
 import { styled } from 'styletron-react';
 import { Fa } from "./components/Fa";
 import { Motors, Servos, ServoPositions, SensorSelectionKey, MotorView, MotorVelocities, MotorPositions, ServoType, SensorValues, DEFAULT_SENSORS, DEFAULT_MOTORS, GraphTypes, GraphSelectionKey, DEFAULT_SERVOS, AnalogSensors, DigitalSensors, Sensors, SensorValue } from './types/motorServoSensorTypes';
@@ -11,6 +11,7 @@ import ComboBox from './components/ComboBox';
 import ResizeableComboBox from './components/ResizeableComboBox';
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import SensorWidget from './components/SensorWidget';
+import ScrollArea from './components/interface/ScrollArea';
 
 
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
@@ -37,6 +38,7 @@ export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
     sensorDisplayShown: (visible: boolean) => void;
     sensorSelections: (selectedSensors: SensorSelectionKey[]) => void;
     graphSelections: (selectedGraphs: GraphSelectionKey[]) => void;
+    clearMotorPosition(motor: Motors): void;
     //enableServo: (servo: Servos, enable: boolean | undefined) => void;
 }
 interface SectionProps {
@@ -88,6 +90,9 @@ interface MotorServoSensorDisplayState {
     selectedSensorGraphs: SensorValue[];
     selectedMotorGraphs: (keyof MotorVelocities)[];
 
+    servoInputStyle: React.CSSProperties;
+    motorInputStyle: React.CSSProperties;
+
 
 
 }
@@ -107,7 +112,8 @@ const MotorServoSensorContainer = styled('div', (props: ThemeProps) => ({
     width: '100%',
     margin: '5px',
     zIndex: 1,
-    paddingBottom: '10px',
+    //  paddingBottom: '10px',
+
 
 }));
 
@@ -119,12 +125,14 @@ const SectionsColumn = styled('div', (props: ThemeProps) => ({
     border: `3px solid ${props.theme.borderColor}`,
     minHeight: '100%',
     height: 'auto',
-    marginBottom: '6px',
+    paddingBottom: '8em',
+
 }));
 
 const SidePanel = styled('div', (props: ThemeProps) => ({
     display: 'flex',
     //backgroundColor: 'blue',
+    flexDirection: 'column',
     flexWrap: 'wrap',
     //flex: '1 0 0',
     left: '3.5%',
@@ -218,7 +226,6 @@ const SubGraphTypeDropDownContainer = styled('span', (props: ThemeProps & { sele
     backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
 
     boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
-    transition: 'background-color 0.2s, opacity 0.2s',
     paddingRight: '5px',
     paddingBottom: '5%',
     fontWeight: 500,
@@ -239,7 +246,6 @@ const GraphTypeDropDownContainer = styled('span', (props: ThemeProps & { selecte
     backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
 
     boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
-    transition: 'background-color 0.2s, opacity 0.2s',
     paddingRight: '5px',
     fontWeight: 500,
     fontSize: '1.44em',
@@ -337,8 +343,8 @@ const SectionTitleText = styled('span', (props: ThemeProps & { selected: boolean
     },
     backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
     boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
-    transition: 'background-color 0.2s, opacity 0.2s',
     paddingRight: '3%',
+    paddingLeft: '1.5%',
     fontWeight: 500,
     fontSize: '1.44em',
     width: '100%',
@@ -346,6 +352,9 @@ const SectionTitleText = styled('span', (props: ThemeProps & { selected: boolean
 
 
 
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+    flex: 1,
+}));
 
 
 const SettingInfoSubtext = styled(SectionInfoText, {
@@ -371,7 +380,6 @@ const SectionName = styled('span', (props: ThemeProps & SectionProps & { selecte
     backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
     boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : '0px 10px 13px -6px rgba(255, 105, 180, 0.1), 0px 1px 31px 0px rgba(135, 206, 250, 0.08), 0px 8px 38px 7px rgba(144, 238, 144, 0.1)',
 
-    transition: 'background-color 0.2s, opacity 0.2s',
     padding: `5px`,
     fontWeight: props.selected ? 400 : undefined,
     userSelect: 'none',
@@ -422,6 +430,20 @@ const StopButton = styled(Button, (props: ThemeProps & ClickProps) => ({
         }
         : {},
 }));
+
+const EnableDisableAllServos = styled(Button, (props: ThemeProps & ClickProps & { allServosEnabled?: boolean }) => ({
+    backgroundColor: props.allServosEnabled ? props.theme.noButtonColor.standard : props.theme.yesButtonColor.standard,
+    border: props.allServosEnabled ? `1px solid ${props.theme.noButtonColor.border}` : `1px solid ${props.theme.yesButtonColor.border}`,
+    ':hover':
+        { backgroundColor: props.allServosEnabled ? props.theme.noButtonColor.hover : props.theme.yesButtonColor.hover },
+    color: props.theme.noButtonColor.textColor,
+    fontSize: '1.2em',
+    fontWeight: 500,
+    textShadow: props.theme.noButtonColor.textShadow,
+    boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+
+}));
+
 
 const EnableButton = styled(Button, (props: ThemeProps & ClickProps & { $enabled?: boolean }) => ({
     backgroundColor: props.$enabled ? props.theme.noButtonColor.standard : props.theme.yesButtonColor.standard,
@@ -501,6 +523,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     }
                 }
             ],
+            motorInputStyle: this.props.theme.themeName === 'DARK' ?
+                {
+                    width: '80%',
+                    appearance: 'none',
+                    height: '6px',
+                    borderRadius: '3px',
+                    background: `linear-gradient(to right,#AD4C4B 0%,#AD4C4B 50%,#4aad52 50%,#4aad52 100%)`,
+                    outline: 'none'
+                } : {
+                    width: '80%',
+                    appearance: 'none',
+                    height: '6px',
+                    borderRadius: '3px',
+                    background: `linear-gradient(to right,#FF4E4E 0%,#FF4E4E 50%,#2BDE3F 50%,#2BDE3F 100%)`,
+                    outline: 'none'
+                },
             shownServo: Servos.SERVO0,
             shownServoValue: 0,
             servoPositions: [
@@ -549,6 +587,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 }
             ],
             sensorValues: DEFAULT_SENSORS,
+            servoInputStyle: this.props.theme.themeName === 'DARK' ?
+                {
+                    width: '80%',
+                    appearance: 'none',
+                    height: '6px',
+                    borderRadius: '3px',
+                    background: `linear-gradient(to right,#AD4C4B 0%,#AD4C4B 10%,#4aad52 10%,#4aad52 90%,#AD4C4B 90%,#AD4C4B 100%)`,
+                    outline: 'none'
+                } : {
+                    width: '80%',
+                    appearance: 'none',
+                    height: '6px',
+                    borderRadius: '3px',
+                    background: `linear-gradient(to right,#FF4E4E 0%,#FF4E4E 10%,#2BDE3F 10%,#2BDE3F 90%,#FF4E4E 90%,#FF4E4E 100%)`,
+                    outline: 'none'
+                },
             selectedSensors: [],
             customTickValueConfig: {
                 style: { fontSize: '1.2em', fill: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000' },
@@ -617,6 +671,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 console.log("MotorServoSensorDisplay compDidUpdate NEW this.state.servoPositions: ", this.state.servoPositions);
             });
         }
+
         if (prevProps.propedProgramRunning !== this.props.propedProgramRunning) {
 
             console.log("MotorServoSensorDisplay compDidUpdate props propedProgramRunning CHANGED from: ", prevProps.propedProgramRunning, "to: ", this.props.propedProgramRunning);
@@ -698,6 +753,38 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     }
 
                 ],
+                servoInputStyle: this.props.theme.themeName === 'DARK' ?
+                    {
+                        width: '80%',
+                        appearance: 'none',
+                        height: '6px',
+                        borderRadius: '3px',
+                        background: `linear-gradient(to right,#AD4C4B 0%,#AD4C4B 10%,#4aad52 10%,#4aad52 90%,#AD4C4B 90%,#AD4C4B 100%)`,
+                        outline: 'none'
+                    } : {
+                        width: '80%',
+                        appearance: 'none',
+                        height: '6px',
+                        borderRadius: '3px',
+                        background: `linear-gradient(to right,#FF4E4E 0%,#FF4E4E 10%,#2BDE3F 10%,#2BDE3F 90%,#FF4E4E 90%,#FF4E4E 100%)`,
+                        outline: 'none'
+                    },
+                motorInputStyle: this.props.theme.themeName === 'DARK' ?
+                    {
+                        width: '80%',
+                        appearance: 'none',
+                        height: '6px',
+                        borderRadius: '3px',
+                        background: `linear-gradient(to right,#AD4C4B 0%,#AD4C4B 50%,#4aad52 50%,#4aad52 100%)`,
+                        outline: 'none'
+                    } : {
+                        width: '80%',
+                        appearance: 'none',
+                        height: '6px',
+                        borderRadius: '3px',
+                        background: `linear-gradient(to right,#FF4E4E 0%,#FF4E4E 50%,#2BDE3F 50%,#2BDE3F 100%)`,
+                        outline: 'none'
+                    },
                 customTickValueConfig: {
                     style: { fontSize: '1.2em', fill: this.props.theme.themeName === 'DARK' ? '#FFFFFF' : '#000000' },
                 },
@@ -733,6 +820,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         if (prevState.shownMotorValue !== this.state.shownMotorValue) {
             console.log("MotorServoSensorDisplay compDidUpdate state shownMotorValue: ", this.state.shownMotorValue);
         }
+
 
     }
 
@@ -837,6 +925,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 motorMaxValue: newMotorLimits.motorMaxValue,
                 motorSubArcs: newMotorSubArcs,
                 shownMotorView: option.data as MotorView,
+                motorPositions: DEFAULT_MOTORS
             });
         }
     };
@@ -858,6 +947,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
     private setMotorGraphSelection = (motorSelection: Motors) => {
         console.log("setMotorGraphSelection: ", motorSelection);
+
         this.setState(prevState => ({
             selectedMotorGraphs: [...prevState.selectedMotorGraphs, motorSelection]
         }), () => {
@@ -924,6 +1014,23 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         });
     };
 
+    private flipEnableDisableAllServos_ = () => {
+        console.log("Flip enable/disable all servos");
+        this.setState((prevState) => {
+            const allEnabled = prevState.servoPositions.every(servo => servo.enable);
+            const updatedServoPositions = prevState.servoPositions.map((servo) =>
+                ({ ...servo, enable: !allEnabled })
+            );
+            return {
+                servoPositions: updatedServoPositions,
+            };
+        }, () => {
+            console.log("After set state servoPositions: ", this.state.servoPositions);
+            this.props.storeServoPositions(this.state.servoPositions);
+        });
+
+    };
+
     private disableAllServos_ = () => {
         console.log("Disable all servos");
         this.setState((prevState) => {
@@ -975,6 +1082,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         }
     }
 
+    private clearCurrentMotorPosition_ = () => {
+
+        console.log("Clear current motor position for current Motor: ", this.newMotorRef.current);
+        if (this.newMotorRef.current) {
+            this.props.clearMotorPosition(this.newMotorRef.current);
+        }
+    };
+
 
 
     private onSectionSelect_ = (section: "Motor" | "Servo" | "Sensor") => {
@@ -1024,8 +1139,6 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     <SensorTypeContainer theme={theme}>
 
                         {Object.entries(this.state.sensorValues.Analogs).map(([key, value], index) => (
-
-                            console.log("Analog key: ", key, " value: ", value),
                             <SelectedGraphTypeContainer theme={theme} >
                                 <SubGraphTypeDropDownContainer theme={theme}>
                                     <Row key={`${key}`} theme={theme}>
@@ -1034,6 +1147,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                             name={`${key}`}
                                             plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
                                             theme={theme}
+
 
                                         />
                                     </Row>
@@ -1132,22 +1246,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SensorTypeContainer>);
             case 'Button':
                 return (
-                <SensorTypeContainer theme={theme}>
-                     <SelectedGraphTypeContainer theme={theme} >
-                        <SubGraphTypeDropDownContainer theme={theme}>
-                            <Row key={'Button'} theme={theme}>
-                                <SensorWidget
-                                    value={propedButtonValues && propedButtonValues[0] !== undefined ? propedButtonValues[0] : 0}
-                                    name={'Button'}
-                                    plotTitle={LocalizedString.lookup(tr(`Button Plot`), locale)}
-                                    theme={theme}
+                    <SensorTypeContainer theme={theme}>
+                        <SelectedGraphTypeContainer theme={theme} >
+                            <SubGraphTypeDropDownContainer theme={theme}>
+                                <Row key={'Button'} theme={theme}>
+                                    <SensorWidget
+                                        value={propedButtonValues && propedButtonValues[0] !== undefined ? propedButtonValues[0] : 0}
+                                        name={'Button'}
+                                        plotTitle={LocalizedString.lookup(tr(`Button Plot`), locale)}
+                                        theme={theme}
 
-                                />
-                            </Row>
-                        </SubGraphTypeDropDownContainer>
+                                    />
+                                </Row>
+                            </SubGraphTypeDropDownContainer>
 
-                    </SelectedGraphTypeContainer>
-                </SensorTypeContainer>
+                        </SelectedGraphTypeContainer>
+                    </SensorTypeContainer>
                 );
 
 
@@ -1166,14 +1280,16 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         console.log("renderMotorGraphs state.motorPositions['Motor 0']: ", this.state.motorPositions['Motor 0']);
         console.log("renderMotorGraphs this.props.propedMotorVelocities: ", this.props.propedMotorVelocities);
         console.log("renderMotorGraphs this.props.propedMotorPositions: ", this.props.propedMotorPositions);
+
         for (let i = 0; i < 4; ++i) {
 
             motorVelocities.push(
                 <Row key={`motor-velocity-${i}`} theme={theme}>
                     <SensorWidget
 
-                        value={this.state.shownMotorView === MotorView.VELOCITY ? (this.props.propedProgramRunning ? this.props.propedMotorVelocities[`Motor ${i}`] : this.state.motorPositions[`Motor ${i}`]) : 0}
-                        name={`motor ${i} velocity`}
+                        value={(this.state.shownMotorView === MotorView.VELOCITY ? (this.props.propedProgramRunning ? this.props.propedMotorVelocities[`Motor ${i}`] : this.state.motorPositions[`Motor ${i}`]) : 0) ||
+                            (this.state.shownMotorView === MotorView.POWER ? (this.props.propedProgramRunning ? this.props.propedMotorPositions[`Motor ${i}`] : this.state.motorPositions[`Motor ${i}`]) : 0)}
+                        name={`motor(${i}) velocity`}
                         plotTitle={LocalizedString.lookup(tr('Motor Velocity Plot'), locale)}
                         theme={theme}
 
@@ -1184,7 +1300,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             motorPositions.push(
                 <Row key={`motor-position-${i}`} theme={theme}>
                     <SensorWidget
-                        value={this.props.propedProgramRunning ? this.props.propedMotorPositions[`Motor ${i}`] : this.state.motorPositions[`Motor ${i}`]}
+                        value={this.props.propedMotorPositions ? this.props.propedMotorPositions[`Motor ${i}`] : 0}
                         name={`get_motor_position_counter(${i})`}
                         plotTitle={LocalizedString.lookup(tr('Motor Position Plot'), locale)}
                         theme={theme}
@@ -1270,7 +1386,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
         console.log("MotorServoSensorDisplay render state shownMotorValue: ", shownMotorValue);
         const motorSection = () => {
-            const { selectedGraphs } = this.state;
+            const { selectedGraphs, motorInputStyle } = this.state;
             const { theme } = this.props;
             return (
                 <SectionsColumn theme={theme}>
@@ -1316,13 +1432,19 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                             maxValue={motorMaxValue}
                             initialValue={0}
                             theme={theme}
-                            margins={{ top: 0.095, bottom: 0.02, left: 0.07, right: 0.07 }}
+                            margins={{ top: 0.1, bottom: 0.02, left: 0.07, right: 0.07 }}
                             onDialChange={this.onMotorChange_}
                             changeValue={this.state.shownMotorValue}
                             customTickValueConfig={this.state.customTickValueConfig}
                             customTickLineConfig={this.state.customTickLineConfig}
                             subArcs={motorSubArcs}
+                            inputStyle={motorInputStyle}
                         />
+                    </SettingContainer>
+                    <SettingContainer theme={theme}>
+                        <MotorStopButton disabled={!(Object.keys(this.props.propedMotorPositions).some((key) => this.props.propedMotorPositions[key] !== 0))} onClick={() => this.clearCurrentMotorPosition_()} theme={theme} >
+                            {LocalizedString.lookup(tr('Clear Motor Position'), locale)}
+                        </MotorStopButton>
                     </SettingContainer>
                     <SettingContainer theme={theme}>
                         <MotorStopButton disabled={!(Object.keys(this.state.motorPositions).some((key) => this.state.motorPositions[key] !== 0))} onClick={() => this.stopAllMotors_()} theme={theme}>
@@ -1362,7 +1484,8 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
         const servoSection = () => {
             console.log("Servo section this.state.shownServoValue: ", this.state.shownServoValue);
-            const { selectedGraphs } = this.state;
+            console.log("Servo section this.props.propedservoPositions: ", this.props.propedServoPositions);
+            const { selectedGraphs, servoInputStyle } = this.state;
             const { theme } = this.props;
             return (
                 <SectionsColumn theme={theme}>
@@ -1391,19 +1514,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                             initialValue={1024}
                             theme={theme}
                             onDialChange={this.onServoChange_}
+                            margins={{ top: 0.07, bottom: 0.02, left: 0.12, right: 0.12 }}
                             changeValue={this.props.propedServoPositions.length < 1 ? 1024 : (this.state.servoPositions[parseInt(this.state.shownServo.split(' ')[1])].value)}
                             customTickValueConfig={this.state.customTickValueConfig}
                             customTickLineConfig={this.state.customTickLineConfig}
+                            inputStyle={servoInputStyle}
                             subArcs={servoSubArcs}
                         />
                     </SettingContainer>
                     <SettingContainer theme={theme} style={{ padding: '1px', paddingBottom: '5px', }}>
 
-                        <StopButton disabled={Object.values(this.props.propedServoPositions).every(
-                            (servo) => servo.enable === false
-                        )} onClick={() => this.disableAllServos_()} theme={theme}>
-                            {LocalizedString.lookup(tr('Disable All Servos'), locale)}
-                        </StopButton>
+                        <EnableDisableAllServos
+                            allServosEnabled={Object.values(this.state.servoPositions).every((servo) => servo.enable === true)} onClick={() => this.flipEnableDisableAllServos_()} theme={theme}>
+                            {Object.values(this.props.propedServoPositions).every(
+                                (servo) => servo.enable === false
+                            ) ? LocalizedString.lookup(tr('Enable All Servos'), locale) : LocalizedString.lookup(tr('Disable All Servos'), locale)}
+                        </EnableDisableAllServos>
                         <EnableButton onClick={() => this.flipEnableServo_(shownServo)} theme={theme} $enabled={this.state.servoPositions.find(servo => servo.name === shownServo)?.enable}>
                             {this.state.servoPositions.find(servo => servo.name === shownServo)?.enable
                                 ? LocalizedString.lookup(tr('Disable Servo'), locale)
@@ -1438,7 +1564,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             const { selectedSensors } = this.state;
             return (
                 console.log("Sensor section selectedSensors: ", selectedSensors),
-                <SectionsColumn theme={theme} style={{ paddingBottom: '10px' }}>
+                <SectionsColumn theme={theme}>
 
                     <SectionTitleContainer theme={theme}>
                         <SectionTitleText
@@ -1517,26 +1643,25 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
         return (
             <SidePanel
                 theme={theme}
-                style={{
-                    flex: 1,
-                    overflowY: 'scroll',
-                }}
+
             >
-                <h2 style={{ marginLeft: '6px', fontSize: '1.728em' }}>Motors, Servos and Sensors</h2>
-                <MotorServoSensorContainer theme={theme} style={{ marginBottom: '10px' }}>
-                    <SectionName theme={theme} selected={selectedSection === "Motor"} onClick={() => this.onSectionSelect_("Motor")}>
-                        Motor
-                    </SectionName>
-                    <SectionName theme={theme} selected={selectedSection === "Servo"} onClick={() => this.onSectionSelect_("Servo")}>
-                        Servo
-                    </SectionName>
-                    <SectionName theme={theme} selected={selectedSection === "Sensor"} onClick={() => this.onSectionSelect_("Sensor")}>
-                        Sensor
-                    </SectionName>
-                    {selectedSection == "Motor" && motorSection()}
-                    {selectedSection == "Servo" && servoSection()}
-                    {selectedSection == "Sensor" && sensorSection()}
-                </MotorServoSensorContainer>
+                <h2 style={{ marginLeft: '6px', }}>Motors, Servos and Sensors</h2>
+                <StyledScrollArea theme={theme} >
+                    <MotorServoSensorContainer theme={theme} style={{ marginBottom: '10px' }}>
+                        <SectionName theme={theme} selected={selectedSection === "Motor"} onClick={() => this.onSectionSelect_("Motor")}>
+                            Motor
+                        </SectionName>
+                        <SectionName theme={theme} selected={selectedSection === "Servo"} onClick={() => this.onSectionSelect_("Servo")}>
+                            Servo
+                        </SectionName>
+                        <SectionName theme={theme} selected={selectedSection === "Sensor"} onClick={() => this.onSectionSelect_("Sensor")}>
+                            Sensor
+                        </SectionName>
+                        {selectedSection == "Motor" && motorSection()}
+                        {selectedSection == "Servo" && servoSection()}
+                        {selectedSection == "Sensor" && sensorSection()}
+                    </MotorServoSensorContainer>
+                </StyledScrollArea>
             </SidePanel >
         );
     }
