@@ -8,6 +8,7 @@ import StructureDocumentation from './StructureDocumentation';
 import TypeDocumentation from './TypeDocumentation';
 
 interface Documentation {
+  title: string;
   files: Dict<FileDocumentation>;
   functions: Dict<FunctionDocumentation>;
   modules: Dict<ModuleDocumentation>;
@@ -18,6 +19,7 @@ interface Documentation {
 
 namespace Documentation {
   export const EMPTY: Documentation = {
+    title: '',
     files: {},
     functions: {},
     modules: {},
@@ -37,6 +39,7 @@ namespace Documentation {
 
   export const subset = (doc: Documentation, params: SubsetParams): Documentation => {
     const ret: Documentation = {
+      title: '',
       files: {},
       functions: {},
       modules: {},

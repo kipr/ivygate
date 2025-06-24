@@ -96,7 +96,7 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
 
     const sections: JSX.Element[] = [];
 
-    const modules = Dict.toList(documentation.modules)
+    const modules = Dict.toList(documentation.modules || {})
       .sort(([idA, a], [idB, b]) => ModuleDocumentation.compare(a, b))
       .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
 
@@ -118,7 +118,8 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
       first = false;
     }
 
-    const functions = Dict.toList(documentation.functions)
+
+    const functions = Dict.toList(documentation.functions || {})
       .sort(([idA, a], [idB, b]) => FunctionDocumentation.compare(a, b))
       .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
 
@@ -140,7 +141,7 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
       first = false;
     }
 
-    const structures = Dict.toList(documentation.structures)
+const structures = Dict.toList(documentation.structures || {})
       .sort(([idA, a], [idB, b]) => StructureDocumentation.compare(a, b))
       .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
 
@@ -161,7 +162,7 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
       first = false;
     }
 
-    const enumerations = Dict.toList(documentation.enumerations)
+    const enumerations = Dict.toList(documentation.enumerations || {})
       .sort(([idA, a], [idB, b]) => EnumerationDocumentation.compare(a, b))
       .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
 
@@ -182,7 +183,7 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
       first = false;
     }
     
-    const files = Dict.toList(documentation.files)
+    const files = Dict.toList(documentation.files || {})
       .sort(([idA, a], [idB, b]) => FileDocumentation.compare(a, b))
       .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
 

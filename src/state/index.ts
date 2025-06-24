@@ -11,7 +11,8 @@ export const history = createBrowserHistory();
 
 
 const rootReducer = combineReducers({
-  documentation: reducer.reduceDocumentation,
+  documentationDefault: reducer.reduceDocumentation,
+  documentationCommon: reducer.reduceDocumentationCommon,
   i18n: reducer.reduceI18n,
 });
 
@@ -22,7 +23,8 @@ const store = configureStore({
 });
 
 export interface State {
-  documentation: DocumentationState;
+  documentationDefault: DocumentationState;
+  documentationCommon: DocumentationState;
   i18n: I18n
   
 }

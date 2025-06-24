@@ -47,7 +47,11 @@ namespace DragState {
 type DragState = DragState.None | DragState.Dragging;
 
 export interface DocumentationWindowPublicProps extends ThemeProps {
-
+  documentationState: DocumentationState;
+  locale: LocalizedString.Language;
+  onDocumentationSizeChange: (size: Size) => void;
+  onDocumentationPop: () => void;
+  onDocumentationPush: (location: DocumentationLocation) => void;
 }
 
 interface DocumentationWindowPrivateProps {
@@ -133,6 +137,10 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     return true;
   };
 
+  componentDidMount(): void {
+    console.log("DocumentationWindow mounted, state:", this.state);
+    console.log("DocumentationWindow props:", this.props);
+  }
   private onWindowMouseUp_ = (e: MouseEvent) => {
     const { state } = this;
     const { dragState } = state;
@@ -179,6 +187,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
+    console.log("Rendering DocumentationWindow with size", this.props.documentationState.size);
+
     const {
       locale,
       theme,
@@ -191,12 +201,12 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const {
       documentation,
       locationStack,
-     size,
+      size,
       language
     } = documentationState;
 
     if (size.type === Size.Type.Minimized) return null;
-   
+
 
     const sizeIndex = SIZES.findIndex(s => s.type === size.type);
 
@@ -204,7 +214,12 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const style: React.CSSProperties = {
       position: 'absolute',
       opacity: dragState.type === 'dragging' ? 0.8 : 1,
+      left: '100px',
+      top: '100px',
+      zIndex: 9999,
+      background: this.props.theme.dialogBoxTitleBackground,
     };
+
 
     switch (size.type) {
       case Size.Type.Partial: {
@@ -223,15 +238,12 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     }
 
     const locationStackTop = locationStack[locationStack.length - 1];
-    console.log('Documentation state:', documentationState);
-    console.log("DocumentationWindow props:", props);
-    console.log("DocumentationWindow render, locationStackTop:", locationStackTop);
-    console.log('Current size:', size.type);
+    console.log("DocumentationWindow render, size:", size.type, "locationStack:", locationStack, "state:", state);
 
     return (
       <DocumentationRoot>
         <Widget
-          name={LocalizedString.lookup(tr('Documentation'), locale)}
+          name={this.props.documentationState.documentation.title === 'common' ? LocalizedString.lookup(tr('Common Functions'), locale) : LocalizedString.lookup(tr('Full Documentation'), locale)}
           theme={theme}
           mode={mode}
           style={style}
@@ -336,11 +348,26 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect((state: ReduxState) => ({
-  documentationState: state.documentation,
+export default connect((state: ReduxState, ownProps: { documentationType: 'common' | 'default'; }) => ({
+  documentationState: ownProps.documentationType === 'common'
+    ? state.documentationCommon
+    : state.documentationDefault,
   locale: state.i18n.locale,
-}), dispatch => ({
-  onDocumentationSizeChange: (size: Size) => dispatch(DocumentationAction.setSize({ size })),
-  onDocumentationPop: () => dispatch(DocumentationAction.POP),
-  onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
-}))(DocumentationWindow) as React.ComponentType<DocumentationWindowPublicProps>;
+}),
+  (dispatch, ownProps) => ({
+    onDocumentationSizeChange: (size: Size) =>
+      ownProps.documentationType === 'common'
+        ? dispatch(DocumentationAction.setSizeCommon({ size }))
+        : dispatch(DocumentationAction.setSize({ size })),
+
+    onDocumentationPop: () =>
+      ownProps.documentationType === 'common'
+        ? dispatch(DocumentationAction.POP_COMMON)
+        : dispatch(DocumentationAction.POP),
+
+    onDocumentationPush: (location: DocumentationLocation) =>
+      ownProps.documentationType === 'common'
+        ? dispatch(DocumentationAction.pushLocationCommon({ location }))
+        : dispatch(DocumentationAction.pushLocation({ location })),
+  })
+)(DocumentationWindow);
