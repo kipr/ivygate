@@ -8,18 +8,19 @@ import { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER } from './types/user';
 import { Project, BLANK_PROJECT, UploadedProject } from './types/project';
 import { InterfaceMode } from './types/interface';
-import { faFolderPlus, faFileCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faFolderPlus, faFileCirclePlus, faUser, faFolderOpen, faFileCode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import ProgrammingLanguage from './types/programmingLanguage';
 import ScrollArea from './components/interface/ScrollArea';
 import FileUploader from './FileUploader';
 import { FileInfo } from './types/fileInfo';
 import ProjectUploader from './ProjectUploader';
+import { Fa } from './components/Fa';
 
 
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
-  
+
   propsSelectedProjectName?: string;
   propFileName?: string;
   propProjectName?: string;
@@ -115,6 +116,12 @@ const FileExplorerContainer = styled('div', (props: ThemeProps) => ({
   overflow: 'hidden',
   paddingBottom: '2em'
 }));
+const ItemIcon = styled(Fa, {
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  alignItems: 'center',
+  height: '30px'
+});
 
 const Container = styled('ul', {
   display: 'flex',
@@ -141,7 +148,7 @@ const ExtraFilesContainer = styled('div', (props: ThemeProps) => ({
 const ProjectContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
-    resize: 'horizontal',
+  resize: 'horizontal',
   position: 'relative',
   flex: '0 0 25rem',
   padding: '1px',
@@ -160,8 +167,8 @@ const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
   padding: '0.5px',
   fontSize: '1.2em',
   overflow: 'hidden',
-  flexWrap: 'nowrap', 
-  gap: '1rem', 
+  flexWrap: 'nowrap',
+  gap: '1rem',
 }));
 
 const ProjectTitle = styled('h2', {
@@ -195,8 +202,8 @@ const AddProjectButtonContainer = styled('div', (props: ThemeProps & { selected:
   height: '1.6em',
   fontSize: '1em',
   gap: '0.5rem',
-  flexShrink: 1,        
-  flexWrap: 'nowrap',  
+  flexShrink: 1,
+  flexWrap: 'nowrap',
   minWidth: 0,
 
 }));
@@ -241,11 +248,12 @@ const AddProjectItemIcon = styled(FontAwesomeIcon, {
 
 const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) => ({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   background: (props.selected) ? props.theme.selectedProjectBackground : props.theme.unselectedBackground,
   flexWrap: 'wrap',
   cursor: 'pointer',
   padding: '5px',
+  fontWeight: props.selected ? 550 : undefined,
   fontSize: '1.44em',
   width: '100%',
   boxSizing: 'border-box',
@@ -293,13 +301,16 @@ const FileContainer = styled('div', (props: ThemeProps) => ({
 const FileItemIcon = styled(FontAwesomeIcon, {
   paddingRight: '3px',
   alignItems: 'center',
-  height: '15px'
+  height: '20px'
 });
 
 const IndividualFile = styled('div', (props: ThemeProps & { selected: boolean, }) => ({
-
+  display: 'flex',
+  flexDirection: 'row',
   listStyleType: 'none',
   borderRadius: '5px',
+  alignItems: 'center',
+  fontWeight: props.selected ? 500 : undefined,
   cursor: 'pointer',
   width: '97%',
   fontSize: '1.15em',
@@ -323,8 +334,9 @@ const ExtraFileButton = styled('div', (props: ThemeProps & ClickProps & { select
   borderRadius: '5px',
   cursor: 'pointer',
   width: '97%',
-  minWidth: '6.8em',
+  minWidth: '7em',
   fontSize: '1.15em',
+
   backgroundColor: (props.selected) ? props.theme.selectedFileBackground : props.theme.unselectedBackground,
   padding: '3px',
   ':hover': {
@@ -342,8 +354,8 @@ const ExtraFileButton = styled('div', (props: ThemeProps & ClickProps & { select
     }
     : {},
 
-  flexShrink: 1,        
-  flexWrap: 'nowrap',   
+  flexShrink: 1,
+  flexWrap: 'nowrap',
 
 }));
 
@@ -394,22 +406,34 @@ const SectionsColumn = styled('div', (props: ThemeProps) => ({
   height: '100vh',
 }));
 
-const SectionName = styled('div', (props: ThemeProps & { selected: boolean }) => ({
-  ':hover': {
-    cursor: 'pointer',
-    backgroundColor: props.theme.hoverOptionBackground
-  },
+const SectionName = styled('div', (props: ThemeProps) => ({
+
   width: '100%',
   fontSize: '1.44em',
   flexWrap: 'wrap',
   alignItems: 'flex-start',
-  backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
+
   boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
   padding: `5px`,
-  fontWeight: props.selected ? 400 : undefined,
+
   userSelect: 'none',
   wordBreak: 'break-word',
   overflowWrap: 'anywhere',
+}));
+
+const UserTitleContainer = styled('div', (props: ThemeProps & { selected: boolean }) => ({
+  ':hover': {
+    cursor: 'pointer',
+    backgroundColor: props.theme.hoverOptionBackground
+  },
+  backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
+  display: 'flex',
+  fontWeight: props.selected ? 600 : undefined,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: '5px',
+
 }));
 
 export class IvygateFileExplorer extends React.PureComponent<Props, State> {
@@ -1217,21 +1241,19 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             console.log("this.state.selectedProject.projectName === project.projectName || this.props.propsSelectedProjectName === project.projectName: ", this.state.selectedProject.projectName === project.projectName || this.props.propsSelectedProjectName === project.projectName),
             console.log("this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false: ", (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)),
             <Container key={project.projectName}>
-              <ProjectItem
 
+              <ProjectItem
                 selected={this.state.selectedProject.projectName === project.projectName || this.props.propsSelectedProjectName === project.projectName
                   && (this.props.propUserShown ? this.props.propUserShown.userName === this.state.selectedUser.userName : false)
                 }
-
                 onClick={() => this.handleProjectClick(project, this.state.selectedUser, project.projectLanguage)}
-
                 onContextMenu={(e) => this.handleProjectRightClick(e, project)} theme={theme}
               >
+                <ItemIcon style={{ height: '25px' }} icon={faFolderOpen} />
                 {project.projectName}
               </ProjectItem>
 
               {this.state.selectedProject.projectName === project.projectName && this.state.showProjectFiles && (
-
                 project.projectLanguage === "graphical" ? (
                   this.graphicalView(project)
                 ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
@@ -1269,10 +1291,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               }
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
             >
+              <FileItemIcon icon={faFileCode} />
               {file}
             </IndividualFile>
           ))}
-
+         
         </FileContainer>
       </FileTypeItem>
 
@@ -1308,13 +1331,17 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               }
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
             >
+              <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />
               {file}
             </IndividualFile>
           ))}
-          <IndividualFile theme={theme} selected={false} onClick={() => this.addNewFile(project.projectLanguage)}>
-            <FileItemIcon icon={faFileCirclePlus} />
-            {LocalizedString.lookup(tr('Add File'), this.props.locale)}
-          </IndividualFile>
+          <ExtraFilesContainer theme={theme}>
+            <ExtraFileButton theme={theme} selected={false} onClick={() => this.addNewFile("h")}>
+              <FileItemIcon icon={faFileCirclePlus} />
+              {LocalizedString.lookup(tr('Create File'), this.props.locale)}
+            </ExtraFileButton>
+
+          </ExtraFilesContainer>
         </FileContainer>
       </FileTypeItem>
 
@@ -1340,7 +1367,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                   && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
                 }
                 onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
-                {file}
+                <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />{file}
               </IndividualFile>
             ))}
 
@@ -1388,6 +1415,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
               }
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
+              <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />
               {file}
             </IndividualFile>
           ))}
@@ -1420,6 +1448,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
               }
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
+              <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />
               {file}
             </IndividualFile>
           ))}
@@ -1465,14 +1494,21 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       const projects = this.props.propUserData || [];
       return (
         <SectionsColumn theme={theme} key={user.userName}>
-          <SectionName
+          <UserTitleContainer
             theme={theme}
             selected={selectedUser.userName === user.userName}
             onClick={() => this.setSelectedUser(user)}
-            onContextMenu={(e) => this.handleUserRightClick(e, user)}
           >
-            {LocalizedString.lookup(tr(user.userName), locale)}
-          </SectionName>
+            <ItemIcon icon={faUser} />
+
+            <SectionName
+              theme={theme}
+
+              onContextMenu={(e) => this.handleUserRightClick(e, user)}
+            >
+              {LocalizedString.lookup(tr(user.userName), locale)}
+            </SectionName>
+          </UserTitleContainer>
           {selectedUser.userName === user.userName && this.state.showProjects && this.renderProjects(projects)}
         </SectionsColumn>
       );
