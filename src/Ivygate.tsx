@@ -1,18 +1,9 @@
 import * as React from 'react';
 import * as monaco from 'monaco-editor';
-import { styled } from 'styletron-react';
 import { StyleProps } from './components/constants/style';
-
 import server from './server';
 import { Message } from './Message';
-
 import format from './c-indent';
-
-// import('monaco-themes/themes/Blackboard.json')
-//   .then(data => {
-//       monaco.editor.defineTheme('blackboard', data as any);
-//       monaco.editor.setTheme('blackboard');
-//   });
 
 (self as any).MonacoEnvironment = {
   getWorkerUrl: function (_moduleId: any, label: string) {
@@ -58,9 +49,6 @@ const clampRange = <A extends monaco.IRange, B extends monaco.IRange>(a: A, b: B
   endLineNumber: clamp(a.startLineNumber, b.endLineNumber, a.endLineNumber),
 });
 
-/* const intersect = <A extends monaco.IRange, B extends monaco.IRange>(a: A, b: B) => {
-  if (b.startLineNumber > a.endLineNumber || b.endLineNumber < a.startLineNumber)
-};*/
 
 export class Ivygate extends React.PureComponent<Props, State> {
 
@@ -68,8 +56,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
     super(props);
 
   }
-
-
   private editor_: monaco.editor.ICodeEditor;
   get editor() { return this.editor_; }
   depth = 0;
@@ -225,7 +211,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/[+\-*\/%=!&|^<>]=?|&&|\|\||<=|>=|(?!->)\b(?:[^\s\w]+)\b/, 'operator'],
           [/\[/, { token: 'bracket.level0', }],
           [/\(/, { token: 'test1', next: '@nestedParens' }],
-          //[/\.(\w+)/, 'variable.member'],  // For 'name' in .name
           [/\b[A-Z0-9_]+\b/, 'macro.constant'],
 
           [/\s*!?defined\b/, { token: 'keyword.defined', next: '@defined' }],
@@ -708,23 +693,16 @@ export class Ivygate extends React.PureComponent<Props, State> {
       }
     });
 
-    // console.log("Ivygate this.editor_: ", this.editor_.);
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
-
-
 
   }
 
   formatCode() {
-    console.log("Ivygate formatCode called");
-    const lang = this.editor_.getModel().getLanguageId();
-    console.log("Editor language is:", lang);
     this.editor_.getAction('editor.action.formatDocument').run()
   }
 
   changeFormatter(formattingFunction: (code: string, tabSize: number, insertSpaces: boolean) => string): void {
-    console.log("Ivygate changeFormatter called");
     monaco.languages.registerDocumentFormattingEditProvider('customCpp', {
       provideDocumentFormattingEdits(model, options) {
         return [{
@@ -735,12 +713,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
     });
   }
 
-  private handle_?: number;
-
   componentDidMount() {
     server.open('')
-
-
   }
 
   private guard_ = false;
@@ -774,15 +748,12 @@ export class Ivygate extends React.PureComponent<Props, State> {
   //
   componentDidUpdate(nextProps: Props) {
     if (!this.editor_) return;
-    const { code, language, messages, autocomplete, theme } = nextProps;
+    const { code, language,autocomplete, theme } = nextProps;
 
-    console.log("Ivygate compDidUpdate this.props: ", this.props);
-    console.log("Ivygate compDidUpdate nextProps: ", nextProps);
 
     if (language === 'customCpp' || language === 'customPython' || language === 'plaintext') {
       this.changeFormatter(format);
     }
-
 
     if (theme !== this.props.theme) {
 
@@ -794,7 +765,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
       model.setValue(nextProps.code);
       this.guard_ = false;
     }
-    //
 
     monaco.editor.setModelLanguage(model, language);
 
@@ -811,7 +781,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   revealLineInCenter(line: number) {
-    console.log("Ivygate revealLineInCenter called for line: ", line);
     this.editor_.revealLineInCenter(line, monaco.editor.ScrollType.Smooth);
   }
 

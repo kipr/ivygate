@@ -4,13 +4,8 @@ import { ThemeProps } from './constants/theme';
 import { StyleProps } from './constants/style';
 import SensorPlot from './SensorPlot';
 import BooleanPlot from './BooleanPlot';
-//import { Spacer } from '../constants/common';
-
-
 import { StyledText } from '../util/StyledText';
-
 import { Fa } from "./Fa";
-
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
@@ -71,9 +66,6 @@ const StyledToolIcon = styled(Fa, (props: ThemeProps & { withBorder?: boolean })
   borderRight: props.withBorder ? `1px solid ${props.theme.borderColor}` : undefined,
 }));
 
-const ACTION_ITEMS = [
-  StyledText.text({ text: 'asd' })
-];
 
 class SensorWidget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -128,8 +120,6 @@ class SensorWidget extends React.PureComponent<Props, State> {
   };
 
   private onTogglePlotClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
-    console.log('onTogglePlotClick_');
-    console.log(this.state.showPlot);
     if (this.state.showPlot) {
       this.onHidePlotClick_(event);
     } else {
@@ -140,39 +130,9 @@ class SensorWidget extends React.PureComponent<Props, State> {
   render() {
     const { props, state } = this;
     const { style, className, theme, name, unit, value, plotTitle } = props;
-    const { showGuide, showActionTooltip, showPlot } = state;
+    const {showPlot } = state;
 
     let plot: JSX.Element;
-
-    const actionItems = [
-      StyledText.text({
-        text: plotTitle,
-        style: {
-          paddingRight: `${theme.itemPadding}px`
-        }
-      }),
-      // Show Sensor plot
-      StyledText.component({
-        component: StyledToolIcon,
-        props: {
-          icon: faEye,
-          theme,
-          onClick: this.onShowPlotClick_,
-          disabled: showPlot,
-          withBorder: true
-        }
-      }),
-      // Hide sensor plot
-      StyledText.component({
-        component: StyledToolIcon,
-        props: {
-          icon: faEyeSlash,
-          theme,
-          onClick: this.onHidePlotClick_,
-          disabled: !showPlot
-        }
-      }),
-    ];
 
     const headerValue: number = typeof value === 'number'
       ? Math.round(value)
@@ -205,8 +165,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           </Header>
           {showPlot ? plot : undefined}
         </Container>
-        {/* showGuide && this.ref_ ? <MeshScreenGuide theme={theme} from={this.ref_} to={'black satin finish plastic'} /> : undefined*/}
-      </>
+       </>
     );
   }
 }

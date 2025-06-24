@@ -85,7 +85,6 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
   };
 
   private onModuleClick_ = (id: string) => (event: React.MouseEvent) => {
-    console.log("onModuleClick", id);
     this.props.onDocumentationPush(DocumentationLocation.module({ id }));
   };
 
@@ -122,8 +121,6 @@ export class RootDocumentation extends React.PureComponent<Props, State> {
     const functions = Dict.toList(documentation.functions || {})
       .sort(([idA, a], [idB, b]) => FunctionDocumentation.compare(a, b))
       .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
-
-      console.log("RootDocumentation functions", documentation.functions);
     if (functions.length > 0) {
       sections.push((
         <Section name={LocalizedString.lookup(tr('Functions'), locale)} theme={theme} noBorder={first} key='functions'>
@@ -204,7 +201,6 @@ const structures = Dict.toList(documentation.structures || {})
       first = false;
     }
 
-    console.log("RootDocumentation sections", sections);
     return (
       <Container>
         <StyledInput

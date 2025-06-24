@@ -3,8 +3,6 @@ import { Vector2 } from '../../util/math';
 import { ThemeProps } from '../constants/theme';
 import Widget, { Mode, Size } from '../interface/Widget';
 import DocumentationRoot from './DocumentationRoot';
-
-import { GLOBAL_EVENTS } from '../../util/GlobalEvents';
 import construct from '../../util/redux/construct';
 import { styled } from 'styletron-react';
 import { DocumentationState } from '../../state/State';
@@ -111,7 +109,6 @@ const SIZES: Size[] = [
 class DocumentationWindow extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
-    console.log("DocumentationWindow props: ", props);
     super(props);
 
     this.state = {
@@ -123,8 +120,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const { state } = this;
     const { dragState } = state;
     if (dragState.type !== 'dragging') return false;
-    console.log("onWindowMouseMove_ e:", e);
-
     const client = Vector2.fromClient(e);
     const position = Vector2.subtract(client, dragState.offset);
     this.setState({
@@ -137,15 +132,10 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     return true;
   };
 
-  componentDidMount(): void {
-    console.log("DocumentationWindow mounted, state:", this.state);
-    console.log("DocumentationWindow props:", this.props);
-  }
   private onWindowMouseUp_ = (e: MouseEvent) => {
     const { state } = this;
     const { dragState } = state;
     if (dragState.type !== 'dragging') return false;
-    console.log("onWindowMouseUp_ e:", e);
 
     this.setState({
       dragState: DragState.none({ position: dragState.position })
@@ -187,8 +177,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    console.log("Rendering DocumentationWindow with size", this.props.documentationState.size);
-
     const {
       locale,
       theme,
@@ -238,8 +226,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     }
 
     const locationStackTop = locationStack[locationStack.length - 1];
-    console.log("DocumentationWindow render, size:", size.type, "locationStack:", locationStack, "state:", state);
-
     return (
       <DocumentationRoot>
         <Widget

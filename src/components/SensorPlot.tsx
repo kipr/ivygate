@@ -117,7 +117,6 @@ class SensorPlot extends React.PureComponent<Props, State> {
   };
 
   componentDidMount() {
-    console.log("SensorPlot props: ", this.props);
     this.mounted_ = true;
 
     this.firstTick_ = Date.now();

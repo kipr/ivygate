@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { styled } from 'styletron-react';
 import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
@@ -18,7 +16,6 @@ export interface ModuleDocumentationProps extends StyleProps, ThemeProps {
   module: ModuleDocumentationModel;
   documentation: Documentation;
   locale: LocalizedString.Language;
-
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
 
@@ -40,18 +37,6 @@ const ModuleDocumentation = ({
 }: Props) => {
   const functions: [string, FunctionDocumentation][] = module.functions.map(f => [f, documentation.functions[f]]);
 
-  console.log("ModuleDocumentation props", {
-    language,
-    module,
-    documentation,
-    onDocumentationPush,
-    style,
-    className,
-    theme,
-    locale
-  });
-  console.log("ModuleDocumentation functions", module.functions);
-  console.log("ModuleDocumentation functions", functions);
   // Sort
   functions.sort(([idA, a], [idB, b]) => FunctionDocumentation.compare(a, b));
 

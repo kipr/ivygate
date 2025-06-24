@@ -23,7 +23,6 @@ class DocumentationRoot extends React.PureComponent<Props> {
   }
 
   componentWillUnmount() {
-    console.log('DocumentationRoot unmounting');
     DOCUMENTATION_ROOT.style.opacity = '0';
   }
 

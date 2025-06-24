@@ -21,7 +21,7 @@ export namespace DocumentationAction {
   export const POP_COMMON: Pop = { type: 'documentationCommon/pop' };
 
   export interface PopAll {
-   type: 'documentationDefault/pop-all' | 'documentationCommon/pop-all';
+    type: 'documentationDefault/pop-all' | 'documentationCommon/pop-all';
   }
 
   export const POP_ALL: PopAll = { type: 'documentationDefault/pop-all' };
@@ -110,28 +110,24 @@ const createDocumentationReducer = (initialState: DocumentationState, namespace:
     switch (action.type) {
 
       case `${namespace}/push`:
-        if ('location' in action) {  
+        if ('location' in action) {
           return {
             ...state,
             locationStack: [...state.locationStack, action.location],
           };
         }
         return state;
- 
-      case `${namespace}/pop`: 
-      console.log("Popping documentation location", action);
-      
-      return {
-        ...state,
-        locationStack: state.locationStack.slice(0, -1),
-      };
+
+      case `${namespace}/pop`:
+        return {
+          ...state,
+          locationStack: state.locationStack.slice(0, -1),
+        };
       case `${namespace}/pop-all`:
-        
-        
-      return {
-        ...state,
-        locationStack: [],
-      };
+        return {
+          ...state,
+          locationStack: [],
+        };
       case `${namespace}/hide`: return {
         ...state,
         size: Size.MINIMIZED,
@@ -142,8 +138,7 @@ const createDocumentationReducer = (initialState: DocumentationState, namespace:
       };
 
       case `${namespace}/set-size`:
-        console.log("Setting documentation size", action);
-        if ('size' in action) {  
+        if ('size' in action) {
           return {
             ...state,
             size: action.size,
@@ -157,7 +152,7 @@ const createDocumentationReducer = (initialState: DocumentationState, namespace:
       };
 
       case `${namespace}/pop-some`:
-        if ('count' in action) { 
+        if ('count' in action) {
           return {
             ...state,
             locationStack: state.locationStack.slice(0, -action.count),
@@ -166,7 +161,7 @@ const createDocumentationReducer = (initialState: DocumentationState, namespace:
         return state;
 
       case `${namespace}/set-language`:
-        if ('language' in action) {  
+        if ('language' in action) {
           return {
             ...state,
             language: action.language,
@@ -203,7 +198,7 @@ const createDocumentationReducer = (initialState: DocumentationState, namespace:
             size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
           };
         }
-        return state; 
+        return state;
       }
       default: return state;
     }
