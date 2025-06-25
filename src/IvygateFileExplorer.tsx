@@ -49,6 +49,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onRenameUser?: (user: User) => void;
   onDownloadProject?: (user: User, project: Project) => void;
   onRenameProject?: (user: User, project: Project) => void;
+  onMoveProject?: (user: User, project: Project) => void; 
   onDownloadFile?: (user: User, project: Project, fileName: string) => void;
   onRenameFile?: (user: User, project: Project, fileName: string) => void;
   onResetHighlightFlag?: () => void;
@@ -661,6 +662,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   renameProject = (project: Project) => {
     this.props.onRenameProject(this.state.selectedUser, project);
   }
+
+  moveProject = (project: Project) => {
+    this.props.onMoveProject(this.state.selectedUser, project);
+  }
+
   downloadFile = (file: string) => {
     this.props.onDownloadFile(this.state.selectedUser, this.state.selectedProject, file);
   }
@@ -759,6 +765,16 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             }}
           >
             Rename Project
+          </li>
+        </ContextMenuItem>
+        <ContextMenuItem theme={theme}>
+          <li
+            style={{ padding: "5px 10px" }}
+            onClick={() => {
+              this.moveProject(this.state.contextMenuProject);
+            }}
+          >
+            Move Project
           </li>
         </ContextMenuItem>
       </ContextMenu>
@@ -1321,11 +1337,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   render() {
     if (!this.props.theme) {
-      return null; 
+      return null;
     }
 
     const { props, state } = this;
-    const {theme, propUsers, locale } = props;
+    const { theme, propUsers, locale } = props;
     const {
       selectedUser,
       showUserContextMenu,
