@@ -48,7 +48,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
   backgroundColor: props.theme.backgroundColor,
   minHeight: '300px',
-  maxHeight: '50vh',
+ // maxHeight: '80vh',
   alignItems: 'center',
   padding: '1em'
 }));
@@ -64,8 +64,16 @@ const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
 }));
 
 
+const OuterScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+  paddingBottom: '3em',
+  minHeight: '50vh',
+  border: `2px solid ${theme.borderColor}`,
+  backgroundColor: theme.backgroundColor,
+}));
+
 const Button = styled('button', (props: ThemeProps & { disabled?: boolean, }) => ({
-  margin: '0 10px',
+  margin: '0.5em 0.75em',
   padding: '10px 20px',
   border: 'none',
   borderRadius: '5px',
@@ -396,7 +404,7 @@ class ProjectUploader extends React.Component<Props, State> {
             );
             if (!isAlreadySelected) {
               prevState.selectedFiles.push(fileInfo);
-            } 
+            }
           }
           return { selectedFiles: prevState.selectedFiles };
         }
@@ -697,7 +705,7 @@ class ProjectUploader extends React.Component<Props, State> {
         {files && files.length > 0 ? (
           <FilePreviewContainer theme={theme} style={{ display: 'flex' }}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'stretch' }}>
-          
+
               <VerticalLine theme={theme} />
 
               <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '8px' }}>
@@ -766,7 +774,7 @@ class ProjectUploader extends React.Component<Props, State> {
   uploadFolderPreview = () => {
     const { theme, locale } = this.props;
     const { selectedFiles, folderName, sourceFiles, includeFiles, dataFiles, configFile, projectLanguage } = this.state;
-        return (
+    return (
       <>
 
         <TitleContainer theme={theme}>
@@ -851,25 +859,27 @@ class ProjectUploader extends React.Component<Props, State> {
 
   render() {
     const { theme, locale, style, className, onClose } = this.props;
-    const {folderName } = this.state;
+    const { folderName } = this.state;
 
     return (
       <Dialog
         theme={theme}
         name={LocalizedString.lookup(tr('Upload Project'), locale)}
-        style={{ color: theme.whiteText }}
+        style={{ color: theme.whiteText, backgroundColor: theme.backgroundColor}}
         onClose={onClose}
       >
-        <Container theme={theme} style={style} className={className}>
-          {!folderName && (
-            this.uploadFolderInstructions()
-          )}
-          {folderName && (
-            this.uploadFolderPreview()
-          )}
+        <OuterScrollArea theme={theme}>
+          <Container theme={theme} style={style} className={className}>
+            {!folderName && (
+              this.uploadFolderInstructions()
+            )}
+            {folderName && (
+              this.uploadFolderPreview()
+            )}
 
-        </Container>
-      </Dialog>
+          </Container>
+        </OuterScrollArea>
+      </Dialog >
     );
   }
 

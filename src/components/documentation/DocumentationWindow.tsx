@@ -201,6 +201,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     let mode = Mode.Floating;
     const style: React.CSSProperties = {
       position: 'absolute',
+      maxWidth: '86vw',
       opacity: dragState.type === 'dragging' ? 0.8 : 1,
       left: '100px',
       top: '100px',

@@ -90,6 +90,8 @@ interface MotorServoSensorDisplayState {
     servoInputStyle: React.CSSProperties;
     motorInputStyle: React.CSSProperties;
 
+    stackVertically: boolean;
+
 }
 interface ClickProps {
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -141,11 +143,11 @@ const SettingContainer = styled('div', (props: ThemeProps) => ({
     padding: `${props.theme.itemPadding * 1}px`,
 }));
 
-const SensorTypeContainer = styled('div', (props: ThemeProps) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gridTemplateRows: 'auto',
-    gap: '5px',
+const SensorTypeContainer = styled('div', (props: ThemeProps & {$stacked: boolean}) => ({
+    display: props.$stacked ? 'flex' : 'grid',
+    flexDirection: props.$stacked ? 'column' : null,
+    gridTemplateColumns: props.$stacked ? null: 'repeat(2, 1fr)',
+    gridTemplateRows: props.$stacked ? null: 'auto',
     alignItems: 'start',
     alignContent: 'center',
     justifyContent: 'center',
@@ -165,7 +167,6 @@ const SelectedGraphTypeContainer = styled('div', (props: ThemeProps) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    paddingBottom: '1%',
     alignContent: 'flex-end',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
@@ -501,11 +502,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             selectedGraphs: [],
             selectedMotorGraphs: [],
             selectedSensorGraphs: [],
+            stackVertically: false,
         };
         this.newMotorRef = React.createRef<Motors | undefined>();
     }
 
     async componentDidMount(): Promise<void> {
+         this.checkLayout();
+        window.addEventListener('resize', this.checkLayout);
         this.newMotorRef.current = Motors.MOTOR0;
 
         if (this.props.getMotorPositions() !== undefined) {
@@ -520,12 +524,21 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             });
         }
     }
+   checkLayout = () => {
+        const availableWidth = window.innerWidth;
+        // Example threshold: if there's at least 600px, stack
+        const stack = availableWidth < 700;
+        this.setState({ stackVertically: stack });
+    };
 
     componentWillUnmount(): void {
+            window.removeEventListener('resize', this.checkLayout);
         this.props.sensorDisplayShown(false);
     }
 
     async componentDidUpdate(prevProps: Props, prevState: State): Promise<void> {
+        console.log('MotorServoSensorDisplay componentDidUpdate prevstate', prevState);
+        console.log('MotorServoSensorDisplay componentDidUpdate state', this.state);
         if (prevProps.propedServoPositions !== this.props.propedServoPositions) {
             this.setState({
                 servoPositions: this.props.propedServoPositions,
@@ -872,22 +885,22 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             propedButtonValues,
             locale
         } = this.props;
+        const {stackVertically} = this.state;
         switch (sensor) {
             case 'Analog':
                 return (
-                    <SensorTypeContainer theme={theme}>
+                    <SensorTypeContainer theme={theme} $stacked={stackVertically}>
 
                         {Object.entries(this.state.sensorValues.Analogs).map(([key, value], index) => (
-                            <SelectedGraphTypeContainer theme={theme} >
+                            <SelectedGraphTypeContainer  theme={theme} >
                                 <SubGraphTypeDropDownContainer theme={theme}>
                                     <Row key={`${key}`} theme={theme}>
                                         <SensorWidget
+                                           
                                             value={propedAnalogValues && propedAnalogValues[index] !== undefined ? propedAnalogValues[index] : value}
                                             name={`${key}`}
                                             plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
                                             theme={theme}
-
-
                                         />
                                     </Row>
                                 </SubGraphTypeDropDownContainer>
@@ -900,7 +913,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Digital':
                 return (
-                    <SensorTypeContainer theme={theme}>
+                    <SensorTypeContainer theme={theme} $stacked={stackVertically}>
                         {Object.entries(this.state.sensorValues.Digitals).map(([key, value], index) => (
                             <SelectedGraphTypeContainer theme={theme} >
                                 <SubGraphTypeDropDownContainer theme={theme}>
@@ -921,7 +934,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     </SensorTypeContainer>
                 );
             case 'Accelerometer':
-                return (<SensorTypeContainer theme={theme}>
+                return (<SensorTypeContainer theme={theme} $stacked={stackVertically}>
                     {Object.entries(this.state.sensorValues.Accelerometers).map(([key, value], index) => (
                         <SelectedGraphTypeContainer theme={theme} >
                             <SubGraphTypeDropDownContainer theme={theme}>
@@ -942,7 +955,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SensorTypeContainer>
                 );
             case 'Gyroscope':
-                return (<SensorTypeContainer theme={theme}>
+                return (<SensorTypeContainer theme={theme} $stacked={stackVertically}>
                     {Object.entries(this.state.sensorValues.Gyroscopes).map(([key, value], index) => (
                         <SelectedGraphTypeContainer theme={theme} >
                             <SubGraphTypeDropDownContainer theme={theme}>
@@ -963,7 +976,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SensorTypeContainer>
                 );
             case 'Magnetometer':
-                return (<SensorTypeContainer theme={theme}>
+                return (<SensorTypeContainer theme={theme} $stacked={stackVertically}>
                     {Object.entries(this.state.sensorValues.Magnetometers).map(([key, value], index) => (
                         <SelectedGraphTypeContainer theme={theme} >
                             <SubGraphTypeDropDownContainer theme={theme}>
@@ -983,13 +996,13 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 </SensorTypeContainer>);
             case 'Button':
                 return (
-                    <SensorTypeContainer theme={theme}>
+                    <SensorTypeContainer theme={theme} $stacked={stackVertically}>
                         <SelectedGraphTypeContainer theme={theme} >
                             <SubGraphTypeDropDownContainer theme={theme}>
                                 <Row key={'Button'} theme={theme}>
                                     <SensorWidget
                                         value={propedButtonValues && propedButtonValues[0] !== undefined ? propedButtonValues[0] : 0}
-                                        name={'Button'}
+                                        name={'right_button()'}
                                         plotTitle={LocalizedString.lookup(tr(`Button Plot`), locale)}
                                         theme={theme}
 
