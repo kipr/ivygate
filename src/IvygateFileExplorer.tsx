@@ -49,7 +49,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onRenameUser?: (user: User) => void;
   onDownloadProject?: (user: User, project: Project) => void;
   onRenameProject?: (user: User, project: Project) => void;
-  onMoveProject?: (user: User, project: Project) => void; 
+  onMoveProject?: (user: User, project: Project) => void;
   onDownloadFile?: (user: User, project: Project, fileName: string) => void;
   onRenameFile?: (user: User, project: Project, fileName: string) => void;
   onResetHighlightFlag?: () => void;
@@ -132,14 +132,17 @@ const Container = styled('ul', {
 
 const ExtraFilesContainer = styled('div', (props: ThemeProps) => ({
   borderRadius: '5px',
-  cursor: 'pointer',
   display: 'flex',
   flexDirection: 'row',
+  marginBottom: '0.3em',
 
-  width: '98%',
-  height: '2.25em',
+  width: '97%',
+  height: '1.6em',
   fontSize: '1em',
-  border: `2px solid ${props.theme.borderColor}`,
+  gap: '0.5rem',
+  flexShrink: 1,
+  flexWrap: 'nowrap',
+  minWidth: 0,
 }));
 
 const ProjectContainer = styled('div', (props: ThemeProps) => ({
@@ -150,22 +153,23 @@ const ProjectContainer = styled('div', (props: ThemeProps) => ({
   flex: '0 0 25rem',
   padding: '1px',
   marginLeft: '3px',
+  marginRight: '3px',
   boxShadow: '4px 4px 4px rgba(0,0,0,0.2)',
-  width: '99%',
+  //width: '99%',
   height: '100vh',
 }));
 
 const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  borderBottom: `3px solid ${props.theme.borderColor}`,
+  flexDirection: 'column',
+
+  alignItems: 'flex-start',
+
   padding: '0.5px',
   fontSize: '1.2em',
   overflow: 'hidden',
   flexWrap: 'nowrap',
-  gap: '1rem',
+
 }));
 
 const ProjectTitle = styled('h2', {
@@ -176,7 +180,7 @@ const ProjectTitle = styled('h2', {
   flexShrink: 0,
   textAlign: 'left',
   paddingRight: '20px',
-  paddingBottom: '0.5em',
+  //paddingBottom: '0.5em',
 });
 
 const AddProjectText = styled('div', {
@@ -192,15 +196,16 @@ const AddProjectButtonContainer = styled('div', (props: ThemeProps & { selected:
   borderRadius: '5px',
   display: 'flex',
   flexDirection: 'row',
-  marginTop: '1.9em',
-  marginRight: '0.5em',
-  width: '100%',
+  marginBottom: '0.3em',
+  marginRight: '0.3em',
+  //width: '97%',
   height: '1.6em',
   fontSize: '1em',
   gap: '0.5rem',
   flexShrink: 1,
   flexWrap: 'nowrap',
   minWidth: 0,
+
 }));
 
 const AddProjectButton = styled('div', (props: ThemeProps & ClickProps) => ({
@@ -212,7 +217,7 @@ const AddProjectButton = styled('div', (props: ThemeProps & ClickProps) => ({
   borderRadius: '5px',
   cursor: 'pointer',
   width: '97%',
-  minWidth: '168px',
+  minWidth: '1em',
   fontSize: 'clamp(1rem, 2vw, 1em)',
   padding: '3px',
   ':hover': {
@@ -329,9 +334,8 @@ const ExtraFileButton = styled('div', (props: ThemeProps & ClickProps & { select
   borderRadius: '5px',
   cursor: 'pointer',
   width: '97%',
-  minWidth: '7em',
-  fontSize: '1.15em',
-  backgroundColor: (props.selected) ? props.theme.selectedFileBackground : props.theme.unselectedBackground,
+  minWidth: '168px',
+  fontSize: 'clamp(1rem, 2vw, 1em)',
   padding: '3px',
   ':hover': {
     cursor: 'pointer',
@@ -346,10 +350,7 @@ const ExtraFileButton = styled('div', (props: ThemeProps & ClickProps & { select
       boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
       transform: 'translateY(1px, 1px)',
     }
-    : {},
-
-  flexShrink: 1,
-  flexWrap: 'nowrap'
+    : {}
 }));
 
 const ContextMenu = styled('div', (props: ThemeProps & { x: number; y: number }) => ({
@@ -509,6 +510,19 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
   async componentDidUpdate(prevProps: Props, prevState: State) {
 
+    console.log("IvygateFileExplorer componentDidUpdate prevState:", prevState);
+    console.log("IvygateFileExplorer componentDidUpdate currentState:", this.state);
+    console.log("IvygateFileExplorer componentDidUpdate prevProps:", prevProps);
+    console.log("IvygateFileExplorer componentDidUpdate currentProps:", this.props);
+
+    if(this.props.propUserShown !== this.state.selectedUser && (this.props.propUserShown !== undefined)) {
+      console.log("IvygateFileExplorer componentDidUpdate propUserShown: ", this.props.propUserShown);
+      console.log("IvygateFileExplorer componentDidUpdate selectedUser: ", this.state.selectedUser);
+
+      this.setState({
+        selectedUser: this.props.propUserShown
+      })
+    }
     if (prevProps.propsSelectedProjectName !== this.props.propsSelectedProjectName) {
       this.setState({
         selectedProject: this.props.propUserData.find(
@@ -906,24 +920,40 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
    * Sets the state user based on the user selected
    * @param user - The User object
    */
-  private setSelectedUser = async (user: User) => {
 
-    if (this.state.selectedUser.userName !== user.userName) {
-      if (this.state.projectName !== this.state.selectedProject.projectName) {
-        this.setState({ showProjects: null });
-      }
-    }
+private setSelectedUser = async (user: User) => {
+  const { selectedUser } = this.state;
 
-    this.setState((prevState) => (
+  const sameUserClicked = selectedUser.userName === user.userName;
 
-      {
-        selectedUser: prevState.selectedUser === user ? BLANK_USER : user,
-        selectedProject: this.state.selectedProject ? BLANK_PROJECT : prevState.selectedProject,
+  if (sameUserClicked) {
 
-        showProjects: !this.state.showProjects
-      }));
-    this.props.onUserSelected(user, true);
-  };
+    this.setState({
+      selectedUser: BLANK_USER,
+      selectedProject: BLANK_PROJECT,
+      showProjects: null,
+    });
+    return;
+  }
+
+
+  this.setState({
+    selectedUser: BLANK_USER,
+    selectedProject: BLANK_PROJECT,
+    showProjects: null,
+  });
+
+
+  await this.props.onUserSelected(user, true);
+
+
+  this.setState({
+    selectedUser: user,
+    selectedProject: BLANK_PROJECT,
+    showProjects: true,
+  });
+};
+
 
   private addNewFile = async (fileType: string) => {
     const { activeLanguage, selectedUser, selectedProject } = this.state;
@@ -951,6 +981,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private handleProjectClick = async (project: Project, user: User, language: ProgrammingLanguage) => {
 
+    console.log("handleProjectClick called with project:", project, "user:", user, "language:", language);
     if (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE) {
       const mainFile = project.srcFolderFiles.find(file => file.includes('main.'));
 
@@ -1099,31 +1130,34 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   renderProjects = (projects: Project[]) => {
     const { theme } = this.props;
+    console.log("Rendering projects for user:", this.state.selectedUser.userName, "with projects:", projects);
 
     return (
       <ProjectContainer theme={theme} key={this.state.selectedUser.userName}>
         <ProjectHeaderContainer theme={theme}>
           <ProjectTitle>Projects</ProjectTitle>
-          <AddProjectButtonContainer
-            theme={theme}
-            selected={false}
 
-          >
-            <AddProjectButton theme={theme} onClick={() => this.addNewProject()}>
-              <AddProjectItemIcon icon={faFolderPlus} />
-              <AddProjectText  >
-                {LocalizedString.lookup(tr('Create Project'), this.props.locale)}
-              </AddProjectText>
-            </AddProjectButton>
-            |
-            <AddProjectButton theme={theme} onClick={() => this.setState({ uploadType: 'project', showProjectUploader: true })}>
-              <AddProjectItemIcon icon={faFolderPlus} />
-              <AddProjectText >
-                {LocalizedString.lookup(tr('Upload Project'), this.props.locale)}
-              </AddProjectText>
-            </AddProjectButton>
-          </AddProjectButtonContainer>
         </ProjectHeaderContainer>
+        <AddProjectButtonContainer
+          theme={theme}
+          selected={false}
+
+        >
+          <AddProjectButton theme={theme} onClick={() => this.addNewProject()}>
+            <AddProjectItemIcon icon={faFolderPlus} />
+            <AddProjectText  >
+              {LocalizedString.lookup(tr('Create Project'), this.props.locale)}
+            </AddProjectText>
+          </AddProjectButton>
+          |
+          <AddProjectButton theme={theme} onClick={() => this.setState({ uploadType: 'project', showProjectUploader: true })}>
+            <AddProjectItemIcon icon={faFolderPlus} />
+            <AddProjectText >
+              {LocalizedString.lookup(tr('Upload Project'), this.props.locale)}
+            </AddProjectText>
+          </AddProjectButton>
+        </AddProjectButtonContainer>
+        <div style={{ borderBottom: `3px solid ${this.props.theme.borderColor}`, }} />
         <ul>
           {projects.map((project) => (
             <Container key={project.projectName}>
@@ -1254,6 +1288,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 <FileItemIcon icon={faFileCirclePlus} />
                 {LocalizedString.lookup(tr('Create File'), this.props.locale)}
               </ExtraFileButton>
+              |
               <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'include', showFileUploader: true })}>
                 <FileItemIcon icon={faFileCirclePlus} />
                 {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
@@ -1289,6 +1324,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               <FileItemIcon icon={faFileCirclePlus} />
               {LocalizedString.lookup(tr('Create File'), this.props.locale)}
             </ExtraFileButton>
+            |
             <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'src', showFileUploader: true })}>
               <FileItemIcon icon={faFileCirclePlus} />
               {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
@@ -1325,6 +1361,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               <FileItemIcon icon={faFileCirclePlus} />
               {LocalizedString.lookup(tr('Create File'), this.props.locale)}
             </ExtraFileButton>
+            |
             <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'data', showFileUploader: true })}>
               <FileItemIcon icon={faFileCirclePlus} />
               {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
