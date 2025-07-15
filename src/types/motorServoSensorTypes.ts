@@ -39,12 +39,12 @@ export const DEFAULT_SERVOS: ServoType[] = [
 
 ];
 export enum AnalogSensors {
-  ANALOG0 = 'Analog 0',
-  ANALOG1 = 'Analog 1',
-  ANALOG2 = 'Analog 2',
-  ANALOG3 = 'Analog 3',
-  ANALOG4 = 'Analog 4',
-  ANALOG5 = 'Analog 5',
+  ANALOG0 = 'analog(0)',
+  ANALOG1 = 'analog(1)',
+  ANALOG2 = 'analog(2)',
+  ANALOG3 = 'analog(3)',
+  ANALOG4 = 'analog(4)',
+  ANALOG5 = 'analog(5)',
 }
 export const DEFAULT_ANALOG_SENSORS: { [key: string]: number } = {
   [AnalogSensors.ANALOG0]: 0,
@@ -55,16 +55,16 @@ export const DEFAULT_ANALOG_SENSORS: { [key: string]: number } = {
   [AnalogSensors.ANALOG5]: 0,
 };
 export enum DigitalSensors {
-  DIGITAL0 = 'Digital 0',
-  DIGITAL1 = 'Digital 1',
-  DIGITAL2 = 'Digital 2',
-  DIGITAL3 = 'Digital 3',
-  DIGITAL4 = 'Digital 4',
-  DIGITAL5 = 'Digital 5',
-  DIGITAL6 = 'Digital 6',
-  DIGITAL7 = 'Digital 7',
-  DIGITAL8 = 'Digital 8',
-  DIGITAL9 = 'Digital 9',
+  DIGITAL0 = 'digital(0)',
+  DIGITAL1 = 'digital(1)',
+  DIGITAL2 = 'digital(2)',
+  DIGITAL3 = 'digital(3)',
+  DIGITAL4 = 'digital(4)',
+  DIGITAL5 = 'digital(5)',
+  DIGITAL6 = 'digital(6)',
+  DIGITAL7 = 'digital(7)',
+  DIGITAL8 = 'digital(8)',
+  DIGITAL9 = 'digital(9)',
 }
 
 export const DEFAULT_DIGITAL_SENSORS: { [key: string]: number } = {
@@ -81,9 +81,9 @@ export const DEFAULT_DIGITAL_SENSORS: { [key: string]: number } = {
 };
 
 export enum AccelerometerSensors {
-  ACCELEROMETERX = 'Accelerometer X',
-  ACCELEROMETERY = 'Accelerometer Y',
-  ACCELEROMETERZ = 'Accelerometer Z',
+  ACCELEROMETERX = 'accel_x()',
+  ACCELEROMETERY = 'accel_y()',
+  ACCELEROMETERZ = 'accel_z()',
 }
 
 export const DEFAULT_ACCELEROMETER_SENSORS: { [key: string]: number } = {
@@ -93,9 +93,9 @@ export const DEFAULT_ACCELEROMETER_SENSORS: { [key: string]: number } = {
 };
 
 export enum GyroscopeSensors {
-  GYROSCOPEX = 'Gyroscope X',
-  GYROSCOPEY = 'Gyroscope Y',
-  GYROSCOPEZ = 'Gyroscope Z',
+  GYROSCOPEX = 'gyro_x()',
+  GYROSCOPEY = 'gyro_y()',
+  GYROSCOPEZ = 'gyro_z()',
 }
 
 export const DEFAULT_GYROSCOPE_SENSORS: { [key: string]: number } = {
@@ -105,9 +105,9 @@ export const DEFAULT_GYROSCOPE_SENSORS: { [key: string]: number } = {
 }
 
 export enum MagnetometerSensors {
-  MAGNETOMETERX = 'Magnetometer X',
-  MAGNETOMETERY = 'Magnetometer Y',
-  MAGNETOMETERZ = 'Magnetometer Z',
+  MAGNETOMETERX = 'magneto_x()',
+  MAGNETOMETERY = 'magneto_y()',
+  MAGNETOMETERZ = 'magneto_z()',
 }
 
 export const DEFAULT_MAGNETOMETER_SENSORS: { [key: string]: number } = {
