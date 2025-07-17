@@ -15,7 +15,9 @@ import FileUploader from './FileUploader';
 import { FileInfo } from './types/fileInfo';
 import ProjectUploader from './ProjectUploader';
 import { Fa } from './components/Fa';
-
+import ResizeableComboBox from './components/ResizeableComboBox';
+import ComboBox from './components/ComboBox';
+import { FileCreationTypeAction, FileCreationTypeActionSimple, ProjectCreationType } from './types/creationTypes';
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   propsSelectedProjectName?: string;
   propFileName?: string;
@@ -83,10 +85,12 @@ interface IvygateFileExplorerState {
   activeLanguage: ProgrammingLanguage;
   contextMenuProject?: Project;
   contextMenuPosition: { x: number; y: number } | null;
+  fileCreationTypeAction: FileCreationTypeAction | null;
   includeFiles: [];
   srcFiles: [];
   userDataFiles: [];
   projects: [] | null;
+  projectCreationType: ProjectCreationType | null;
   users: string[];
   uploadType: 'project' | 'include' | 'src' | 'data' | 'none';
 
@@ -126,7 +130,7 @@ const Container = styled('ul', {
   flexWrap: 'wrap',
   overflow: 'hidden',
   padding: '0',
-  margin: '0px 0px 0px -30px',
+  margin: '0px 0px 0px -40px',
   listStyleType: 'none',
 });
 
@@ -161,10 +165,9 @@ const ProjectContainer = styled('div', (props: ThemeProps) => ({
 
 const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
-  flexDirection: 'column',
-
-  alignItems: 'flex-start',
-
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   padding: '0.5px',
   fontSize: '1.2em',
   overflow: 'hidden',
@@ -183,58 +186,21 @@ const ProjectTitle = styled('h2', {
   //paddingBottom: '0.5em',
 });
 
-const AddProjectText = styled('div', {
-  fontSize: 'clamp(1rem, 2vw, 1em)',
-  textAlign: 'left',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-
+const FileTypeTitle = styled('div', {
+  width: '100%',
+  fontSize: '1em',
+  padding: `5px`,
+  fontWeight: 400,
 });
 
-const AddProjectButtonContainer = styled('div', (props: ThemeProps & { selected: boolean }) => ({
-  borderRadius: '5px',
-  display: 'flex',
-  flexDirection: 'row',
-  marginBottom: '0.3em',
-  marginRight: '0.3em',
-  //width: '97%',
-  height: '1.6em',
-  fontSize: '1em',
-  gap: '0.5rem',
-  flexShrink: 1,
-  flexWrap: 'nowrap',
-  minWidth: 0,
+
+const StyledResizeableComboBox = styled(ResizeableComboBox, (props: ThemeProps & { selectedType?: string }) => ({
+  //flex: '1 0',
+  //padding: '3px',
 
 }));
 
-const AddProjectButton = styled('div', (props: ThemeProps & ClickProps) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '6px',
-  listStyleType: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  width: '97%',
-  minWidth: '1em',
-  fontSize: 'clamp(1rem, 2vw, 1em)',
-  padding: '3px',
-  ':hover': {
-    cursor: 'pointer',
-    backgroundColor: props.theme.hoverFileBackground
-  },
-  userSelect: 'none',
-  wordBreak: 'break-word',
-  overflowWrap: 'anywhere',
-  boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
-  ':active': props.onClick && !props.disabled
-    ? {
-      boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
-      transform: 'translateY(1px, 1px)',
-    }
-    : {}
-}));
+
 
 const AddProjectItemIcon = styled(FontAwesomeIcon, {
   paddingLeft: '3px',
@@ -273,6 +239,8 @@ const FileTypeTitleContainer = styled('div', (props: ThemeProps) => ({
   padding: `5px`,
   fontWeight: 400,
   userSelect: 'none',
+  display: 'flex',
+  flexDirection: 'row',
 }));
 
 const FileTypeContainer = styled('span', (props: ThemeProps & { selected: boolean }) => ({
@@ -295,7 +263,7 @@ const FileContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   width: '100%',
   flex: '0 0 150px',
-  marginLeft: '7px',
+  marginLeft: '20px',
 }));
 
 const FileItemIcon = styled(FontAwesomeIcon, {
@@ -426,6 +394,33 @@ const UserTitleContainer = styled('div', (props: ThemeProps & { selected: boolea
   padding: '5px'
 }));
 
+const PROJECT_OPTIONS: ComboBox.Option[] = (() => {
+
+  const ret: ComboBox.Option[] = [];
+  for (const view of Object.values(ProjectCreationType)) {
+    ret.push(ComboBox.option(view, view));
+  }
+  return ret;
+})();
+const FILE_OPTIONS: ComboBox.Option[] = (() => {
+
+  const ret: ComboBox.Option[] = [];
+  for (const view of Object.values(FileCreationTypeAction)) {
+    ret.push(ComboBox.option(view, view));
+  }
+  return ret;
+})();
+
+const SIMPLE_FILE_OPTIONS: ComboBox.Option[] = (() => {
+
+  const ret: ComboBox.Option[] = [];
+  for (const view of Object.values(FileCreationTypeActionSimple)) {
+    ret.push(ComboBox.option(view, view));
+  }
+  return ret;
+})();
+
+
 export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private selectedFileRefFE: React.MutableRefObject<string>;
   private previousSelectedFileFE: React.MutableRefObject<string>;
@@ -456,6 +451,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       showProjectFiles: false,
       showProjects: false,
       currentUserSelected: false,
+      fileCreationTypeAction: FileCreationTypeAction.ADD,
       includeFiles: [],
       srcFiles: [],
       userDataFiles: [],
@@ -466,7 +462,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       showFileContextMenu: false,
       showFileUploader: false,
       showProjectUploader: false,
-      uploadType: 'none'
+      uploadType: 'none',
+      projectCreationType: ProjectCreationType.ADD
     };
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
@@ -515,7 +512,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     console.log("IvygateFileExplorer componentDidUpdate prevProps:", prevProps);
     console.log("IvygateFileExplorer componentDidUpdate currentProps:", this.props);
 
-    if(this.props.propUserShown !== this.state.selectedUser && (this.props.propUserShown !== undefined)) {
+    if (this.props.propUserShown !== this.state.selectedUser && (this.props.propUserShown !== undefined)) {
       console.log("IvygateFileExplorer componentDidUpdate propUserShown: ", this.props.propUserShown);
       console.log("IvygateFileExplorer componentDidUpdate selectedUser: ", this.state.selectedUser);
 
@@ -921,38 +918,38 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
    * @param user - The User object
    */
 
-private setSelectedUser = async (user: User) => {
-  const { selectedUser } = this.state;
+  private setSelectedUser = async (user: User) => {
+    const { selectedUser } = this.state;
 
-  const sameUserClicked = selectedUser.userName === user.userName;
+    const sameUserClicked = selectedUser.userName === user.userName;
 
-  if (sameUserClicked) {
+    if (sameUserClicked) {
+
+      this.setState({
+        selectedUser: BLANK_USER,
+        selectedProject: BLANK_PROJECT,
+        showProjects: null,
+      });
+      return;
+    }
+
 
     this.setState({
       selectedUser: BLANK_USER,
       selectedProject: BLANK_PROJECT,
       showProjects: null,
     });
-    return;
-  }
 
 
-  this.setState({
-    selectedUser: BLANK_USER,
-    selectedProject: BLANK_PROJECT,
-    showProjects: null,
-  });
+    await this.props.onUserSelected(user, true);
 
 
-  await this.props.onUserSelected(user, true);
-
-
-  this.setState({
-    selectedUser: user,
-    selectedProject: BLANK_PROJECT,
-    showProjects: true,
-  });
-};
+    this.setState({
+      selectedUser: user,
+      selectedProject: BLANK_PROJECT,
+      showProjects: true,
+    });
+  };
 
 
   private addNewFile = async (fileType: string) => {
@@ -978,6 +975,112 @@ private setSelectedUser = async (user: User) => {
       this.props.onAddNewProject(selectedUser);
     }
   }
+
+  private onProjectCreationSelect = (index: number, option: ComboBox.Option) => {
+    const { projectCreationType } = this.state;
+    console.log("onProjectCreationSelect called with option:", option);
+    console.log("onProjectCreationSelect current projectCreationType:", projectCreationType);
+
+    this.setState({
+      projectCreationType: option.data as ProjectCreationType,
+    }, () => {
+      switch (option.data) {
+        case ProjectCreationType.ADD:
+          break;
+        case ProjectCreationType.CREATE_PROJECT:
+          this.props.onAddNewProject(this.state.selectedUser);
+          this.setState({
+            projectCreationType: ProjectCreationType.ADD,
+          })
+          break;
+        case ProjectCreationType.UPLOAD_PROJECT:
+          this.setState({
+            showProjectUploader: true,
+            uploadType: 'project',
+            projectCreationType: ProjectCreationType.ADD,
+          });
+          break;
+
+      }
+    })
+
+
+
+  }
+
+  private onFileCreationSelect = (index: number, option: ComboBox.Option,) => {
+    console.log("onFileCreationSelect called with option:", option);
+
+    this.setState({
+      fileCreationTypeAction: option.data as FileCreationTypeAction,
+    }, () => {
+      switch (option.data) {
+        case FileCreationTypeAction.ADD:
+          break;
+        case FileCreationTypeAction.CREATE_FILE:
+          this.addNewFile(this.state.activeLanguage);
+          this.setState({
+            fileCreationTypeAction: FileCreationTypeAction.ADD,
+          });
+          break;
+        case FileCreationTypeAction.UPLOAD_FILE:
+          this.setState({
+
+          })
+      }
+    })
+
+  }
+
+  onFileCreationSelectWithContext = (fileGroup: 'h' | 'src' | 'txt' | 'include', srcType?: string) => {
+    return (index: number, option: ResizeableComboBox.Option) => {
+      const fileType = option.data as string;
+      let fileT;
+      console.log(`Creating file of type: ${fileType} in group: ${fileGroup}`);
+
+
+      this.setState({
+        fileCreationTypeAction: option.data as FileCreationTypeAction,
+      }, () => {
+        if (fileGroup === 'h') {
+          fileT = 'include';
+        }
+        else if (fileGroup === 'txt') {
+          fileT = 'data';
+        }
+        else {
+          fileT = 'src';
+        }
+        switch (option.data) {
+          case FileCreationTypeAction.ADD:
+            break;
+          case FileCreationTypeAction.CREATE_FILE:
+            if (srcType) {
+              this.addNewFile(srcType);
+            }
+            else {
+              this.addNewFile(fileGroup);
+            }
+            this.setState({
+              fileCreationTypeAction: FileCreationTypeAction.ADD,
+            });
+            break;
+          case FileCreationTypeAction.UPLOAD_FILE:
+            this.setState({
+              showFileUploader: true,
+              uploadType: fileT,
+              fileCreationTypeAction: FileCreationTypeAction.ADD,
+            }, () => {
+              console.log("File upload type set to:", fileT);
+            });
+            break;
+        }
+      })
+
+    };
+  };
+
+
 
   private handleProjectClick = async (project: Project, user: User, language: ProgrammingLanguage) => {
 
@@ -1130,33 +1233,25 @@ private setSelectedUser = async (user: User) => {
 
   renderProjects = (projects: Project[]) => {
     const { theme } = this.props;
+    const { projectCreationType, selectedUser, showProjectFiles } = this.state;
     console.log("Rendering projects for user:", this.state.selectedUser.userName, "with projects:", projects);
 
     return (
       <ProjectContainer theme={theme} key={this.state.selectedUser.userName}>
         <ProjectHeaderContainer theme={theme}>
           <ProjectTitle>Projects</ProjectTitle>
+          <StyledResizeableComboBox
+            options={PROJECT_OPTIONS}
+            index={PROJECT_OPTIONS.findIndex(opt => opt.data === projectCreationType)}
+            onSelect={this.onProjectCreationSelect}
+            theme={theme}
+            mainWidth={'4em'}
+            mainHeight={'1.5em'}
+            mainFontSize={'0.9em'}
 
+          />
         </ProjectHeaderContainer>
-        <AddProjectButtonContainer
-          theme={theme}
-          selected={false}
 
-        >
-          <AddProjectButton theme={theme} onClick={() => this.addNewProject()}>
-            <AddProjectItemIcon icon={faFolderPlus} />
-            <AddProjectText  >
-              {LocalizedString.lookup(tr('Create Project'), this.props.locale)}
-            </AddProjectText>
-          </AddProjectButton>
-          |
-          <AddProjectButton theme={theme} onClick={() => this.setState({ uploadType: 'project', showProjectUploader: true })}>
-            <AddProjectItemIcon icon={faFolderPlus} />
-            <AddProjectText >
-              {LocalizedString.lookup(tr('Upload Project'), this.props.locale)}
-            </AddProjectText>
-          </AddProjectButton>
-        </AddProjectButtonContainer>
         <div style={{ borderBottom: `3px solid ${this.props.theme.borderColor}`, }} />
         <ul>
           {projects.map((project) => (
@@ -1225,10 +1320,21 @@ private setSelectedUser = async (user: User) => {
 
   simpleView = (project: Project) => {
     const { theme } = this.props;
+    const { fileCreationTypeAction } = this.state;
     return <FileTypeContainer theme={theme} selected={false}>
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
-          Source Files
+          <FileTypeTitle>Source Files</FileTypeTitle>
+          <StyledResizeableComboBox
+            options={SIMPLE_FILE_OPTIONS}
+            index={SIMPLE_FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+            onSelect={this.onFileCreationSelect}
+            theme={theme}
+            mainWidth={'4em'}
+            mainHeight={'1.5em'}
+            mainFontSize={'0.9em'}
+
+          />
         </FileTypeTitleContainer>
         <FileContainer theme={theme}>
           {project.srcFolderFiles.map((file, i) => (
@@ -1246,13 +1352,6 @@ private setSelectedUser = async (user: User) => {
               {file}
             </IndividualFile>
           ))}
-          <ExtraFilesContainer theme={theme}>
-            <ExtraFileButton theme={theme} selected={false} onClick={() => this.addNewFile("h")}>
-              <FileItemIcon icon={faFileCirclePlus} />
-              {LocalizedString.lookup(tr('Create File'), this.props.locale)}
-            </ExtraFileButton>
-
-          </ExtraFilesContainer>
         </FileContainer>
       </FileTypeItem>
 
@@ -1261,11 +1360,22 @@ private setSelectedUser = async (user: User) => {
 
   advancedView = (project: Project) => {
     const { theme } = this.props;
+    const { fileCreationTypeAction } = this.state;
     return (<FileTypeContainer theme={theme} selected={false}>
       {project.projectLanguage != "python" && (
         <FileTypeItem theme={theme} key={`IncludeFileHeader-${project.projectName}`}>
           <FileTypeTitleContainer theme={theme} >
-            Include Files
+            <FileTypeTitle>Include Files</FileTypeTitle>
+            <StyledResizeableComboBox
+              options={FILE_OPTIONS}
+              index={FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+              onSelect={this.onFileCreationSelectWithContext('h')}
+              theme={theme}
+              mainWidth={'4em'}
+              mainHeight={'1.5em'}
+              mainFontSize={'0.9em'}
+
+            />
           </FileTypeTitleContainer>
           <FileContainer theme={theme}>
             {project.includeFolderFiles.map((file, i) => (
@@ -1283,25 +1393,23 @@ private setSelectedUser = async (user: User) => {
             ))}
 
 
-            <ExtraFilesContainer theme={theme}>
-              <ExtraFileButton theme={theme} selected={false} onClick={() => this.addNewFile("h")}>
-                <FileItemIcon icon={faFileCirclePlus} />
-                {LocalizedString.lookup(tr('Create File'), this.props.locale)}
-              </ExtraFileButton>
-              |
-              <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'include', showFileUploader: true })}>
-                <FileItemIcon icon={faFileCirclePlus} />
-                {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
-              </ExtraFileButton>
-            </ExtraFilesContainer>
-
           </FileContainer>
         </FileTypeItem>
       )}
 
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
-          Source Files
+          <FileTypeTitle>Source Files</FileTypeTitle>
+          <StyledResizeableComboBox
+            options={FILE_OPTIONS}
+            index={FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+            onSelect={this.onFileCreationSelectWithContext('src', project.projectLanguage)}
+            theme={theme}
+            mainWidth={'4em'}
+            mainHeight={'1.5em'}
+            mainFontSize={'0.9em'}
+
+          />
         </FileTypeTitleContainer>
         <FileContainer theme={theme}>
           {project.srcFolderFiles.map((file, i) => (
@@ -1319,23 +1427,22 @@ private setSelectedUser = async (user: User) => {
             </IndividualFile>
           ))}
 
-          <ExtraFilesContainer theme={theme}>
-            <ExtraFileButton theme={theme} selected={false} onClick={() => this.addNewFile(project.projectLanguage)}>
-              <FileItemIcon icon={faFileCirclePlus} />
-              {LocalizedString.lookup(tr('Create File'), this.props.locale)}
-            </ExtraFileButton>
-            |
-            <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'src', showFileUploader: true })}>
-              <FileItemIcon icon={faFileCirclePlus} />
-              {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
-            </ExtraFileButton>
-          </ExtraFilesContainer>
         </FileContainer>
       </FileTypeItem>
 
       <FileTypeItem theme={theme} key={`UserDataFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
-          User Data Files
+          <FileTypeTitle>User Data Files</FileTypeTitle>
+          <StyledResizeableComboBox
+            options={FILE_OPTIONS}
+            index={FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+            onSelect={this.onFileCreationSelectWithContext('txt')}
+            theme={theme}
+            mainWidth={'4em'}
+            mainHeight={'1.5em'}
+            mainFontSize={'0.9em'}
+
+          />
         </FileTypeTitleContainer>
         <FileContainer theme={theme}>
           {project.dataFolderFiles.map((file, i) => (
@@ -1353,20 +1460,6 @@ private setSelectedUser = async (user: User) => {
             </IndividualFile>
           ))}
 
-          <ExtraFilesContainer theme={theme}>
-            <ExtraFileButton
-              theme={theme}
-              selected={false}
-              onClick={() => this.addNewFile("txt")}>
-              <FileItemIcon icon={faFileCirclePlus} />
-              {LocalizedString.lookup(tr('Create File'), this.props.locale)}
-            </ExtraFileButton>
-            |
-            <ExtraFileButton theme={theme} selected={false} onClick={() => this.setState({ uploadType: 'data', showFileUploader: true })}>
-              <FileItemIcon icon={faFileCirclePlus} />
-              {LocalizedString.lookup(tr('Upload File'), this.props.locale)}
-            </ExtraFileButton>
-          </ExtraFilesContainer>
         </FileContainer>
       </FileTypeItem>
     </FileTypeContainer>)
