@@ -11,9 +11,11 @@ import { ThemeProps } from "./constants/theme";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; $width?: string; $height?: string }) => ({
-  width: props.$width ?? '100%',
-  height: props.$height,
-  padding: `${props.theme.itemPadding * 2}px`,
+  // width: props.$width ?? '100%',
+  height: props.$height ?? '100%',
+  minWidth: props.$width ?? '100%',
+  paddingLeft: `${props.theme.itemPadding * 2}px`,
+  paddingRight: `${props.theme.itemPadding * 4}px`,
   borderTopLeftRadius: !props.$minimal ? `${props.theme.borderRadius}px` : undefined,
   borderTopRightRadius: !props.$minimal ? `${props.theme.borderRadius}px` : undefined,
   borderBottomLeftRadius: props.$focus || props.$minimal ? 0 : `${props.theme.borderRadius}px`,
@@ -52,7 +54,7 @@ const DropIcon = styled(Fa, {
   right: '5px',
   top: '50%',
   transform: 'translateY(-50%)',
-});
+ });
 
 const CurrentOptionContainer = styled('div', (props: ThemeProps & { $focus?: boolean; }) => ({
   userSelect: 'none',
@@ -65,9 +67,8 @@ const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean
   userSelect: 'none',
   display: 'flex',
   alignItems: 'center',
-  //height: '20px',
-  height: props.$height,
-  backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : undefined,
+  height: 'auto',
+    backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : undefined,
   ':hover': {
     backgroundColor: props.theme.hoverOptionBackground
   },
@@ -145,10 +146,8 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
   render() {
     const { props, state } = this;
 
-    const { options, index, style, className, theme, minimal, widthTweak, mainFontSize,mainWidth} = props;
+    const { options, index, style, className, theme, minimal, widthTweak, mainFontSize,mainWidth, mainHeight} = props;
     const { focus } = state;
-
-
 
     let dropDownStyle: React.CSSProperties;
 
@@ -170,8 +169,8 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
     }
 
     return (
-      <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal} $width={mainWidth}>
-        <CurrentOptionContainer theme={theme}><Text style={{ fontSize: props.mainFontSize, lineHeight: '2' }} text={options[index].text} /></CurrentOptionContainer>
+      <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal} $width={mainWidth} $height={mainHeight}>
+        <CurrentOptionContainer theme={theme}><Text style={{ fontSize: props.mainFontSize,}} text={options[index].text} /></CurrentOptionContainer>
         <DropIcon icon={focus ? faCaretUp : faCaretDown} />
         {ReactDom.createPortal((focus && this.ref_)
           ? <DropDown theme={theme} style={dropDownStyle}>
@@ -183,7 +182,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                 onClick={this.onOptionClick_(i)}
                 $height={props.mainHeight}
               >
-                <Text style={{  fontSize: props.mainFontSize , lineHeight: '2' }} text={option.text} />
+                <Text style={{  fontSize: props.mainFontSize , lineHeight: '1' }} text={option.text} />
               </OptionContainer>
             ))}
           </DropDown>
