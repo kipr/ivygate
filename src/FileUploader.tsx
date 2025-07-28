@@ -17,7 +17,7 @@ export interface FileUploaderPublicProps extends StyleProps, ThemeProps {
   onFileUpload: (files: FileInfo[]) => void;
   onClose: () => void;
   currentLanguage: ProgrammingLanguage;
-  uploadType: 'project' | 'include' | 'src' | 'data' | 'none';
+  uploadType:'user'|'project' | 'include' | 'src' | 'data' | 'none';
 }
 interface FileUploaderPrivateProps {
   locale: LocalizedString.Language;
