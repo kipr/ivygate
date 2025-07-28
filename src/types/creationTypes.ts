@@ -15,3 +15,14 @@ export enum FileCreationTypeActionSimple {
   CREATE_FILE = 'Create File',
 
 }
+
+export enum ClassroomCreationType {
+  ADD = '+',
+  CREATE_CLASSROOM = 'Create Classroom',
+  UPLOAD_CLASSROOM = 'Upload Classroom',
+}
+export enum UserCreationType {
+  ADD = '+',
+  CREATE_USER = 'Create User',
+  UPLOAD_USER = 'Upload User',
+}
