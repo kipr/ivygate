@@ -11,13 +11,15 @@ import ProgrammingLanguage from './types/programmingLanguage';
 import { Fa } from './components/Fa';
 import ScrollArea from './components/interface/ScrollArea';
 import { FileInfo } from './types/fileInfo';
+import { Project } from './types/project';
 
 export interface FileUploaderPublicProps extends StyleProps, ThemeProps {
   theme: Theme;
+  currentUserProjectFiles: Project;
+  currentLanguage: ProgrammingLanguage;
+  uploadType: 'user' | 'project' | 'include' | 'src' | 'data' | 'none';
   onFileUpload: (files: FileInfo[]) => void;
   onClose: () => void;
-  currentLanguage: ProgrammingLanguage;
-  uploadType:'user'|'project' | 'include' | 'src' | 'data' | 'none';
 }
 interface FileUploaderPrivateProps {
   locale: LocalizedString.Language;
@@ -164,10 +166,39 @@ class FileUploader extends React.Component<Props, State> {
           const content = await file.text();
           let language;
           let errorMessage = '';
-          if (this.props.uploadType === 'src') {
+          if (this.props.uploadType === 'include') {
+            const projectIncludeFiles = this.props.currentUserProjectFiles?.includeFolderFiles || [];
+            const isFileAlreadyIncluded = projectIncludeFiles.some(includeFile => includeFile === file.name);
+            if (isFileAlreadyIncluded) {
+              errorMessage = LocalizedString.lookup(tr('The selected file is already included in the project.'), this.props.locale);
+            }
+            language = await this.detectLanguage(file);
+            if (language !== 'c') {
+              errorMessage = LocalizedString.lookup(tr('The selected file does not match the expected language.'), this.props.locale);
+            }
+            if (!file.name.endsWith('.h')) {
+              errorMessage = LocalizedString.lookup(tr('The selected file must have a .h extension.'), this.props.locale);
+            }
+          }
+          else if (this.props.uploadType === 'src') {
+            const projectSrcFiles = this.props.currentUserProjectFiles?.srcFolderFiles || [];
+            const isFileAlreadyIncluded = projectSrcFiles.some(srcFile => srcFile === file.name);
+            if (isFileAlreadyIncluded) {
+              errorMessage = LocalizedString.lookup(tr('The selected file is already included in the project.'), this.props.locale);
+            }
             language = await this.detectLanguage(file);
             if (language !== this.props.currentLanguage) {
               errorMessage = LocalizedString.lookup(tr('The selected file does not match the expected language.'), this.props.locale);
+            }
+          }
+          else if (this.props.uploadType === 'data') {
+            const projectDataFiles = this.props.currentUserProjectFiles?.dataFolderFiles || [];
+            const isFileAlreadyIncluded = projectDataFiles.some(dataFile => dataFile === file.name);
+            if (isFileAlreadyIncluded) {
+              errorMessage = LocalizedString.lookup(tr('The selected file is already included in the project.'), this.props.locale);
+            }
+            if (!file.name.endsWith('.txt')) {
+              errorMessage = LocalizedString.lookup(tr('The selected file must have a .txt extension.'), this.props.locale);
             }
           }
           else {
@@ -226,7 +257,7 @@ class FileUploader extends React.Component<Props, State> {
       };
 
       reader.onerror = (e) => {
-        
+
         reject(e);
       };
 
@@ -259,7 +290,7 @@ class FileUploader extends React.Component<Props, State> {
     }
 
     // Check for C
-    if (/#include\s*<.*>/.test(content) && /\bint\s+main\s*\(/.test(content)) {
+    if (/#include\s*<.*>/.test(content) || /\bint\s+main\s*\(/.test(content) || /\.h[">\)]/.test(content)) {
       return "c";
     }
 
@@ -273,7 +304,7 @@ class FileUploader extends React.Component<Props, State> {
     if (selectedFiles) {
       if (!selectedFiles.some(fileInfo => fileInfo.errorMessage)) {
         this.props.onFileUpload(selectedFiles);
-        this.props.onClose(); 
+        this.props.onClose();
       }
     }
 
@@ -281,7 +312,8 @@ class FileUploader extends React.Component<Props, State> {
 
   render() {
     const { theme, locale, style, className, onClose } = this.props;
-    const { selectedFiles} = this.state;
+    const { selectedFiles } = this.state;
+    console.log("FileUploader render props:", this.props);
     return (
       <Dialog
         theme={theme}
