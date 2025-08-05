@@ -11,18 +11,20 @@ import ProgrammingLanguage from './types/programmingLanguage';
 import { Fa } from './components/Fa';
 import ScrollArea from './components/interface/ScrollArea';
 import { FileInfo } from './types/fileInfo';
-import { UploadedProject } from './types/project';
+import { Project, UploadedProject } from './types/project';
 import ResizeableComboBox from './components/ResizeableComboBox';
 import ComboBox from './components/ComboBox';
 
 
 export interface ProjectUploaderPublicProps extends StyleProps, ThemeProps {
   theme: Theme;
-  onProjectUpload: (uploadedProject: UploadedProject) => void;
-  onClose: () => void;
+  currentUserProjects: Project[];
   currentLanguage: ProgrammingLanguage;
   uploadType: 'project' | 'include' | 'src' | 'data' | 'config' | 'none';
+  onProjectUpload: (uploadedProject: UploadedProject) => void;
+  onClose: () => void;
 }
+
 interface ProjectUploaderPrivateProps {
   locale: LocalizedString.Language;
 }
@@ -48,7 +50,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
   backgroundColor: props.theme.backgroundColor,
   minHeight: '300px',
- // maxHeight: '80vh',
+  // maxHeight: '80vh',
   alignItems: 'center',
   padding: '1em'
 }));
@@ -281,6 +283,11 @@ class ProjectUploader extends React.Component<Props, State> {
     this.fileInputRef = React.createRef();
   }
 
+  componentDidUpdate = async (prevProps: Props, prevState: State) => {
+    console.log('ProjectUploader componentDidUpdate state: ', this.state);
+    console.log('ProjectUploader componentDidUpdate props: ', this.props);
+  }
+
 
   getProjectLanguage = async (configFile: File): Promise<ProgrammingLanguage | string | undefined> => {
     const content = await configFile.text();
@@ -330,109 +337,120 @@ class ProjectUploader extends React.Component<Props, State> {
       const firstRelativePath = fileArray[0].webkitRelativePath;
       const folderName = firstRelativePath.split('/')[0]; // Top-level folder name
       this.setState({ folderName });
-      const fileInfos = await Promise.all(
-        fileArray.map(async (file) => {
-          const content = await file.text();
-          const detectedLanguage = await this.detectLanguage(file);
-          let errorMessage = '';
-          const fileExtension = file.name.split('.').pop()?.toLowerCase();
-          let uploadType: 'project' | 'include' | 'src' | 'data' | 'config' | 'none' = 'none';
-          // Determine language from extension
-          let language: ProgrammingLanguage | string = undefined;
-          switch (fileExtension) {
-            case 'json':
-              uploadType = 'config';
+      if (this.props.currentUserProjects.some(project => project.projectName === folderName)) {
+        console.log("Project with this name already exists.");
+        this.setState({
+          errorMessage: `Project with name "${folderName}" already exists. Please choose a different name.`,
+          selectedFiles: null,
+          projectErrorMessage: ''
+        })
 
-              const parsedConfig = JSON.parse(content);
-              if (parsedConfig.language) {
-                language = parsedConfig.language;
-                if (language !== projectLanguage) {
-                  errorMessage = `File ${file.name} detected as ${parsedConfig.language}, not matching project language ${projectLanguage}.`
-                }
-              }
-              break;
-            case 'h':
-              uploadType = 'include';
-              language = 'c';
-              break;
-            case 'txt':
-              uploadType = 'data';
-              language = 'plaintext';
-              break;
-            case 'cpp':
-            case 'c':
-            case 'py':
-              for (const [lang, ext] of Object.entries(ProgrammingLanguage.FILE_EXTENSION)) {
+      }
+      else {
+        const fileInfos = await Promise.all(
+          fileArray.map(async (file) => {
+            const content = await file.text();
+            const detectedLanguage = await this.detectLanguage(file);
+            let errorMessage = '';
+            const fileExtension = file.name.split('.').pop()?.toLowerCase();
+            let uploadType: 'project' | 'include' | 'src' | 'data' | 'config' | 'none' = 'none';
+            // Determine language from extension
+            let language: ProgrammingLanguage | string = undefined;
+            switch (fileExtension) {
+              case 'json':
+                uploadType = 'config';
 
-                if (ext === fileExtension) {
-                  if (detectedLanguage === projectLanguage) {
-                    language = lang as ProgrammingLanguage;
-                    uploadType = 'src';
+                const parsedConfig = JSON.parse(content);
+                if (parsedConfig.language) {
+                  language = parsedConfig.language;
+                  if (language !== projectLanguage) {
+                    errorMessage = `File ${file.name} detected as ${parsedConfig.language}, not matching project language ${projectLanguage}.`
                   }
-                  else {
-                    uploadType = 'src';
-                    errorMessage = `File ${file.name} detected as ${detectedLanguage}, not matching project language ${projectLanguage}.
+                }
+                break;
+              case 'h':
+                uploadType = 'include';
+                language = 'c';
+                break;
+              case 'txt':
+                uploadType = 'data';
+                language = 'plaintext';
+                break;
+              case 'cpp':
+              case 'c':
+              case 'py':
+                for (const [lang, ext] of Object.entries(ProgrammingLanguage.FILE_EXTENSION)) {
+
+                  if (ext === fileExtension) {
+                    if (detectedLanguage === projectLanguage) {
+                      language = lang as ProgrammingLanguage;
+                      uploadType = 'src';
+                    }
+                    else {
+                      uploadType = 'src';
+                      errorMessage = `File ${file.name} detected as ${detectedLanguage}, not matching project language ${projectLanguage}.
                   Please ensure all source files match the project language.`;
 
+                    }
                   }
                 }
-              }
-              break;
+                break;
 
-            default:
-              uploadType = 'none';
-              language = 'plaintext'; // Default to plaintext for unknown extensions
-              console.warn(`Unknown file type for ${file.name}, defaulting to plaintext.`);
-          }
-          return {
-            name: file.name,
-            content,
-            language,
-            errorMessage,
-            uploadType: uploadType,
-          };
-        })
-      );
-
-      this.setState(prevState => {
-        if (prevState.selectedFiles) {
-          // Merge new files with previous selected files
-          for (const fileInfo of fileInfos) {
-            // Check if the file is already selected
-            const isAlreadySelected = prevState.selectedFiles.some(
-              selectedFile => selectedFile.name === fileInfo.name
-            );
-            if (!isAlreadySelected) {
-              prevState.selectedFiles.push(fileInfo);
+              default:
+                uploadType = 'none';
+                language = 'plaintext'; // Default to plaintext for unknown extensions
+                console.warn(`Unknown file type for ${file.name}, defaulting to plaintext.`);
             }
+            return {
+              name: file.name,
+              content,
+              language,
+              errorMessage,
+              uploadType: uploadType,
+            };
+          })
+        );
+        this.setState(prevState => {
+          if (prevState.selectedFiles) {
+            // Merge new files with previous selected files
+            for (const fileInfo of fileInfos) {
+              // Check if the file is already selected
+              const isAlreadySelected = prevState.selectedFiles.some(
+                selectedFile => selectedFile.name === fileInfo.name
+              );
+              if (!isAlreadySelected) {
+                prevState.selectedFiles.push(fileInfo);
+              }
+            }
+            return { selectedFiles: prevState.selectedFiles };
           }
-          return { selectedFiles: prevState.selectedFiles };
-        }
-        else {
+          else {
 
-          return { selectedFiles: fileInfos };
-        }
+            return { selectedFiles: fileInfos };
+          }
 
-      }, () => {
+        }, () => {
 
-        this.setState({
-          projectErrorMessage: this.state.selectedFiles?.some(file => file.name.includes('main.'))
-            ? '' : `Project must contain a main.${extension} file`,
+          this.setState({
+            projectErrorMessage: this.state.selectedFiles?.some(file => file.name.includes('main.'))
+              ? '' : `Project must contain a main.${extension} file`,
 
-          sourceFiles: this.state.selectedFiles?.filter(
-            (f) => f.uploadType === 'src'
-          ) || [],
-          includeFiles: this.state.selectedFiles?.filter(
-            (f) => f.uploadType === 'include'
-          ) || [],
-          dataFiles: this.state.selectedFiles?.filter(
-            (f) => f.uploadType === 'data'
-          ) || [],
-          configFile: this.state.selectedFiles?.find(
-            (f) => f.uploadType === 'config'
-          ) || { name: '', content: '', errorMessage: '', uploadType: 'none', language: 'none' }
+            sourceFiles: this.state.selectedFiles?.filter(
+              (f) => f.uploadType === 'src'
+            ) || [],
+            includeFiles: this.state.selectedFiles?.filter(
+              (f) => f.uploadType === 'include'
+            ) || [],
+            dataFiles: this.state.selectedFiles?.filter(
+              (f) => f.uploadType === 'data'
+            ) || [],
+            configFile: this.state.selectedFiles?.find(
+              (f) => f.uploadType === 'config'
+            ) || { name: '', content: '', errorMessage: '', uploadType: 'none', language: 'none' }
+          });
         });
-      });
+      }
+
 
     }
   };
@@ -484,7 +502,7 @@ class ProjectUploader extends React.Component<Props, State> {
     }
 
     // Check for C
-    if (/#include\s*<.*>/.test(content) && /\bint\s+main\s*\(/.test(content)) {
+    if (/#include\s*<.*>/.test(content) || /\bint\s+main\s*\(/.test(content) || /\.h[">\)]/.test(content)) {
       return "c";
     }
 
@@ -604,7 +622,7 @@ class ProjectUploader extends React.Component<Props, State> {
           onSelect={this.onLanguageSelect}
           theme={theme}
           mainWidth={'10em'}
-          mainHeight={'0.7em'}
+          mainHeight={'1.5em'}
           mainFontSize={'1em'}
 
         />
@@ -856,16 +874,52 @@ class ProjectUploader extends React.Component<Props, State> {
 
     )
   };
+uploadFolderError = (errorMessage: string) => {
+  const { theme, locale } = this.props;
+  const { folderName } = this.state;
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+     
+    }}>
+      <TitleContainer theme={theme}>
+        <Title theme={theme}>
+          <strong>
+            {LocalizedString.lookup(tr(`The selected project ${folderName} already exists for this user.`), locale)}
+          </strong>
+          <br/>
+          <strong>
+            {LocalizedString.lookup(tr(`Please choose a different project.`), locale)}
+          </strong>
+        </Title>
+      </TitleContainer>
+
+      <UploadFolderPreviewButtonContainer theme={theme}>
+        <Button 
+          onClick={() => this.setState({ folderName: '', selectedFiles: [], projectLanguage: 'none' })} 
+          theme={theme}
+        >
+          {LocalizedString.lookup(tr('Choose a different project'), locale)}
+        </Button>
+      </UploadFolderPreviewButtonContainer>
+    </div>
+  )
+}
 
   render() {
     const { theme, locale, style, className, onClose } = this.props;
-    const { folderName } = this.state;
-
+    const { folderName, errorMessage } = this.state;
+    console.log('ProjectUploader render state: ', this.state);
+    console.log('ProjectUploader render props: ', this.props);
     return (
       <Dialog
         theme={theme}
         name={LocalizedString.lookup(tr('Upload Project'), locale)}
-        style={{ color: theme.whiteText, backgroundColor: theme.backgroundColor}}
+        style={{ color: theme.whiteText, backgroundColor: theme.backgroundColor }}
         onClose={onClose}
       >
         <OuterScrollArea theme={theme}>
@@ -873,12 +927,17 @@ class ProjectUploader extends React.Component<Props, State> {
             {!folderName && (
               this.uploadFolderInstructions()
             )}
-            {folderName && (
+            {folderName && !errorMessage && (
               this.uploadFolderPreview()
+            )}
+            {folderName && errorMessage && (
+              this.uploadFolderError(errorMessage)
             )}
 
           </Container>
+          
         </OuterScrollArea>
+        
       </Dialog >
     );
   }
