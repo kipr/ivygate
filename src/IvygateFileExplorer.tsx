@@ -4,7 +4,7 @@ import tr from './i18n';
 import { styled } from 'styletron-react';
 import { StyleProps } from './components/constants/style';
 import { ThemeProps } from './components/constants/theme';
-import { User, BLANK_USER } from './types/user';
+import { User, BLANK_USER, UploadedUser } from './types/user';
 import { Project, BLANK_PROJECT, UploadedProject } from './types/project';
 import { InterfaceMode } from './types/interface';
 import { faUsersRectangle, faUser, faFolderOpen, faFileCode } from '@fortawesome/free-solid-svg-icons';
@@ -75,6 +75,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onReloadProjects?: (user: User) => Promise<void>;
   onUploadFiles?: (user: User, project: Project, files: FileInfo[]) => void;
   onUploadProject?: (user: User, project: UploadedProject) => void;
+  onUploadUser?: (uploadedUser: UploadedUser) => void;
 }
 
 interface IvygateFileExplorerPrivateProps {
@@ -102,7 +103,7 @@ interface IvygateFileExplorerState {
   showFileContextMenu: boolean;
   showFileUploader: boolean;
   showProjectUploader: boolean;
-  showUserUploader:boolean;
+  showUserUploader: boolean;
   currentUserSelected: boolean;
   activeLanguage: ProgrammingLanguage;
   contextMenuProject?: Project;
@@ -509,10 +510,9 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount(): Promise<void> {
-    console.log("IvygateFileExplorer componentDidMount props:", this.props);
+
     if (this.props.propUserShown !== undefined) {
-      // console.log("IvygateFileExplorer componentDidMount onReloadProjects...");
-      // await this.props.onReloadProjects(this.props.propUserShown);
+  
       if (this.props.propUserShown.userName !== '') {
         const selectedProject = this.props.propUserShown.projects.find((project) => {
           return project.projectName === this.props.propsSelectedProjectName;
@@ -548,13 +548,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
   async componentDidUpdate(prevProps: Props, prevState: State) {
 
-    console.log("IvygateFileExplorer componentDidUpdate prevState:", prevState);
-    console.log("IvygateFileExplorer componentDidUpdate currentState:", this.state);
-    console.log("IvygateFileExplorer componentDidUpdate prevProps:", prevProps);
-    console.log("IvygateFileExplorer componentDidUpdate currentProps:", this.props);
-
     if (prevProps.propClassrooms !== this.props.propClassrooms) {
-      console.log("IvygateFileExplorer componentDidUpdate propClassrooms: ", this.props.propClassrooms);
+    
       if (this.props.propUserShown !== undefined) {
         this.setState({
           selectedClassroom: this.props.propClassrooms.find(
@@ -574,21 +569,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         });
       }
     }
-    // if (this.props.propUserShown !== this.state.selectedUser && (this.props.propUserShown !== undefined)) {
-    //   console.log("IvygateFileExplorer componentDidUpdate propUserShown: ", this.props.propUserShown);
-    //   console.log("IvygateFileExplorer componentDidUpdate selectedUser: ", this.state.selectedUser);
 
-    //   this.setState({
-    //     selectedUser: this.props.propUserShown
-    //   })
-    // }
-    // if (prevProps.propsSelectedProjectName !== this.props.propsSelectedProjectName && prevProps.propsSelectedProjectName !== '') {
-    //   this.setState({
-    //     selectedProject: this.props.propUserData.find(
-    //       (project) => project.projectName === this.props.propsSelectedProjectName
-    //     ),
-    //   })
-    // }
     if (prevProps.reHighlightProject !== this.props.reHighlightProject && this.props.reHighlightProject.projectName !== '') {
       this.selectedFileRefFE.current = this.props.reHighlightProject.srcFolderFiles[0];
       if (this.props.reHighlightFile) {
@@ -612,27 +593,32 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
     }
 
-    // if (this.props.propUsers !== prevProps.propUsers) {
-    //   if (this.props.renameUserFlag) {
-    //     this.setState({
-    //       selectedUser: this.props.propUserShown
-    //     })
-    //   }
-    //   else {
-    //     const foundUser = Object.values(this.props.propUsers).find(
-    //       (user) => user.userName === this.props.propUserName
-    //     );
-    //     console.log("IvygateFileExplorer componentDidUpdate foundUser:", foundUser);
+    if (this.props.propUsers !== prevProps.propUsers) {
+      if (this.props.renameUserFlag) {
+        this.setState({
+          selectedUser: this.props.propUserShown
+        })
+      }
+      else {
+        if (this.props.propUserShown) {
+          const foundUser = Object.values(this.props.propUsers).find(
+            (user) => user.userName === this.props.propUserShown.userName
+          );
+          const foundProject = Object.values(foundUser.projects).find(
+            (project) => project.projectName === this.props.propProjectShown?.projectName
+          );
 
-    //     if (foundUser) {
-    //       this.setState({
-    //         selectedUser: foundUser
-    //       })
+          if (foundUser) {
+            this.setState({
+              selectedUser: foundUser,
+              selectedProject: foundProject
+            })
 
-    //     }
-    //   }
+          }
+        }
+      }
 
-    // }
+    }
     if (this.props.propFileName !== prevProps.propFileName) {
       if (this.props.propFileName !== null) {
         this.setState({ selectedFile: this.props.propFileName });
@@ -651,7 +637,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           selectedFile: this.props.reHighlightFile,
         });
       }
-      else if (prevState.selectedProject.projectName === '') {
+      else if (prevState.selectedProject.projectName !== '') {
         this.setState({
           selectedProject: this.state.selectedProject,
           projectName: this.state.selectedProject.projectName,
@@ -711,8 +697,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   };
 
   copyObject = (object: Classroom | User | Project | string) => {
-    console.log("Copying object:", object);
-    //this.props.onCopyObject?.(object);
 
     //Copying a file
     if (typeof object === "string") {
@@ -721,17 +705,16 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       });
     }
     else if (typeof object === "object" && "projectName" in object) {
-      console.log("Copying project:", object);
+
       this.setState({
         toCopyObject: { copyObjectUser: this.state.selectedUser, copyObjectProject: object, copyObjectFile: undefined },
       })
     }
-   
+
   }
 
   pasteObject = (toPasteObject: {}, toPasteWhere: Classroom | User | Project | string) => {
-    console.log("Pasting object:", toPasteObject);
-    console.log("Pasting to:", toPasteWhere);
+
     let toPasteData = { pasteFromData: {}, pasteToData: {} };
 
     //if pasting to a Project (file)
@@ -749,7 +732,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       };
     }
     else if (typeof toPasteWhere === "object" && "userName" in toPasteWhere) {
-      console.log("Pasting to a user:", toPasteWhere);
+
       toPasteData = {
         pasteFromData: {
           toPasteObject: toPasteObject,
@@ -761,7 +744,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       };
 
     }
-   
+
     this.props.onPasteObject?.(toPasteData);
   };
 
@@ -789,8 +772,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     this.props.onRenameClassroom(classroom);
   }
   removeUserFromClassroom = (user: User, classroom: Classroom) => {
-    console.log("removeUserFromClassroom user:", user);
-    console.log("removeUserFromClassroom classroom:", classroom);
+
     if (classroom.users.some(u => u.userName === user.userName)) {
       this.props.onRemoveUserFromClassroom(user, classroom);
     }
@@ -821,7 +803,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   renderClassroomContextMenu() {
-    console.log("renderClassroomContextMenu state:", this.state);
+  
     const { contextMenuPosition } = this.state;
     const { theme } = this.props;
     if (!contextMenuPosition) return null;
@@ -869,7 +851,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             Rename Classroom
           </li>
         </ContextMenuItem>
-     
+
       </ContextMenu>
     );
   }
@@ -949,7 +931,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               Move User to Classroom
             </li>
           </ContextMenuItem>)}
-  
+
         {this.state.toCopyObject && typeof this.state.toCopyObject.copyObjectProject === "object" && this.state.toCopyObject.copyObjectProject && (
           <ContextMenuItem theme={theme}>
             <li
@@ -971,7 +953,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     if (!contextMenuPosition) return null;
 
     const { x, y } = contextMenuPosition;
-    console.log("renderProjectContextMenu state:", this.state);
+
 
     return (
       <ContextMenu x={x} y={y} theme={theme} onClick={this.closeContextMenu}>
@@ -1100,8 +1082,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   renderUploadFileView(uploadType: 'user' | 'project' | 'include' | 'src' | 'data' | 'none') {
     const { theme, locale } = this.props;
-    console.log("renderUploadFileView state:", this.state);
-    console.log("renderUploadFileView props:", this.props);
+
     return (
       <FileUploader
         theme={theme}
@@ -1119,8 +1100,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   renderUploadProjectView() {
     const { theme, locale } = this.props;
-    console.log("renderUploadProjectView state:", this.state);
-    console.log("renderUploadProjectView props:", this.props);
+
     return (
       <ProjectUploader
         theme={theme}
@@ -1138,12 +1118,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   renderUploadUserView() {
     const { theme, locale } = this.props;
-    console.log("renderUploadUserView state:", this.state);
-    console.log("renderUploadUserView props:", this.props);
+
     return (
       <UserUploader
         theme={theme}
-        onProjectUpload={this.onProjectUploadClose_}
+        onUserUpload={this.onUserUploadClose_}
         currentClassroom={this.state.selectedClassroom}
         onClose={() => this.onClose()}
         locale={locale}
@@ -1164,6 +1143,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     this.props.onUploadProject(this.state.selectedUser, project);
   };
 
+  private onUserUploadClose_ = (user: UploadedUser) => {
+    this.setState({
+      showUserUploader: false,
+    })
+    this.props.onUploadUser( user);
+  }
+
   /**
      * Right click handler for Users
      * @param event - right click event
@@ -1171,7 +1157,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
      */
   handleUserRightClick = (event: React.MouseEvent, user: User) => {
     event.preventDefault();
-    console.log("handleUserRightClick props:", this.props);
+   
     this.setState({
       showUserContextMenu: true,
       showProjectContextMenu: false,
@@ -1225,11 +1211,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private setSelectedUser = async (user: User, classroom?: Classroom) => {
     const { selectedUser } = this.state;
-    console.log("setSelectedUser called with user:", user, "and classroom:", classroom);
+
     const sameUserClicked = selectedUser.userName === user.userName;
     if (sameUserClicked) {
-      console.log("setSelectedUser called with same user, resetting state");
-      console.log("setSelectedUser state:", this.state);
+
       this.setState({
         selectedUser: BLANK_USER,
         selectedProject: BLANK_PROJECT,
@@ -1239,27 +1224,18 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       });
       return;
     }
-    // this.setState({
-    //   selectedUser: BLANK_USER,
-    //   selectedProject: BLANK_PROJECT,
-    //   showProjects: null,
-    // });
-    // let editedUser = {...user, classroom: classroom};
-    // await this.props.onUserSelected(editedUser, true);
-    // console.log("setSelectedUser right before");
+
     this.setState({
       selectedUser: Object.values(this.props.propUsers).find(
         (u) => u.userName === user.userName
       ) || user,
       selectedProject: BLANK_PROJECT,
       showProjects: true,
-    }, () => {
-      console.log("setSelectedUser after setting state:", this.state);
     });
   };
 
   private setSelectedClassroom = async (classroom: Classroom) => {
-    console.log("setSelectedClassroom called with classroom:", classroom);
+
     const { selectedClassroom } = this.state;
     const sameClassroomClicked = selectedClassroom?.name === classroom.name;
     if (sameClassroomClicked) {
@@ -1304,8 +1280,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private onUserCreationSelect = (index: number, option: ComboBox.Option) => {
     const { userCreationType, selectedClassroom } = this.state;
-    console.log("onUserCreationSelect called with option:", option);
-    console.log("onUserCreationSelect current userCreationType:", userCreationType);
 
     this.setState({
       userCreationType: option.data as UserCreationType,
@@ -1334,10 +1308,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private onProjectCreationSelect = (index: number, option: ComboBox.Option) => {
     const { propSettings } = this.props;
     const { projectCreationType } = this.state;
-    console.log("onProjectCreationSelect called with option:", option);
-    console.log("onProjectCreationSelect current projectCreationType:", projectCreationType);
-    console.log("onProjectCreationSelect current state:", this.state);
-    console.log("onProjectCreationSelect current selectedUser:", this.state.selectedUser);
 
     this.setState({
       projectCreationType: option.data as ProjectCreationType,
@@ -1371,7 +1341,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   private onFileCreationSelect = (index: number, option: ComboBox.Option,) => {
-    console.log("onFileCreationSelect called with option:", option);
 
     this.setState({
       fileCreationTypeAction: option.data as FileCreationTypeAction,
@@ -1398,8 +1367,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     return (index: number, option: ResizeableComboBox.Option) => {
       const fileType = option.data as string;
       let fileT;
-      console.log(`Creating file of type: ${fileType} in group: ${fileGroup}`);
-
 
       this.setState({
         fileCreationTypeAction: option.data as FileCreationTypeAction,
@@ -1432,8 +1399,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               showFileUploader: true,
               uploadType: fileT,
               fileCreationTypeAction: FileCreationTypeAction.ADD,
-            }, () => {
-              console.log("File upload type set to:", fileT);
             });
             break;
         }
@@ -1446,7 +1411,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private handleProjectClick = async (project: Project, user: User, language: ProgrammingLanguage) => {
 
-    console.log("handleProjectClick called with project:", project, "user:", user, "language:", language);
 
     if (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE) {
       const mainFile = project.srcFolderFiles.find(file => file.includes('main.'));
@@ -1462,9 +1426,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         showProjectFiles: prevState.selectedProject === project ? false : true,
         selectedProject: prevState.selectedProject === project ? BLANK_PROJECT : project,
         activeLanguage: prevState.selectedProject === project ? null : language
-      }), () => {
-        console.log("handleProjectClick after setting state:", this.state);
-      });
+      }));
 
   };
 
@@ -1545,14 +1507,14 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   private onClose = () => {
-    const {showUserUploader, showFileUploader, showProjectUploader } = this.state;
+    const { showUserUploader, showFileUploader, showProjectUploader } = this.state;
     if (showFileUploader) {
       this.setState({ showFileUploader: false });
     }
     if (showProjectUploader) {
       this.setState({ showProjectUploader: false });
     }
-    if(showUserUploader) {
+    if (showUserUploader) {
       this.setState({ showUserUploader: false });
     }
   }
@@ -1604,17 +1566,12 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   renderClassroomUsers = (classroom: Classroom) => {
     const { theme, locale } = this.props;
     const { userCreationType, selectedUser } = this.state;
-    console.log("Rendering classroom users with state:", this.state);
-    console.log("Rendering users for classroom:", classroom.name);
-    console.log("Classroom users:", classroom.users);
+
     const classroomUsers = classroom.users || [];
 
     const completeUsersInClass = Object.values(this.props.propUsers).filter((user) => {
       return user.classroomName === classroom.name;
     });
-
-    console.log("Complete users in classroom:", completeUsersInClass);
-    console.log("propClassrooms:", this.props.propClassrooms);
 
     // MAKE LIST OF ALL STATE.USERS IN GIVEN CLASSROOM
     return (
@@ -1665,12 +1622,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   renderProjects = (projects: Project[]) => {
     const { theme } = this.props;
     const { projectCreationType, selectedUser, showProjectFiles } = this.state;
-    console.log("Rendering projects for user:", this.state.selectedUser, "with projects:", projects);
-    console.log("renderProjects state:", this.state);
-    console.log("renderProjects props:", this.props);
 
     const userProjects = Object.values(this.props.propUsers).find((user) => user.userName === selectedUser.userName)?.projects || [];
-    console.log("User projects:", userProjects);
 
     return (
       <ProjectContainer theme={theme} >
@@ -1756,7 +1709,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   };
 
   simpleView = (project: Project) => {
-    console.log("Rendering simple view for project:", project);
+
     const { theme } = this.props;
     const { fileCreationTypeAction } = this.state;
     return <FileTypeContainer theme={theme} selected={false}>
@@ -1923,9 +1876,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       uploadType
     } = state;
 
-    console.log("Rendering IvygateFileExplorer with props:", props);
     const usersArray = Object.values(propUsers || {});
-    console.log("Users array:", usersArray);
+
     const userSections = usersArray.map((user: User) => {
       const projects = user.projects || [];
       return (
