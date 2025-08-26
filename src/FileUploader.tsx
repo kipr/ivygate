@@ -12,6 +12,7 @@ import { Fa } from './components/Fa';
 import ScrollArea from './components/interface/ScrollArea';
 import { FileInfo } from './types/fileInfo';
 import { Project } from './types/project';
+import { current } from '@reduxjs/toolkit';
 
 export interface FileUploaderPublicProps extends StyleProps, ThemeProps {
   theme: Theme;
@@ -42,8 +43,14 @@ const Container = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   padding: '1em'
 }));
+const Title = styled('div', (props: ThemeProps) => ({
+  color: props.theme.color,
+  fontSize: '1.1em',
+  margin: '0.1em 0',
+  textAlign: 'center',
+}));
 
-const UploadFileButton = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
+const UploadFileButton = styled('button', (props: ThemeProps & { disabled?: boolean }) => ({
   flex: '1 1',
   borderRadius: `${props.theme.itemPadding * 2}px`,
   padding: `${props.theme.itemPadding * 2}px`,
@@ -64,7 +71,7 @@ const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   marginBottom: '1.5em',
   marginTop: '1em',
   paddingBottom: '13em',
-  minHeight: '28vh',
+  minHeight: '24vh',
   border: `2px solid ${theme.borderColor}`,
 }));
 
@@ -148,7 +155,7 @@ class FileUploader extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedFiles: null,
+      selectedFiles: [],
       errorMessage: '',
     };
     this.fileInputRef = React.createRef();
@@ -157,6 +164,7 @@ class FileUploader extends React.Component<Props, State> {
 
   handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
+    const {currentLanguage} = this.props;
     const files = event.target.files;
     if (files) {
       const fileArray = Array.from(files);
@@ -174,7 +182,7 @@ class FileUploader extends React.Component<Props, State> {
             }
             language = await this.detectLanguage(file);
             if (language !== 'c') {
-              errorMessage = LocalizedString.lookup(tr('The selected file does not match the expected language.'), this.props.locale);
+              errorMessage = LocalizedString.lookup(tr(`The selected file is in ${language} and does not match the expected language ${currentLanguage}.`), this.props.locale);
             }
             if (!file.name.endsWith('.h')) {
               errorMessage = LocalizedString.lookup(tr('The selected file must have a .h extension.'), this.props.locale);
@@ -188,7 +196,8 @@ class FileUploader extends React.Component<Props, State> {
             }
             language = await this.detectLanguage(file);
             if (language !== this.props.currentLanguage) {
-              errorMessage = LocalizedString.lookup(tr('The selected file does not match the expected language.'), this.props.locale);
+              errorMessage =  LocalizedString.lookup(tr(`The selected file is in ${language} and does not match the expected language ${currentLanguage}.`), this.props.locale);
+            
             }
           }
           else if (this.props.uploadType === 'data') {
@@ -204,7 +213,9 @@ class FileUploader extends React.Component<Props, State> {
           else {
             language = '';
           }
-
+          if(errorMessage){
+            this.setState({ errorMessage });
+          }
 
           return {
             name: file.name,
@@ -310,10 +321,36 @@ class FileUploader extends React.Component<Props, State> {
 
   }
 
+onDeleteFile = (fileInfo: FileInfo) => {
+  console.log("Deleting file:", fileInfo);
+
+  this.setState(prevState => {
+    const updatedFiles = prevState.selectedFiles?.filter(f => f.name !== fileInfo.name) || [];
+
+    const hasError = updatedFiles.some(f => f.errorMessage && f.errorMessage.trim() !== "");
+
+    return {
+      selectedFiles: updatedFiles,
+      errorMessage: hasError ? "Some files have errors" : ""
+    };
+  }, () => {
+    console.log("Updated state: ", this.state);
+    console.log("Updated selected Files:", this.state.selectedFiles);
+  });
+};
+
+
   render() {
-    const { theme, locale, style, className, onClose } = this.props;
+    const { theme, locale, style, className, onClose, currentLanguage, uploadType } = this.props;
     const { selectedFiles } = this.state;
     console.log("FileUploader render props:", this.props);
+    console.log("FileUploader render state:", this.state);
+    console.log("disabled check:", {
+  selectedFiles: this.state.selectedFiles,
+  length: Array.isArray(this.state.selectedFiles) ? this.state.selectedFiles.length : "not-array",
+  errorMessage: this.state.errorMessage,
+  condition: this.state.selectedFiles.length === 0 || this.state.errorMessage !== ''
+});
     return (
       <Dialog
         theme={theme}
@@ -322,9 +359,17 @@ class FileUploader extends React.Component<Props, State> {
         onClose={onClose}
       >
         <Container theme={theme} style={style} className={className}>
+          <Title theme={theme}>
+            <strong>{LocalizedString.lookup(tr('Selected File Upload Language: '), locale)}</strong>
+            {LocalizedString.lookup(tr(`${currentLanguage} `), locale)}
+
+          </Title>
           <p>{LocalizedString.lookup(tr('Select a file from your computer to upload'), locale)}</p>
+          
           <Button onClick={() => this.fileInputRef.current?.click()} theme={theme}>
-            {LocalizedString.lookup(tr('Choose File'), locale)}
+            {uploadType == 'include' ? LocalizedString.lookup(tr('Upload Include File'), locale) :
+            uploadType === 'src' ? LocalizedString.lookup(tr('Upload Source File'), locale) :
+            LocalizedString.lookup(tr('Upload User Data File'), locale)}
           </Button>
           <input
             type="file" multiple
@@ -348,11 +393,7 @@ class FileUploader extends React.Component<Props, State> {
                       </div>
                       <TrashIcon
                         icon={faTrashCan}
-                        onClick={() => {
-                          this.setState(prevState => ({
-                            selectedFiles: prevState.selectedFiles?.filter(f => f.name !== fileInfo.name)
-                          }));
-                        }}
+                        onClick={() => {this.onDeleteFile(fileInfo)}}
                         style={{ cursor: 'pointer', color: theme.color }}
                       />
                     </FileListTitle>
@@ -373,7 +414,7 @@ class FileUploader extends React.Component<Props, State> {
           </StyledScrollArea>
           <UploadFileButton
             theme={theme}
-            disabled={!this.state.selectedFiles}
+            disabled={this.state.selectedFiles.length === 0 || this.state.errorMessage !== ''}
             onClick={() => this.onUploadClick()} >
             Upload File
           </UploadFileButton>
