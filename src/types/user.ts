@@ -18,3 +18,11 @@ export type UploadedUser = {
 };
 
 export const BLANK_USER: User = {userName: '', interfaceMode: InterfaceMode.SIMPLE, projects: [], classroomName: ''};
+
+export const BLANK_UPLOAD_USER: UploadedUser = {configFile: {
+  name: '',
+  errorMessage: '',
+  content: '',
+  language: '',
+  uploadType: ''
+}, userName: '', interfaceMode: InterfaceMode.SIMPLE, projects: [], classroomName: ''};
