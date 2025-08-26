@@ -1126,7 +1126,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 onSelect={this.onMotorViewSelect_}
                                 theme={theme}
                                 mainWidth={'1em'}
-                                mainHeight={'1.2em'}
+                                mainHeight={'1.8em'}
                                 mainFontSize={'1em'}
 
                             />
@@ -1142,7 +1142,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 onSelect={this.onMotorSelect_}
                                 theme={theme}
                                 mainWidth={'8.3em'}
-                                mainHeight={'1.2em'}
+                                mainHeight={'2em'}
                                 mainFontSize={'1em'}
                             />
                         </ControlContainer>
@@ -1217,7 +1217,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 onSelect={this.onServoSelect_}
                                 theme={theme}
                                 mainWidth={'8.3em'}
-                                mainHeight={'1.2em'}
+                                mainHeight={'2em'}
                                 mainFontSize={'1em'}
 
                             />
