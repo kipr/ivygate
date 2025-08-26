@@ -19,7 +19,7 @@ export enum FileCreationTypeActionSimple {
 export enum ClassroomCreationType {
   ADD = '+',
   CREATE_CLASSROOM = 'Create Classroom',
-  UPLOAD_CLASSROOM = 'Upload Classroom',
+
 }
 export enum UserCreationType {
   ADD = '+',
