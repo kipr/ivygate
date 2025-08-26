@@ -15,7 +15,7 @@ import ResizeableComboBox from './components/ResizeableComboBox';
 import ComboBox from './components/ComboBox';
 import Classroom from './types/classroomTypes';
 import { InterfaceMode } from './types/interface';
-import { UploadedUser, User } from './types/user';
+import { BLANK_UPLOAD_USER, BLANK_USER, UploadedUser, User } from './types/user';
 
 
 export interface UserUploaderPublicProps extends StyleProps, ThemeProps {
@@ -365,7 +365,7 @@ class UserUploader extends React.Component<Props, State> {
 
       //If classrooms.json contains uploaded user, show error message
       if (this.props.currentClassroom.users.some(user => user.userName === folderName)) {
-        
+
         this.setState({
           duplicateUserErrorMessage: `User with name "${folderName}" already exists. Please choose a different name.`,
           selectedFiles: null,
@@ -403,7 +403,7 @@ class UserUploader extends React.Component<Props, State> {
 
                   //Get user interface mode from config file
                   const interfaceMode = await this.getUserInterfaceFromConfig(file);
-               
+
                   if (interfaceMode && interfaceMode !== this.state.interfaceMode) {
                     errorMessage = `File ${file.name} detected with interface mode ${interfaceMode}, not matching project interface mode ${this.state.interfaceMode}.`;
                   }
@@ -497,7 +497,7 @@ class UserUploader extends React.Component<Props, State> {
                 language = 'plaintext'; // Default to plaintext for unknown extensions
                 console.warn(`Unknown file type for ${file.name}, defaulting to plaintext.`);
             }
-          
+
             if (errorMessage) {
               this.setState({ errorMessage });
             }
@@ -511,6 +511,7 @@ class UserUploader extends React.Component<Props, State> {
 
           })
         );
+        console.log("File Infos: ", fileInfos);
         this.setState(prevState => {
           if (prevState.selectedFiles) {
             // Merge new files with previous selected files
@@ -625,9 +626,60 @@ class UserUploader extends React.Component<Props, State> {
 
   onUploadUserClick = async () => {
     const { uploadedUser } = this.state;
+    console.log("onUploadUserClick state: ", this.state);
+    console.log("onUploadUserClick props:", this.props);
+    if (uploadedUser.configFile.name === '') { //blank or no config file uploaded
+      const generatedConfig = this.constructUserConfigFile();
+      this.setState(prevState => ({
+        uploadedUser: {
+          ...prevState.uploadedUser,
+          userName: prevState.folderName,
+          configFile: generatedConfig,
+          classroomName: this.props.currentClassroom.name,
+          interfaceMode: prevState.interfaceMode as InterfaceMode,
 
-    this.props.onUserUpload(uploadedUser);
+        }
+      }), () => {
+        console.log("Updated uploadedUser:", this.state.uploadedUser);
+        this.props.onUserUpload(this.state.uploadedUser);
+      });
 
+    }
+
+    else {
+      this.props.onUserUpload(uploadedUser);
+    }
+
+  }
+
+  constructUserConfigFile = (): FileInfo => {
+    const { uploadedUser, folderName } = this.state;
+    const { currentClassroom } = this.props;
+
+    const configObject = {
+      [folderName]: {
+        userName: folderName,
+        interfaceMode: this.state.interfaceMode,
+        projects: uploadedUser.projects.map(project => {
+          return {
+            projectName: project.projectName,
+            projectLanguage: project.projectLanguage,
+            includeFolderFiles: project.includeFolderFiles.map(file => file.name),
+            srcFolderFiles: project.srcFolderFiles.map(file => file.name),
+            dataFolderFiles: project.dataFolderFiles.map(file => file.name)
+          };
+        }),
+        classroomName: currentClassroom.name
+      }
+    }
+    const configFile: FileInfo = {
+      name: '.user.config.json',
+      errorMessage: '',
+      content: JSON.stringify(configObject, null, 2),
+      language: 'json',
+      uploadType: 'config'
+    };
+    return configFile;
   }
 
   includePreview = () => {
@@ -964,6 +1016,7 @@ class UserUploader extends React.Component<Props, State> {
   uploadedUserPreview = (uploadedUser: UploadedUser) => {
     const { theme, locale } = this.props;
     const { folderName } = this.state;
+    console.log("uploadedUserPreview uploadedUser: ", uploadedUser);
 
     return (
       <>
@@ -974,7 +1027,7 @@ class UserUploader extends React.Component<Props, State> {
         <div style={{ display: 'flex', marginLeft: '1.5em', }}>
           <VerticalLine theme={theme} />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {this.configFilePreview(uploadedUser.configFile, `${uploadedUser.configFile.name}-config`)}
+            {uploadedUser.configFile && uploadedUser.configFile.name !== '' && this.configFilePreview(uploadedUser.configFile, `${uploadedUser.configFile.name}-config`)}
             {this.projectView()}
           </div>
         </div>
@@ -992,7 +1045,7 @@ class UserUploader extends React.Component<Props, State> {
       <>
 
         {uploadedUser.projects.map((project, i) => (
-   
+
           <ProjectPreviewContainer theme={theme} key={i}>
             <ListTitle theme={theme}>
               <ItemIcon icon={faFolderOpen} />
@@ -1019,18 +1072,19 @@ class UserUploader extends React.Component<Props, State> {
 
   uploadFolderPreview = () => {
     const { theme, locale } = this.props;
-    const { uploadedUser } = this.state;
+    const { uploadedUser, folderName, interfaceMode } = this.state;
     return (
       <>
 
         <TitleContainer theme={theme}>
           <Title theme={theme}>
             <strong>{LocalizedString.lookup(tr('Selected User Folder: '), locale)}</strong>
-            {LocalizedString.lookup(tr(`${uploadedUser.userName} `), locale)}
+            {LocalizedString.lookup(tr(`${folderName} `), locale)}
           </Title>
           <Title theme={theme}>
             <strong>{LocalizedString.lookup(tr('Selected User Interface Mode: '), locale)}</strong>
-            {LocalizedString.lookup(tr(`${uploadedUser.interfaceMode} `), locale)}
+            {LocalizedString.lookup(tr(`${interfaceMode} `), locale)}
+
           </Title>
 
         </TitleContainer>
@@ -1041,14 +1095,21 @@ class UserUploader extends React.Component<Props, State> {
         </StyledScrollArea>
         <UploadFolderPreviewButtonContainer theme={theme}>
 
-          <Button onClick={() => this.setState({ folderName: '', selectedFiles: [], projectLanguage: 'none', errorMessage: '' })} theme={theme}>
-            {LocalizedString.lookup(tr('Choose a different project'), locale)}
+          <Button onClick={() => this.setState({
+            folderName: '',
+            selectedFiles: [],
+            projectLanguage: 'none',
+            errorMessage: '',
+            userConfigFile: { configFileName: '', user: BLANK_USER, errorMessage: '' },
+            uploadedUser: BLANK_UPLOAD_USER
+          })} theme={theme}>
+            {LocalizedString.lookup(tr('Choose a different User'), locale)}
           </Button>
           <Button disabled={
 
             this.state.errorMessage !== ''
           } theme={theme} onClick={() => this.onUploadUserClick()}>
-            {LocalizedString.lookup(tr('Upload Project'), locale)}
+            {LocalizedString.lookup(tr('Upload User'), locale)}
           </Button>
         </UploadFolderPreviewButtonContainer>
 
@@ -1071,21 +1132,27 @@ class UserUploader extends React.Component<Props, State> {
         <TitleContainer theme={theme}>
           <Title theme={theme}>
             <strong>
-              {LocalizedString.lookup(tr(`The selected project ${folderName} already exists for this user.`), locale)}
+              {LocalizedString.lookup(tr(`The selected user ${folderName} already exists in this classroom.`), locale)}
             </strong>
             <br />
             <strong>
-              {LocalizedString.lookup(tr(`Please choose a different project.`), locale)}
+              {LocalizedString.lookup(tr(`Please choose a different user.`), locale)}
             </strong>
           </Title>
         </TitleContainer>
 
         <UploadFolderPreviewButtonContainer theme={theme}>
           <Button
-            onClick={() => this.setState({ folderName: '', selectedFiles: [], projectLanguage: 'none' })}
+            onClick={() => this.setState({
+              folderName: '',
+              selectedFiles: [],
+              projectLanguage: 'none',
+              userConfigFile: { configFileName: '', user: BLANK_USER, errorMessage: '' },
+              uploadedUser: BLANK_UPLOAD_USER
+            })}
             theme={theme}
           >
-            {LocalizedString.lookup(tr('Choose a different project'), locale)}
+            {LocalizedString.lookup(tr('Choose a different user'), locale)}
           </Button>
         </UploadFolderPreviewButtonContainer>
       </div>
