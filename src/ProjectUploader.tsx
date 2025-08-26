@@ -328,7 +328,7 @@ class ProjectUploader extends React.Component<Props, State> {
   handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { projectLanguage } = this.state;
     const files = event.target.files;
-
+    let projectErrorMessage = '';
     let extension = '';
 
     if (files && files.length > 0) {
@@ -336,7 +336,10 @@ class ProjectUploader extends React.Component<Props, State> {
       const fileArray = Array.from(files);
       const firstRelativePath = fileArray[0].webkitRelativePath;
       const folderName = firstRelativePath.split('/')[0]; // Top-level folder name
-      this.setState({ folderName });
+      this.setState({ 
+        folderName,
+        projectErrorMessage: /\s/.test(folderName) ? 'Please remove all spaces in the folder name.' : '',
+      });
       if (this.props.currentUserProjects.some(project => project.projectName === folderName)) {
         console.log("Project with this name already exists.");
         this.setState({
@@ -352,20 +355,36 @@ class ProjectUploader extends React.Component<Props, State> {
             const content = await file.text();
             const detectedLanguage = await this.detectLanguage(file);
             let errorMessage = '';
+
             const fileExtension = file.name.split('.').pop()?.toLowerCase();
             let uploadType: 'project' | 'include' | 'src' | 'data' | 'config' | 'none' = 'none';
             // Determine language from extension
             let language: ProgrammingLanguage | string = undefined;
+            const hasSpaces = /\s/.test(file.name);
+            const hasSpecialCharacters = /[^a-zA-Z0-9._-]/.test(file.name);
+
             switch (fileExtension) {
               case 'json':
                 uploadType = 'config';
 
                 const parsedConfig = JSON.parse(content);
-                if (parsedConfig.language) {
-                  language = parsedConfig.language;
+                console.log('Parsed config:', parsedConfig);
+                if (parsedConfig.projectLanguage) {
+                  language = parsedConfig.projectLanguage;
                   if (language !== projectLanguage) {
-                    errorMessage = `File ${file.name} detected as ${parsedConfig.language}, not matching project language ${projectLanguage}.`
+                    errorMessage = `File ${file.name} detected as ${parsedConfig.projectLanguage}, not matching selected project language ${projectLanguage}.`
+                    this.setState({
+                      //projectErrorMessage: `Project language in config file (${parsedConfig.projectLanguage}) does not match selected project language (${projectLanguage}).`
+                    })
                   }
+                }
+
+                //Error handling for folder name not matching projectName in config file
+                if (parsedConfig.projectName && parsedConfig.projectName !== folderName) {
+                  errorMessage = `Folder name "${folderName}" does not match project name "${parsedConfig.projectName}" in config file.`;
+                  this.setState({
+                    //projectErrorMessage: `Folder name "${folderName}" does not match project name "${parsedConfig.projectName}" in config file.`
+                  })
                 }
                 break;
               case 'h':
@@ -389,10 +408,13 @@ class ProjectUploader extends React.Component<Props, State> {
                     else {
                       uploadType = 'src';
                       errorMessage = `File ${file.name} detected as ${detectedLanguage}, not matching project language ${projectLanguage}.
-                  Please ensure all source files match the project language.`;
+                    Please ensure all source files match the selected project language.`;
 
                     }
                   }
+
+
+
                 }
                 break;
 
@@ -401,15 +423,29 @@ class ProjectUploader extends React.Component<Props, State> {
                 language = 'plaintext'; // Default to plaintext for unknown extensions
                 console.warn(`Unknown file type for ${file.name}, defaulting to plaintext.`);
             }
+            if (hasSpaces) {
+              errorMessage = `Please remove all spaces in the name "${file.name}".`;
+            }
+            if(hasSpecialCharacters){
+              errorMessage = `Please remove all special characters in the name "${file.name}".`;
+            }
+            if(file.name.length > 50){
+              errorMessage = `File name "${file.name}" exceeds maximum length of 50 characters.`;
+            }
+            console.log("ErrorMessage: ", errorMessage);
+            console.log("ProjectErrorMessage: ", projectErrorMessage);
             return {
               name: file.name,
               content,
               language,
               errorMessage,
+              projectErrorMessage,
               uploadType: uploadType,
             };
           })
         );
+
+        console.log("File Infos: ", fileInfos);
         this.setState(prevState => {
           if (prevState.selectedFiles) {
             // Merge new files with previous selected files
@@ -432,8 +468,6 @@ class ProjectUploader extends React.Component<Props, State> {
         }, () => {
 
           this.setState({
-            projectErrorMessage: this.state.selectedFiles?.some(file => file.name.includes('main.'))
-              ? '' : `Project must contain a main.${extension} file`,
 
             sourceFiles: this.state.selectedFiles?.filter(
               (f) => f.uploadType === 'src'
@@ -511,10 +545,11 @@ class ProjectUploader extends React.Component<Props, State> {
 
   onUploadProjectClick = async () => {
     const { configFile, includeFiles, sourceFiles, dataFiles, projectLanguage } = this.state;
-
+    console.log("Uploading project with state: ", this.state);
+    console.log("Uploading project with props: ", this.props);
     const newUploadedProject: UploadedProject =
     {
-      configFile: configFile,
+      configFile: configFile.name === '' ? this.constructProjectConfigFile() : configFile,
       projectName: this.state.folderName,
       projectLanguage: projectLanguage as ProgrammingLanguage,
       includeFolderFiles: includeFiles,
@@ -522,8 +557,29 @@ class ProjectUploader extends React.Component<Props, State> {
       dataFolderFiles: dataFiles,
     };
 
-    this.props.onProjectUpload(newUploadedProject);
+    console.log("Uploading project: ", newUploadedProject);
 
+   this.props.onProjectUpload(newUploadedProject);
+
+  }
+
+  constructProjectConfigFile = () : FileInfo => {
+    const { folderName, projectLanguage } = this.state;
+    const configObject = {
+      projectName: folderName,
+      projectLanguage: projectLanguage,
+      includeFolderFiles: this.state.includeFiles.map((file)=> file.name),
+      srcFolderFiles: this.state.sourceFiles.map((file)=> file.name),
+      dataFolderFiles: this.state.dataFiles.map((file)=> file.name),
+    }
+    return {
+      name: '.project.config.json',
+      language: 'c',
+      content: JSON.stringify(configObject, null, 2),
+      errorMessage: '',
+      uploadType: 'config',
+    
+    };
   }
 
   uploadFolderInstructions = () => {
@@ -694,10 +750,19 @@ class ProjectUploader extends React.Component<Props, State> {
             <VerticalLine style={{ margin: '0 5px 0 0' }} theme={theme} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {files.map((file, i) => (
-                <FilePreviewItem theme={theme} key={i}>
-                  <SubItemIcon icon={faFileCode} />
-                  {LocalizedString.lookup(tr(`${file.name} `), locale)}
-                </FilePreviewItem>
+                <div key={i}>
+                  <FilePreviewItem theme={theme} key={i}>
+                    <SubItemIcon icon={faFileCode} />
+                    {LocalizedString.lookup(tr(`${file.name} `), locale)}
+                  </FilePreviewItem>
+                  {file.errorMessage && (
+                    <ErrorMessageContainer theme={theme}>
+                      <Fa icon={faExclamationTriangle} />
+                      {LocalizedString.lookup(tr(`${file.errorMessage} `), locale)}
+                    </ErrorMessageContainer>
+                  )}
+                </div>
+
               ))}
 
             </div>
@@ -712,7 +777,7 @@ class ProjectUploader extends React.Component<Props, State> {
 
 
   sourceFilePreview = (files: FileInfo[], index: number) => {
-    const { projectErrorMessage } = this.state;
+    const { projectErrorMessage, errorMessage } = this.state;
     const { theme, locale } = this.props;
     return (
       <FileListItem style={{ marginLeft: '7px' }} key={index} theme={theme}>
@@ -727,14 +792,10 @@ class ProjectUploader extends React.Component<Props, State> {
               <VerticalLine theme={theme} />
 
               <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '8px' }}>
-                {projectErrorMessage && (
-                  <ErrorMessageContainer theme={theme}>
-                    <Fa icon={faExclamationTriangle} />
-                    {LocalizedString.lookup(tr(`${projectErrorMessage} `), locale)}
-                  </ErrorMessageContainer>
-                )}
+
                 {files.map((file, i) => (
                   <div key={i}>
+
                     <FilePreviewItem theme={theme}>
                       <SubItemIcon icon={faFileCode} />
                       {LocalizedString.lookup(tr(`${file.name} `), locale)}
@@ -773,10 +834,19 @@ class ProjectUploader extends React.Component<Props, State> {
             <VerticalLine style={{ margin: '0 5px 0 0' }} theme={theme} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {files.map((file, i) => (
-                <FilePreviewItem theme={theme} key={i}>
-                  <SubItemIcon icon={faFileCode} />
-                  {LocalizedString.lookup(tr(`${file.name} `), locale)}
-                </FilePreviewItem>
+                <div key={i}>
+                  <FilePreviewItem theme={theme} key={i}>
+                    <SubItemIcon icon={faFileCode} />
+                    {LocalizedString.lookup(tr(`${file.name} `), locale)}
+                  </FilePreviewItem>
+                  {file.errorMessage && (
+                    <ErrorMessageContainer theme={theme}>
+                      <Fa icon={faExclamationTriangle} />
+                      {LocalizedString.lookup(tr(`${file.errorMessage} `), locale)}
+                    </ErrorMessageContainer>
+                  )}
+
+                </div>
               ))}
 
             </div>
@@ -811,7 +881,14 @@ class ProjectUploader extends React.Component<Props, State> {
             <ProjectListTitle theme={theme}>
               <ItemIcon icon={faFolderOpen} />
               {LocalizedString.lookup(tr(`${folderName} `), locale)}
+              
             </ProjectListTitle>
+            {this.state.projectErrorMessage && (
+                <ErrorMessageContainer theme={theme}>
+                  <Fa icon={faExclamationTriangle} />
+                  {LocalizedString.lookup(tr(`${this.state.projectErrorMessage} `), locale)}
+                </ErrorMessageContainer>
+              )}
             {selectedFiles && configFile ? (<div style={{ display: 'flex', marginLeft: '3em' }}>
               <VerticalLine theme={theme} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -864,7 +941,8 @@ class ProjectUploader extends React.Component<Props, State> {
           </Button>
           <Button disabled={
             this.state.sourceFiles.some(file => file.errorMessage !== '') ||
-            this.state.projectErrorMessage !== ''
+            this.state.projectErrorMessage !== '' ||
+            this.state.errorMessage !== ''
           } theme={theme} onClick={() => this.onUploadProjectClick()}>
             {LocalizedString.lookup(tr('Upload Project'), locale)}
           </Button>
@@ -874,41 +952,41 @@ class ProjectUploader extends React.Component<Props, State> {
 
     )
   };
-uploadFolderError = (errorMessage: string) => {
-  const { theme, locale } = this.props;
-  const { folderName } = this.state;
-  return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-     
-    }}>
-      <TitleContainer theme={theme}>
-        <Title theme={theme}>
-          <strong>
-            {LocalizedString.lookup(tr(`The selected project ${folderName} already exists for this user.`), locale)}
-          </strong>
-          <br/>
-          <strong>
-            {LocalizedString.lookup(tr(`Please choose a different project.`), locale)}
-          </strong>
-        </Title>
-      </TitleContainer>
+  uploadFolderError = (errorMessage: string) => {
+    const { theme, locale } = this.props;
+    const { folderName } = this.state;
+    return (
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
 
-      <UploadFolderPreviewButtonContainer theme={theme}>
-        <Button 
-          onClick={() => this.setState({ folderName: '', selectedFiles: [], projectLanguage: 'none' })} 
-          theme={theme}
-        >
-          {LocalizedString.lookup(tr('Choose a different project'), locale)}
-        </Button>
-      </UploadFolderPreviewButtonContainer>
-    </div>
-  )
-}
+      }}>
+        <TitleContainer theme={theme}>
+          <Title theme={theme}>
+            <strong>
+              {LocalizedString.lookup(tr(`The selected project ${folderName} already exists for this user.`), locale)}
+            </strong>
+            <br />
+            <strong>
+              {LocalizedString.lookup(tr(`Please choose a different project.`), locale)}
+            </strong>
+          </Title>
+        </TitleContainer>
+
+        <UploadFolderPreviewButtonContainer theme={theme}>
+          <Button
+            onClick={() => this.setState({ folderName: '', selectedFiles: [], projectLanguage: 'none' })}
+            theme={theme}
+          >
+            {LocalizedString.lookup(tr('Choose a different project'), locale)}
+          </Button>
+        </UploadFolderPreviewButtonContainer>
+      </div>
+    )
+  }
 
   render() {
     const { theme, locale, style, className, onClose } = this.props;
@@ -935,9 +1013,9 @@ uploadFolderError = (errorMessage: string) => {
             )}
 
           </Container>
-          
+
         </OuterScrollArea>
-        
+
       </Dialog >
     );
   }
