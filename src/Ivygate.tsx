@@ -260,7 +260,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
         nestedParens: [
           //[/\(/, 'delimiter.parenthesis', '@push'], // Handles deeper nesting
-                [/\b(?:long|double|return|void|operator|while|for|char|bool|int|string|\?)\b/, 'keyword.boldBlue'],
+          [/\b(?:long|double|return|void|operator|while|for|char|bool|int|string|\?)\b/, 'keyword.boldBlue'],
           [/"/, 'delimiter.quote', '@string_double'],
           [/'/, 'delimiter.quote', '@string_single'],
           [/\)/, 'test1', '@pop'],
@@ -681,9 +681,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     // Create Monaco editor with correct language and theme
     this.editor_ = monaco.editor.create(this.ref_, {
-
       fontSize: 16,
-      value: code,
+      tabSize: 1,
+      insertSpaces: false,
+      detectIndentation: false,
       language: language,
       theme: this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme',
       automaticLayout: true,
@@ -693,6 +694,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
       }
     });
 
+    this.editor_.setValue(code);
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
 
@@ -707,7 +709,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
       provideDocumentFormattingEdits(model, options) {
         return [{
           range: model.getFullModelRange(),
-       text: formattingFunction(model.getValue(), options.tabSize, options.insertSpaces).replace(/\s+$/, '')
+          text: formattingFunction(model.getValue(), options.tabSize, options.insertSpaces).replace(/\s+$/, '')
         }];
       }
     });
@@ -748,7 +750,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
   //
   componentDidUpdate(nextProps: Props) {
     if (!this.editor_) return;
-    const { code, language,autocomplete, theme } = nextProps;
+    const { code, language, autocomplete, theme } = nextProps;
 
 
     if (language === 'customCpp' || language === 'customPython' || language === 'plaintext') {
