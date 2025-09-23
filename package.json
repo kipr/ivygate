@@ -40,8 +40,9 @@
   },
   "types": "./dist/index.d.ts",
   "devDependencies": {
-    "@types/react": "^18.3.20",
-    "@types/react-dom": "^17.0.26",
-    "typescript": "^4.8.4"
-  }
+  "@types/react": "^18.3.24",
+  "@types/react-dom": "^18.3.24",
+  "typescript": "^5.9.2"
+}
+
 }
