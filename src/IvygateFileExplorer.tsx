@@ -963,10 +963,14 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     if (!contextMenuPosition) return null;
 
     const { x, y } = contextMenuPosition;
-
-
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const menuWidth = 200;
+    const menuHeight = 185;
+    const adjustedX = Math.min(x, viewportWidth - menuWidth);
+    const adjustedY = Math.min(y, viewportHeight - (menuHeight + 50));
     return (
-      <ContextMenu x={x} y={y} theme={theme} onClick={this.closeContextMenu}>
+      <ContextMenu x={adjustedX} y={adjustedY} theme={theme} onClick={this.closeContextMenu}>
         <ContextMenuItem theme={theme}>
           <li
             style={{ padding: "5px 10px" }}
@@ -1039,9 +1043,15 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     if (!contextMenuPosition) return null;
 
     const { x, y } = contextMenuPosition;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const menuWidth = 200;
+    const menuHeight = 185;
+    const adjustedX = Math.min(x, viewportWidth - menuWidth);
+    const adjustedY = Math.min(y, viewportHeight - (menuHeight + 50));
 
     return (
-      <ContextMenu x={x} y={y} theme={theme} onClick={this.closeContextMenu}>
+      <ContextMenu x={adjustedX} y={adjustedY} theme={theme} onClick={this.closeContextMenu}>
         <ContextMenuItem theme={theme}>
           <li
             style={{ padding: "5px 10px" }}
@@ -1289,7 +1299,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
   }
 
-   private onClassroomCreationSelect = (index: number, option: ComboBox.Option) => {
+  private onClassroomCreationSelect = (index: number, option: ComboBox.Option) => {
     const { classroomCreationType, selectedClassroom } = this.state;
 
     this.setState({

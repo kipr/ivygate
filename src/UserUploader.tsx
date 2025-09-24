@@ -322,14 +322,19 @@ class UserUploader extends React.Component<Props, State> {
 
   getUserInterfaceFromConfig = async (userConfigFile: File): Promise<InterfaceMode | string | undefined> => {
     const content = await userConfigFile.text();
+    console.log("getUserInterfaceFromConfig content: ", content); 
+    const userKey = Object.keys(content)[0];
     let parsedConfig: any;
-    try {
-      parsedConfig = JSON.parse(content);
-    } catch (error) {
-      this.setState({ errorMessage: 'Invalid user config file format.' });
-      return;
-    }
+     try {
+    parsedConfig = JSON.parse(content); // parse the full object
+    const userKey = Object.keys(parsedConfig)[0]; // "Bren"
+    console.log("Parsed user config: ", parsedConfig[userKey]);
 
+    return parsedConfig[userKey].interfaceMode || 'none';
+  } catch (error) {
+    this.setState({ errorMessage: 'Invalid user config file format.' });
+    return;
+  }
     return parsedConfig.interfaceMode || 'none';
   }
 
@@ -362,9 +367,11 @@ class UserUploader extends React.Component<Props, State> {
       const folderName = firstRelativePath.split('/')[0]; // Top-level folder name
 
       this.setState({ folderName });
-
+      console.log("UserUploader state: ", this.state);
+      console.log("UserUploader props:", this.props);
       //If classrooms.json contains uploaded user, show error message
-      if (this.props.currentClassroom.users.some(user => user.userName === folderName)) {
+      if (this.props.currentClassroom?.users.some(user => user.userName === folderName)) {
+        console.log("this.props.currentClassroom.users: ", this.props.currentClassroom.users);
 
         this.setState({
           duplicateUserErrorMessage: `User with name "${folderName}" already exists. Please choose a different name.`,
@@ -415,7 +422,7 @@ class UserUploader extends React.Component<Props, State> {
                       userName: parsedConfig.userName || folderName,
                       interfaceMode: interfaceMode === 'none' ? InterfaceMode.SIMPLE : interfaceMode as InterfaceMode,
                       projects: [],
-                      classroom: this.props.currentClassroom
+                      classroom: this.props.currentClassroom ? this.props.currentClassroom.name : null
                     }
 
                   }))
@@ -1073,6 +1080,7 @@ class UserUploader extends React.Component<Props, State> {
   uploadFolderPreview = () => {
     const { theme, locale } = this.props;
     const { uploadedUser, folderName, interfaceMode } = this.state;
+    console.log("uploadFolderPreview state: ", this.state);
     return (
       <>
 

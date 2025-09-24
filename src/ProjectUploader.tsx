@@ -335,10 +335,11 @@ class ProjectUploader extends React.Component<Props, State> {
 
       const fileArray = Array.from(files);
       const firstRelativePath = fileArray[0].webkitRelativePath;
+      console.log("First relative path: ", firstRelativePath);
       const folderName = firstRelativePath.split('/')[0]; // Top-level folder name
+      console.log("Detected folder name: ", folderName);
       this.setState({ 
         folderName,
-        projectErrorMessage: /\s/.test(folderName) ? 'Please remove all spaces in the folder name.' : '',
       });
       if (this.props.currentUserProjects.some(project => project.projectName === folderName)) {
         console.log("Project with this name already exists.");
