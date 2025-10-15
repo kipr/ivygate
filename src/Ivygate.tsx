@@ -312,7 +312,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/\s*print\b/, { token: 'print.token', next: '@print' }],  // Specific rule for print()
           [/f(?=\s*['"])/, { token: 'keyword.fstring', next: '@fString' }],
           [/@[\w]+/, 'support.type.decorator'],
-          [/\b(?:import|extern|typedef|raise|from|yield|struct|using|namespace|public|private|pass|for|if|else|elif|while|switch|operator|in|with|and|or|not|\?)\b/, 'keyword'],
+          [/\b(?:import|extern|typedef|raise|from|yield|struct|using|namespace|public|private|pass|for|if|else|elif|while|switch|operator|in|with|and|or|not|\?)\b/, 'keyword.boldBlue'],
           [/\b(?:long|int|double|return|void|operator|while|for|char|bool|float|string\?)\b/, 'keyword.boldBlue'],
           [/\b(?:len|max|isinstance|type|int|str|float|sum|min|set|abs|range|sorted|reversed|id|zip|all|any|eval|input|open|divmod|list|super|\?)\b/, { token: 'builtin.function', next: '@insideFunction' }],
           [/\b[A-Z][A-Z0-9_]*\b/, 'constant.caps'],  // Tokenize all uppercase words
@@ -334,7 +334,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/\[/, { token: 'bracket.level0', }], // bracket.level0
           //[/\w+\s*(?=\()/, { token: 'function.declaration', next: '@insideFunction' }],  // Match any function declaration
           [/#\s*include\b/, { token: 'preprocessor.include', next: '@inInclude' }],
-          [/\s*def\b/, { token: 'preprocessor.define', next: '@def' }],
+          [/\s*def\b/, { token: 'keyword.boldBlue', next: '@def' }],
           [/\b[a-zA-Z_][a-zA-Z0-9_]*(?=\()/, { token: 'function-call.python', next: '@insideFunction' }],
           [/\b[a-zA-Z_]\w*\d\w*\b/, 'variable.mixed'],
           [/\b[a-zA-Z_]\w*\b/, 'variable.mixed'],
