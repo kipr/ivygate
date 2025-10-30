@@ -682,7 +682,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     // Create Monaco editor with correct language and theme
     this.editor_ = monaco.editor.create(this.ref_, {
       fontSize: 16,
-      tabSize: 1,
+      tabSize: 2,
       insertSpaces: false,
       detectIndentation: false,
       language: language,
