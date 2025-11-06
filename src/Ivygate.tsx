@@ -695,6 +695,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     });
 
     this.editor_.setValue(code);
+
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
 
@@ -716,7 +717,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    server.open('')
+    server.open('');
   }
 
   private guard_ = false;
@@ -747,11 +748,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
 
   }
-  //
-  componentDidUpdate(nextProps: Props) {
-    if (!this.editor_) return;
-    const { code, language, autocomplete, theme } = nextProps;
 
+  componentDidUpdate(prevProps: Props) {
+    if (!this.editor_) return;
+    const { code, language, autocomplete, theme } = this.props;
 
     if (language === 'customCpp' || language === 'customPython' || language === 'plaintext') {
       this.changeFormatter(format);
@@ -763,11 +763,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
     }
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
-    if (!this.guard_ && code !== model.getValue()) {
-      model.setValue(nextProps.code);
-      this.guard_ = false;
-    }
+    if (!this.guard_ && code !== model.getValue()) model.setValue(code);
 
+    this.guard_ = false;
     monaco.editor.setModelLanguage(model, language);
 
     const monacoMessages = (this.props.messages || []).map(Message.toMonaco).reduce((a, b) => [...a, ...b], []);
