@@ -21,6 +21,7 @@ import { Spacer } from '../constants/common';
 import { FunctionName } from './common';
 import ModuleDocumentation from './ModuleDocumentation';
 import StructureDocumentation from './StructureDocumentation';
+import { ReactReduxContext } from 'react-redux';
 
 import tr from '../../i18n';
 import LocalizedString from '../../util/LocalizedString';
@@ -116,6 +117,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     };
   }
 
+  
   private onWindowMouseMove_ = (e: MouseEvent) => {
     const { state } = this;
     const { dragState } = state;
@@ -176,6 +178,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   };
 
   render() {
+    console.log("Using Ivygate's DocumentationWindow component.");
     const { props, state } = this;
     const {
       locale,
@@ -356,5 +359,7 @@ export default connect((state: ReduxState, ownProps: { documentationType: 'commo
       ownProps.documentationType === 'common'
         ? dispatch(DocumentationAction.pushLocationCommon({ location }))
         : dispatch(DocumentationAction.pushLocation({ location })),
-  })
+  }),
+  null,
+  { context: ReactReduxContext }
 )(DocumentationWindow);
