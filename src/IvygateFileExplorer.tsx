@@ -20,7 +20,7 @@ import ComboBox from './components/ComboBox';
 import { ClassroomCreationType, FileCreationTypeAction, FileCreationTypeActionSimple, ProjectCreationType, UserCreationType } from './types/creationTypes';
 import { Settings } from './types/settings';
 import Classroom from './types/classroomTypes';
-import { to } from 'colorjs.io/fn';
+
 import UserUploader from './UserUploader';
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
@@ -38,15 +38,17 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   userSelectedFlag?: boolean;
   userDeleteFlag?: boolean;
   reloadUser?: boolean;
-  reHighlightProject: Project;
-  reHighlightFile: string;
+  reHighlightProject?: Project;
+  reHighlightFile?: string;
   renameUserFlag?: boolean;
 
   propActiveLanguage?: ProgrammingLanguage;
-  propUsers: User[];
-  propUserData: Project[];
-  propSettings: Settings;
+  propUsers?: User[];
+  propUserData?: Project[];
+  propSettings?: Settings;
   propClassrooms?: Classroom[];
+
+  classroomInvitationCode?: string;
 
   onRenameClassroom?: (classroom: Classroom) => void;
 
@@ -519,6 +521,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   async componentDidMount(): Promise<void> {
 
+    console.log("Using WOOOOO Erin's local!");////
+  
     if (this.props.propUserShown !== undefined) {
 
       if (this.props.propUserShown.userName !== '') {
@@ -838,6 +842,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
     const adjustedX = Math.min(x, viewportWidth - menuWidth);
     const adjustedY = Math.min(y, viewportHeight - menuHeight);
+    console.log("IFE renderClassroomContextMenu: ", this.state.contextMenuClassroom);
     return (
       <ContextMenu x={adjustedX} y={adjustedY} theme={theme} onClick={this.closeContextMenu}>
         <ContextMenuItem theme={theme}>
@@ -862,6 +867,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           </li>
         </ContextMenuItem>
 
+               <ContextMenuItem theme={theme}>
+          <li
+            style={{ padding: "5px 10px" }}
+          >
+            Classroom Invitation Code: {this.state.contextMenuClassroom?.classroomInvitationCode}
+          </li>
+        </ContextMenuItem>
       </ContextMenu>
     );
   }
@@ -2046,10 +2058,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               {propSettings.classroomView === true ? classroomSections : userSections}
 
               {propSettings.classroomView === true ?
-                <UsersContainer theme={theme} style={{}}>
+                propUsers.length > 0 ? <UsersContainer theme={theme} style={{}}>
                   <h3 style={{ marginLeft: '6px', fontSize: '1.3em' }}>{LocalizedString.lookup(tr(`Users without Classrooms`), locale)}</h3>
                   {usersWithoutClassroomsSection}
-                </UsersContainer>
+                </UsersContainer>: null
                 : null}
             </UsersContainer>
           </StyledScrollArea>
