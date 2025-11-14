@@ -5,7 +5,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from './components/constants/style';
 import { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER, UploadedUser } from './types/user';
-import { Project, BLANK_PROJECT, UploadedProject } from './types/project';
+import { Project, BLANK_PROJECT, UploadedProject, SimClassroomProject } from './types/project';
 import { InterfaceMode } from './types/interface';
 import { faUsersRectangle, faUser, faFolderOpen, faFileCode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,6 +25,7 @@ import UserUploader from './UserUploader';
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
 
+  config?: { appName?: string };
   propsSelectedProjectName?: string;
   propFileName?: string;
   propProjectName?: string;
@@ -55,7 +56,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onCopyObject?: (object: Classroom | User | Project | string) => void;
   //onPasteObject?: (toPasteObject: Classroom | User | Project | string, toPasteWhere: Classroom | User | Project | string) => void;
   onPasteObject?: (toPasteData: { pasteFromData: {}, pasteToData: {} }) => void;
-  onProjectSelected?: (user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage) => void;
+  onProjectSelected?: (user: User, project: Project | SimClassroomProject, fileName: string, activeLanguage: ProgrammingLanguage) => void;
   onFileSelected?: (classroom: Classroom, user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage, fileType: string) => void;
   onUserSelected?: (user: User, loadUserData: boolean) => void;
   onAddNewClassroom?: (classroom: Classroom) => void;
@@ -88,7 +89,7 @@ interface IvygateFileExplorerPrivateProps {
 interface IvygateFileExplorerState {
   selectedClassroom?: Classroom;
   selectedUser: User;
-  selectedProject: Project;
+  selectedProject: Project | SimClassroomProject;
   selectedFile: string;
   userName: string;
   error: string | null;
@@ -110,7 +111,7 @@ interface IvygateFileExplorerState {
   showUserUploader: boolean;
   currentUserSelected: boolean;
   activeLanguage: ProgrammingLanguage;
-  contextMenuProject?: Project;
+  contextMenuProject?: Project | SimClassroomProject;
   contextMenuPosition: { x: number; y: number } | null;
   fileCreationTypeAction: FileCreationTypeAction | null;
   includeFiles: [];
@@ -469,6 +470,7 @@ const SIMPLE_FILE_OPTIONS: ComboBox.Option[] = (() => {
 export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private selectedFileRefFE: React.MutableRefObject<string>;
   private previousSelectedFileFE: React.MutableRefObject<string>;
+  private hostApp: string;
   constructor(props: Props) {
     super(props);
 
@@ -487,7 +489,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         srcFolderFiles: [],
         dataFolderFiles: []
       },
-      selectedFile: "",
+      selectedFile: '',
       projects: null,
       error: null,
       projectName: '',
@@ -517,15 +519,18 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     };
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
+    this.hostApp = this.getHostApp();
   }
+
+
 
   async componentDidMount(): Promise<void> {
 
     console.log("Using WOOOOO Erin's local!");////
-  
+
     if (this.props.propUserShown !== undefined) {
 
-      if (this.props.propUserShown.userName !== '') {
+      if (this.props.propsSelectedProjectName !== '') {
         const selectedProject = this.props.propUserShown.projects.find((project) => {
           return project.projectName === this.props.propsSelectedProjectName;
         });
@@ -557,12 +562,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   }
 
-  componentWillUnmount(): void {
-    // if (this.props.propUserShown !== undefined) {
-    //   this.props.onReloadProjects(this.props.propUserShown);
-    // }
-
-  }
   async componentDidUpdate(prevProps: Props, prevState: State) {
 
     console.log('IvygateFileExplorer componentDidUpdate state: ', this.state);
@@ -658,7 +657,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           selectedFile: this.props.reHighlightFile,
         });
       }
-      else if (prevState.selectedProject?.projectName !== '') {
+      else if (this.props.propFileName !== '') {
         this.setState({
           selectedProject: this.state.selectedProject,
           projectName: this.state.selectedProject?.projectName,
@@ -713,6 +712,9 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
   }
 
+  getHostApp = () => {
+    return this.props.config?.appName || 'Ivygate';
+  }
   closeContextMenu = () => {
     this.setState({ contextMenuPosition: null });
   };
@@ -722,13 +724,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     //Copying a file
     if (typeof object === "string") {
       this.setState({
-        toCopyObject: { copyObjectUser: this.state.selectedUser, copyObjectProject: this.state.selectedProject, copyObjectFile: object },
+        toCopyObject: { copyObjectUser: this.state.selectedUser, copyObjectProject: this.state.selectedProject as Project, copyObjectFile: object },
       });
     }
     else if (typeof object === "object" && "projectName" in object) {
 
       this.setState({
-        toCopyObject: { copyObjectUser: this.state.selectedUser, copyObjectProject: object, copyObjectFile: undefined },
+        toCopyObject: { copyObjectUser: this.state.selectedUser, copyObjectProject: object as Project, copyObjectFile: undefined },
       })
     }
 
@@ -782,7 +784,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   deleteFile = (file: string) => {
-    this.props.onDeleteFile(this.state.selectedUser, this.state.selectedProject, file, true);
+    const { selectedProject } = this.state;
+    if ('srcFolderFiles' in selectedProject) {
+      this.props.onDeleteFile(this.state.selectedUser, selectedProject, file, true);
+
+    }
   }
 
   downloadUser = (user: User) => {
@@ -820,11 +826,17 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   downloadFile = (file: string) => {
-    this.props.onDownloadFile(this.state.selectedUser, this.state.selectedProject, file);
+    const { selectedProject } = this.state;
+    if ('srcFolderFiles' in selectedProject) {
+      this.props.onDownloadFile(this.state.selectedUser, selectedProject, file);
+    }
   }
 
   renameFile = (file: string) => {
-    this.props.onRenameFile(this.state.selectedUser, this.state.selectedProject, file);
+    const { selectedProject } = this.state;
+    if ('srcFolderFiles' in selectedProject) {
+      this.props.onRenameFile(this.state.selectedUser, selectedProject, file);
+    }
   }
 
   renderClassroomContextMenu() {
@@ -867,20 +879,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           </li>
         </ContextMenuItem>
 
-               <ContextMenuItem theme={theme}>
-          <li
-            style={{ padding: "5px 10px" }}
-          >
-            Classroom Invitation Code: {this.state.contextMenuClassroom?.classroomInvitationCode}
-          </li>
-        </ContextMenuItem>
       </ContextMenu>
     );
   }
 
 
   renderUserContextMenu() {
-    const { contextMenuPosition } = this.state;
+    const { contextMenuPosition, contextMenuUser } = this.state;
     const { theme } = this.props;
     if (!contextMenuPosition) return null;
 
@@ -928,7 +933,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           </li>
         </ContextMenuItem>
 
-        {this.props.propSettings.classroomView && this.state.contextMenuUser.classroomName !== '' && this.state.contextMenuUser.classroomName !== null && (
+        {this.props.propSettings.classroomView && contextMenuUser.classroomName !== null && (
           <ContextMenuItem theme={theme}>
             <li
               style={{ padding: "5px 10px" }}
@@ -987,7 +992,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              this.deleteProject(this.state.contextMenuProject);
+              this.deleteProject(this.state.contextMenuProject as Project);
             }}
           >
             Delete Project
@@ -997,7 +1002,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              this.downloadProject(this.state.contextMenuProject);
+              this.downloadProject(this.state.contextMenuProject as Project);
             }}
           >
             Download Project
@@ -1007,7 +1012,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              this.renameProject(this.state.contextMenuProject);
+              this.renameProject(this.state.contextMenuProject as Project);
             }}
           >
             Rename Project
@@ -1017,7 +1022,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              this.moveProject(this.state.contextMenuProject);
+              this.moveProject(this.state.contextMenuProject as Project);
             }}
           >
             Move Project
@@ -1027,7 +1032,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              this.copyObject(this.state.contextMenuProject);
+              this.copyObject(this.state.contextMenuProject as Project);
             }}
           >
             Copy Project
@@ -1038,7 +1043,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             <li
               style={{ padding: "5px 10px" }}
               onClick={() => {
-                this.pasteObject(this.state.toCopyObject, this.state.contextMenuProject);
+                this.pasteObject(this.state.toCopyObject, this.state.contextMenuProject as Project);
               }}
             >
               Paste File
@@ -1118,7 +1123,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     return (
       <FileUploader
         theme={theme}
-        currentUserProjectFiles={this.state.selectedProject}
+        currentUserProjectFiles={this.state.selectedProject as Project}
         onFileUpload={this.onFileUploadClose_}
         onClose={() => this.onClose()}
         locale={locale}
@@ -1139,7 +1144,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         onProjectUpload={this.onProjectUploadClose_}
         currentUserProjects={Object.values(this.props.propUsers).find(
           (user) => user.userName === this.state.selectedUser.userName
-        )?.projects || []}
+        )?.projects as Project[] || []}
         onClose={() => this.onClose()}
         locale={locale}
         currentLanguage={this.state.activeLanguage}
@@ -1165,7 +1170,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   private onFileUploadClose_ = (files: FileInfo[]) => {
-    this.props.onUploadFiles(this.state.selectedUser, this.state.selectedProject, files);
+    this.props.onUploadFiles(this.state.selectedUser, this.state.selectedProject as Project, files);
   };
 
   private onProjectUploadClose_ = (project: UploadedProject) => {
@@ -1292,10 +1297,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     if (this.props.onAddNewFile) {
       if (fileType == "python") {
         this.setState({ fileType: 'py' });
-        this.props.onAddNewFile(selectedUser, selectedProject, activeLanguage, 'py');
+        this.props.onAddNewFile(selectedUser, selectedProject as Project, activeLanguage, 'py');
       } else {
         this.setState({ fileType: fileType });
-        this.props.onAddNewFile(selectedUser, selectedProject, activeLanguage, fileType);
+        this.props.onAddNewFile(selectedUser, selectedProject as Project, activeLanguage, fileType);
       }
     }
   }
@@ -1463,13 +1468,14 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
 
 
-  private handleProjectClick = async (project: Project, user: User, language: ProgrammingLanguage) => {
+  private handleProjectClick = async (project: Project | SimClassroomProject, user: User, language: ProgrammingLanguage) => {
 
-
+    let mainFile: string;
     if (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE) {
-      const mainFile = project.srcFolderFiles.find(file => file.includes('main.'));
-
-      this.props.onProjectSelected(user, project, mainFile, language,);
+      if ('srcFolderFiles' in project) {
+        mainFile = project.srcFolderFiles.find(file => file.includes('main.') || '');
+      }
+      this.props.onProjectSelected(user, project, mainFile, language);
       this.setState({
         selectedFile: mainFile,
       });
@@ -1495,6 +1501,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
     this.selectedFileRefFE.current = fileName;
 
+
     const [name, extension] = fileName.split('.');
     this.setState({
       fileType: extension,
@@ -1506,7 +1513,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           activeLanguage: "c"
         }, () => {
           if (this.props.onFileSelected) {
-            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject, fileName, 'c' as ProgrammingLanguage, this.state.fileType);
+            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'c' as ProgrammingLanguage, this.state.fileType);
           }
         });
         break;
@@ -1516,7 +1523,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         }, () => {
           if (this.props.onFileSelected) {
 
-            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject, fileName, 'cpp' as ProgrammingLanguage, this.state.fileType);
+            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'cpp' as ProgrammingLanguage, this.state.fileType);
           }
         });
         break;
@@ -1525,7 +1532,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           activeLanguage: "python"
         }, () => {
           if (this.props.onFileSelected) {
-            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject, fileName, 'python' as ProgrammingLanguage, this.state.fileType);
+            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'python' as ProgrammingLanguage, this.state.fileType);
           }
         });
         break;
@@ -1534,7 +1541,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           activeLanguage: projectDetails.projectLanguage
         }, () => {
           if (this.props.onFileSelected) {
-            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject, fileName, 'c' as ProgrammingLanguage, this.state.fileType);
+            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'c' as ProgrammingLanguage, this.state.fileType);
           }
         });
         break;
@@ -1543,7 +1550,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           activeLanguage: "plaintext"
         }, () => {
           if (this.props.onFileSelected) {
-            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject, fileName, 'plaintext' as ProgrammingLanguage, this.state.fileType);
+            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'plaintext' as ProgrammingLanguage, this.state.fileType);
           }
         });
         break;
@@ -1553,7 +1560,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           activeLanguage: "graphical"
         }, () => {
           if (this.props.onFileSelected) {
-            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject, fileName, 'graphical' as ProgrammingLanguage, this.state.fileType);
+            this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'graphical' as ProgrammingLanguage, this.state.fileType);
           }
         })
 
@@ -1578,7 +1585,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
    * @param event - right click event
    * @param project - project name
    */
-  handleProjectRightClick = (event: React.MouseEvent, project: Project) => {
+  handleProjectRightClick = (event: React.MouseEvent, project: Project | SimClassroomProject) => {
     event.preventDefault();
     this.setState({
       showProjectContextMenu: true,
@@ -1622,6 +1629,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const { userCreationType, selectedUser } = this.state;
 
     const classroomUsers = classroom.users || [];
+    const hostApp = this.getHostApp();
 
     const completeUsersInClass = Object.values(this.props.propUsers).filter((user) => {
       return user.classroomName === classroom.name;
@@ -1632,16 +1640,20 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       <ProjectContainer theme={this.props.theme} key={classroom.name}>
         <ProjectHeaderContainer theme={theme}>
           <ProjectTitle>{LocalizedString.lookup(tr("Users"), locale)}</ProjectTitle>
-          <StyledResizeableComboBox
-            options={USER_OPTIONS}
-            index={USER_OPTIONS.findIndex(opt => opt.data === userCreationType)}
-            onSelect={this.onUserCreationSelect}
-            theme={theme}
-            mainWidth={'4em'}
-            mainHeight={'1.5em'}
-            mainFontSize={'0.9em'}
+          {hostApp === 'Simulator' ?
+            <div>
+              <h3>Classroom Invitation Code: {classroom.classroomInvitationCode}</h3>
+            </div>
+            : <StyledResizeableComboBox
+              options={USER_OPTIONS}
+              index={USER_OPTIONS.findIndex(opt => opt.data === userCreationType)}
+              onSelect={this.onUserCreationSelect}
+              theme={theme}
+              mainWidth={'4em'}
+              mainHeight={'1.5em'}
+              mainFontSize={'0.9em'}
 
-          />
+            />}
         </ProjectHeaderContainer>
 
         {classroomUsers.map((user) => (
@@ -1662,7 +1674,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               </SectionName>
             </UserTitleContainer>
 
-            {(this.state.selectedUser.userName) === `${user.userName}` && this.state.showProjects && (
+            {(LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
               this.renderProjects(user.projects || [])
             )}
           </React.Fragment>
@@ -1673,7 +1685,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     );
   };
 
-  renderProjects = (projects: Project[]) => {
+  renderProjects = (projects: (Project | SimClassroomProject)[]) => {
     const { theme } = this.props;
     const { projectCreationType, selectedUser, showProjectFiles } = this.state;
     console.log("renderProjects props:", this.props);
@@ -1698,43 +1710,46 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
         <div style={{ borderBottom: `3px solid ${this.props.theme.borderColor}`, }} />
         <ul>
-          {userProjects.map((project) => (
+          {this.hostApp === 'Simulator' ?
+            <div>
+              <h3>No Projects Available in Simulator Mode</h3>
+            </div>
+            : userProjects.map((project) => (
 
-            <Container key={`${selectedUser?.userName}_${project.projectName}`}>
+              <Container key={`${selectedUser?.userName}_${project.projectName}`}>
 
-              <ProjectItem
-                selected={
-                  this.state.selectedProject?.projectName === project.projectName ||
-                  this.props.propsSelectedProjectName === project.projectName ||
-                  (
-                    this.props.propUserShown?.projects?.some(
-                      p =>
-                        p.projectName === project.projectName &&
-                        p.projectName === this.state.selectedProject?.projectName // ✅ safe now
-                    ) &&
-                    this.props.propUserShown?.userName === this.state.selectedUser?.userName
-                  )
-                }
+                <ProjectItem
+                  selected={
+                    this.state.selectedProject?.projectName === project.projectName ||
+                    this.props.propsSelectedProjectName === project.projectName ||
+                    (
+                      this.props.propUserShown?.projects?.some(
+                        p =>
+                          p.projectName === project.projectName &&
+                          p.projectName === this.state.selectedProject?.projectName // ✅ safe now
+                      ) &&
+                      this.props.propUserShown?.userName === this.state.selectedUser?.userName
+                    )
+                  }
 
-                onClick={() => this.handleProjectClick(project, this.state.selectedUser, project.projectLanguage)}
-                onContextMenu={(e) => this.handleProjectRightClick(e, project)} theme={theme}
-              >
-                <ItemIcon style={{ height: '25px' }} icon={faFolderOpen} />
-                {project.projectName}
-              </ProjectItem>
+                  onClick={() => this.handleProjectClick(project, this.state.selectedUser, project.projectLanguage)}
+                  onContextMenu={(e) => this.handleProjectRightClick(e, project)} theme={theme}
+                >
+                  <ItemIcon style={{ height: '25px' }} icon={faFolderOpen} />
+                  {LocalizedString.lookup(tr(`${project.projectName}`), this.props.locale)}
+                </ProjectItem>
 
-              {this.state.selectedProject?.projectName === project.projectName && this.state.showProjectFiles && (
-                project.projectLanguage === "graphical" ? (
-                  this.graphicalView(project)
-                ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
-                  this.simpleView(project)
-                ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
-                  this.advancedView(project)
-                ) : null))
-              )
-              }
-            </Container>
-          ))}
+                {this.state.selectedProject?.projectName === project.projectName && this.state.showProjectFiles && (
+                  project.projectLanguage === "graphical" ? (
+                    this.graphicalView(project as Project)
+                  ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
+                    this.simpleView(project as Project)
+                  ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
+                    this.advancedView(project as Project)
+                  ) : null))
+                )}
+              </Container>
+            ))}
         </ul>
       </ProjectContainer>
     )
@@ -1762,7 +1777,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
             >
               <FileItemIcon icon={faFileCode} />
-              {file}
+              {LocalizedString.lookup(tr(file), this.props.locale)}
             </IndividualFile>
           ))}
 
@@ -1805,7 +1820,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}
             >
               <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />
-              {file}
+              {LocalizedString.lookup(tr(file), this.props.locale)}
             </IndividualFile>
           ))}
         </FileContainer>
@@ -1844,7 +1859,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                   && (this.props.propUserShown ? this.props.propsSelectedProjectName === project.projectName : false)
                 }
                 onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
-                <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />{file}
+                <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />{LocalizedString.lookup(tr(file), this.props.locale)}
               </IndividualFile>
             ))}
 
@@ -1879,7 +1894,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               }
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
               <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />
-              {file}
+              {LocalizedString.lookup(tr(file), this.props.locale)}
             </IndividualFile>
           ))}
 
@@ -1912,7 +1927,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               }
               onClick={() => this.handleFileClick(file, project)} onContextMenu={(e) => this.handleFileRightClick(e, file)}>
               <FileItemIcon style={{ paddingRight: '7px' }} icon={faFileCode} />
-              {file}
+              {LocalizedString.lookup(tr(file), this.props.locale)}
             </IndividualFile>
           ))}
 
@@ -1927,7 +1942,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
 
     const { props, state } = this;
-    const { theme, propUsers, locale, propSettings, propClassrooms } = props;
+    const { theme, propUsers, locale, propSettings, propClassrooms, config } = props;
     const {
       selectedUser,
       selectedClassroom,
@@ -1942,11 +1957,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       userCreationType,
       classroomCreationType
     } = state;
-
+    const hostApp = config?.appName || 'Default';
+    console.log("IvygateFileExplorer host app:", hostApp);
     const usersArray = Object.values(propUsers || {});
 
     const userSections = usersArray.map((user: User) => {
       const projects = user.projects || [];
+
       return (
         <SectionsColumn theme={theme} key={user.userName}>
           <UserTitleContainer
@@ -1972,7 +1989,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     });
 
     const classroomSections = (propClassrooms || []).map((classroom: Classroom) => {
-
       return (
         <SectionsColumn theme={theme} key={classroom.name}>
           <UserTitleContainer
@@ -2061,7 +2077,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 propUsers.length > 0 ? <UsersContainer theme={theme} style={{}}>
                   <h3 style={{ marginLeft: '6px', fontSize: '1.3em' }}>{LocalizedString.lookup(tr(`Users without Classrooms`), locale)}</h3>
                   {usersWithoutClassroomsSection}
-                </UsersContainer>: null
+                </UsersContainer> : null
                 : null}
             </UsersContainer>
           </StyledScrollArea>

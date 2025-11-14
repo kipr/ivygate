@@ -1,4 +1,6 @@
+import LocalizedString from '../util/LocalizedString';
 import { User } from './user';
+import tr from '../i18n';
 
 type Classroom = {
   name: string;

@@ -1,11 +1,13 @@
-import { Project, UploadedProject } from './project';
+import { Project, SimClassroomProject, UploadedProject } from './project';
 import { InterfaceMode } from './interface';
 import Classroom  from './classroomTypes';
 import { FileInfo } from './fileInfo';
+import LocalizedString from '../util/LocalizedString';
+import tr from '../i18n';
 export type User = {
   userName: string;
   interfaceMode: InterfaceMode;
-  projects: Project[];
+  projects: (Project | SimClassroomProject)[];
   classroomName?: string;
 };
 

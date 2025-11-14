@@ -1,12 +1,25 @@
 import ProgrammingLanguage from './programmingLanguage';
 import { FileInfo } from './fileInfo';
-export type Project = {
+import LocalizedString from '../util/LocalizedString';
+import tr from '../i18n';
+
+interface ProjectBase {
   projectName: string;
   projectLanguage: ProgrammingLanguage;
+}
+
+export interface Project extends ProjectBase {
   includeFolderFiles: string[];
   srcFolderFiles: string[];
   dataFolderFiles: string[];
-};
+}
+
+export interface SimClassroomProject extends ProjectBase {
+  type: string; //Default, JBC0, JBC1, etc.
+  code: string;
+}
+
+
 
 export type UploadedProject = {
   projectName: string;
