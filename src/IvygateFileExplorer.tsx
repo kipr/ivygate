@@ -22,6 +22,8 @@ import { Settings } from './types/settings';
 import Classroom from './types/classroomTypes';
 
 import UserUploader from './UserUploader';
+import { Ivygate } from './Ivygate';
+import Dict from './types/Dict';
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
 
@@ -43,6 +45,8 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   reHighlightFile?: string;
   renameUserFlag?: boolean;
 
+  ivygateLanguageMapping?: Dict<string>;
+
   propActiveLanguage?: ProgrammingLanguage;
   propUsers?: User[];
   propUserData?: Project[];
@@ -58,7 +62,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onPasteObject?: (toPasteData: { pasteFromData: {}, pasteToData: {} }) => void;
   onProjectSelected?: (user: User, project: Project | SimClassroomProject, fileName: string, activeLanguage: ProgrammingLanguage) => void;
   onFileSelected?: (classroom: Classroom, user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage, fileType: string) => void;
-  onUserSelected?: (user: User, loadUserData: boolean) => void;
+  onUserSelected?: (user: User) => void;
   onAddNewClassroom?: (classroom: Classroom) => void;
   onAddNewUser?: (classroom: Classroom) => void;
   onAddNewProject?: (user: User, classroom?: Classroom) => void;
@@ -220,6 +224,20 @@ const FileTypeTitle = styled('div', {
   padding: `5px`,
   fontWeight: 400,
 });
+
+const EditorContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '555px',
+  backgroundColor: props.theme.backgroundColor,
+  color: props.theme.color,
+  border: 'none',
+  ':focus': { outline: 'none' },
+  '& > *': {
+    flex: 1,
+    height: '100%',
+  },
+}));
 
 
 const StyledResizeableComboBox = styled(ResizeableComboBox, (props: ThemeProps & { selectedType?: string }) => ({
@@ -1249,7 +1267,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private setSelectedUser = async (user: User, classroom?: Classroom) => {
     const { selectedUser } = this.state;
-
+    console.log("ivygatefileexplorer setselecteduser: ", user);
     const sameUserClicked = selectedUser.userName === user.userName;
     if (sameUserClicked) {
 
@@ -1262,7 +1280,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       });
       return;
     }
-
+    this.props.onUserSelected(user);
     this.setState({
       selectedUser: Object.values(this.props.propUsers).find(
         (u) => u.userName === user.userName
@@ -1686,12 +1704,17 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   };
 
   renderProjects = (projects: (Project | SimClassroomProject)[]) => {
-    const { theme } = this.props;
+    const { theme, style } = this.props;
     const { projectCreationType, selectedUser, showProjectFiles } = this.state;
     console.log("renderProjects props:", this.props);
     console.log("renderProjects state:", this.state);
-    const userProjects = Object.values(this.props.propUsers).find((user) => user.userName === selectedUser.userName)?.projects || [];
 
+
+    const userProjects = Object.values(this.props.propUsers).find((user) => user.userName === selectedUser.userName)?.projects || [];
+    const simProjects = Object.values(this.props.propClassrooms).find((classroom) => classroom.name === selectedUser.classroomName)?.users?.find((user) => user.userName === selectedUser.userName)?.projects || [];
+
+    // Determine projects visual display based on host app (Simulator vs IDE (Voldigate))
+    const renderedProjects = this.hostApp === 'Simulator' ? simProjects : userProjects;
     return (
       <ProjectContainer theme={theme} >
         <ProjectHeaderContainer theme={theme}>
@@ -1710,46 +1733,62 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
         <div style={{ borderBottom: `3px solid ${this.props.theme.borderColor}`, }} />
         <ul>
-          {this.hostApp === 'Simulator' ?
-            <div>
-              <h3>No Projects Available in Simulator Mode</h3>
-            </div>
-            : userProjects.map((project) => (
+          {renderedProjects.map((project) => (
+            <Container key={`${selectedUser?.userName}_${project.projectName}`}>
 
-              <Container key={`${selectedUser?.userName}_${project.projectName}`}>
+              <ProjectItem
+                selected={
+                  this.state.selectedProject?.projectName === project.projectName ||
+                  this.props.propsSelectedProjectName === project.projectName ||
+                  (
+                    this.props.propUserShown?.projects?.some(
+                      p =>
+                        p.projectName === project.projectName &&
+                        p.projectName === this.state.selectedProject?.projectName // ✅ safe now
+                    ) &&
+                    this.props.propUserShown?.userName === this.state.selectedUser?.userName
+                  )
+                }
 
-                <ProjectItem
-                  selected={
-                    this.state.selectedProject?.projectName === project.projectName ||
-                    this.props.propsSelectedProjectName === project.projectName ||
-                    (
-                      this.props.propUserShown?.projects?.some(
-                        p =>
-                          p.projectName === project.projectName &&
-                          p.projectName === this.state.selectedProject?.projectName // ✅ safe now
-                      ) &&
-                      this.props.propUserShown?.userName === this.state.selectedUser?.userName
-                    )
-                  }
+                onClick={() => this.handleProjectClick(project, this.state.selectedUser, project.projectLanguage)}
+                onContextMenu={(e) => this.handleProjectRightClick(e, project)} theme={theme}
+              >
+                <ItemIcon style={{ height: '25px' }} icon={faFolderOpen} />
+                {LocalizedString.lookup(tr(`${project.projectName}`), this.props.locale)}
+              </ProjectItem>
 
-                  onClick={() => this.handleProjectClick(project, this.state.selectedUser, project.projectLanguage)}
-                  onContextMenu={(e) => this.handleProjectRightClick(e, project)} theme={theme}
-                >
-                  <ItemIcon style={{ height: '25px' }} icon={faFolderOpen} />
-                  {LocalizedString.lookup(tr(`${project.projectName}`), this.props.locale)}
-                </ProjectItem>
+              {this.state.selectedProject?.projectName === project.projectName && this.state.showProjectFiles &&
+                (this.hostApp === "Simulator" ? (
+                  <EditorContainer theme={this.props.theme} >
+                    <Ivygate
+                      code={'code' in project ? project.code || '' : ''}
+                      language={this.props.ivygateLanguageMapping[project.projectLanguage]}
+                      autocomplete={false}
+                      onCodeChange={function (code: string): void {
+                        throw new Error('Function not implemented.');
+                      }}
+                      editable={false}
+                      theme={"DARK"}
 
-                {this.state.selectedProject?.projectName === project.projectName && this.state.showProjectFiles && (
-                  project.projectLanguage === "graphical" ? (
-                    this.graphicalView(project as Project)
-                  ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
-                    this.simpleView(project as Project)
-                  ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
-                    this.advancedView(project as Project)
-                  ) : null))
-                )}
-              </Container>
-            ))}
+                    >
+
+
+                    </Ivygate>
+                  </EditorContainer>
+                )
+                  : (
+                    project.projectLanguage === "graphical" ? (
+                      this.graphicalView(project as Project)
+                    ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
+                      this.simpleView(project as Project)
+                    ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
+                      this.advancedView(project as Project)
+                    ) : null))
+                  )
+                )
+              }
+            </Container>
+          ))}
         </ul>
       </ProjectContainer>
     )
@@ -2082,13 +2121,18 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             </UsersContainer>
           </StyledScrollArea>
         </FileExplorerContainer>
-        {showUserContextMenu && this.renderUserContextMenu()}
-        {showProjectContextMenu && this.renderProjectContextMenu()}
-        {showFileContextMenu && this.renderFileContextMenu()}
-        {showFileUploader && this.renderUploadFileView(uploadType)}
-        {showProjectUploader && this.renderUploadProjectView()}
-        {showUserUploader && this.renderUploadUserView()}
-        {showClassroomContextMenu && this.renderClassroomContextMenu()}
+        {this.hostApp !== 'Simulator' && (
+          <>
+            {showUserContextMenu && this.renderUserContextMenu()}
+            {showProjectContextMenu && this.renderProjectContextMenu()}
+            {showFileContextMenu && this.renderFileContextMenu()}
+            {showFileUploader && this.renderUploadFileView(uploadType)}
+            {showProjectUploader && this.renderUploadProjectView()}
+            {showUserUploader && this.renderUploadUserView()}
+            {showClassroomContextMenu && this.renderClassroomContextMenu()}
+          </>
+        )}
+
       </div>
     );
   }
