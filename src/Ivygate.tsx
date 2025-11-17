@@ -30,6 +30,7 @@ export interface IvygateProps extends StyleProps {
   autocomplete: boolean;
   onCodeChange: (code: string) => void;
   theme: string;
+  editable?: boolean;
 }
 
 interface IvygateState {
@@ -691,7 +692,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
       matchBrackets: "always",
       bracketPairColorization: {
         enabled: true
-      }
+      },
+      readOnly: !this.props.editable
     });
 
     this.editor_.setValue(code);
