@@ -6,6 +6,7 @@ import LocalizedString from '../util/LocalizedString';
 import tr from '../i18n';
 export type User = {
   userName: string;
+  anonUserName?: string;
   interfaceMode: InterfaceMode;
   projects: (Project | SimClassroomProject)[];
   classroomName?: string;
