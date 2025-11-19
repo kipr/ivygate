@@ -7,7 +7,7 @@ import { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER, UploadedUser } from './types/user';
 import { Project, BLANK_PROJECT, UploadedProject, SimClassroomProject } from './types/project';
 import { InterfaceMode } from './types/interface';
-import { faUsersRectangle, faUser, faFolderOpen, faFileCode } from '@fortawesome/free-solid-svg-icons';
+import { faUsersRectangle, faUser, faFolderOpen, faFileCode, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProgrammingLanguage from './types/programmingLanguage';
 import ScrollArea from './components/interface/ScrollArea';
@@ -128,7 +128,7 @@ interface IvygateFileExplorerState {
   users: string[];
   uploadType: 'project' | 'include' | 'src' | 'data' | 'none' | 'user';
   toCopyObject?: { copyObjectUser: User, copyObjectProject?: Project, copyObjectFile?: string };
-
+  hoveredClassroom: string
 }
 
 type Props = IvygateFileExplorerProps & IvygateFileExplorerPrivateProps;
@@ -147,7 +147,7 @@ const FileExplorerContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   minWidth: '12vw',
   width: 'auto',
-  height: '100vh',
+  height: 'calc(100vh - 300px)',
   overflow: 'hidden',
   paddingBottom: '5em'
 }));
@@ -157,6 +157,21 @@ const ItemIcon = styled(Fa, {
   paddingRight: '10px',
   alignItems: 'center',
   height: '30px'
+
+});
+
+
+const TrashItemIcon = styled(Fa, {
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  alignItems: 'center',
+  height: '30px',
+  opacity: '0',
+
+  ':hover': {
+    opacity: '1',
+  }
+
 });
 
 const Container = styled('ul', {
@@ -192,7 +207,8 @@ const ProjectContainer = styled('div', (props: ThemeProps) => ({
   marginRight: '3px',
   boxShadow: '4px 4px 4px rgba(0,0,0,0.2)',
   //width: '99%',
-  height: '100vh',
+  //height: '100vh',
+  maxHeight: 'calc(100vh - 300px)'
 }));
 
 const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
@@ -419,8 +435,10 @@ const SectionsColumn = styled('div', (props: ThemeProps) => ({
 const SectionName = styled('div', (props: ThemeProps) => ({
   width: '100%',
   fontSize: '1.44em',
+  display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'flex-start',
+
   boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
   padding: `5px`,
   userSelect: 'none',
@@ -534,6 +552,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       classroomCreationType: ClassroomCreationType.ADD,
       projectCreationType: ProjectCreationType.ADD,
       userCreationType: UserCreationType.ADD,
+      hoveredClassroom: null as string | null
     };
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
@@ -1719,7 +1738,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       <ProjectContainer theme={theme} >
         <ProjectHeaderContainer theme={theme}>
           <ProjectTitle>Projects</ProjectTitle>
-          <StyledResizeableComboBox
+          {this.hostApp === 'Simulator' ? null : <StyledResizeableComboBox
             options={PROJECT_OPTIONS}
             index={PROJECT_OPTIONS.findIndex(opt => opt.data === projectCreationType)}
             onSelect={this.onProjectCreationSelect}
@@ -1728,7 +1747,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             mainHeight={'1.5em'}
             mainFontSize={'0.9em'}
 
-          />
+          />}
         </ProjectHeaderContainer>
 
         <div style={{ borderBottom: `3px solid ${this.props.theme.borderColor}`, }} />
@@ -1998,6 +2017,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     } = state;
     const hostApp = config?.appName || 'Default';
     console.log("IvygateFileExplorer host app:", hostApp);
+    console.log("IvygateFileExplorer props:", this.props);
     const usersArray = Object.values(propUsers || {});
 
     const userSections = usersArray.map((user: User) => {
@@ -2033,15 +2053,22 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <UserTitleContainer
             theme={theme}
             selected={selectedClassroom?.name === classroom.name}
-            onClick={() => this.setSelectedClassroom(classroom)}
+
+            onMouseEnter={() => this.setState({ hoveredClassroom: classroom.name })}
+            onMouseLeave={() => this.setState({ hoveredClassroom: null })}
           >
             <ItemIcon icon={faUsersRectangle} />
             <SectionName
               theme={theme}
+              onClick={() => this.setSelectedClassroom(classroom)}
               onContextMenu={(e) => this.handleClassroomRightClick(e, classroom)}
             >{
                 LocalizedString.lookup(tr(classroom.name), locale)}
+
             </SectionName>
+            {this.state.hoveredClassroom === classroom.name && (
+              <ItemIcon icon={faTrash} onClick={() => this.deleteClassroom(classroom)} />
+            )}
           </UserTitleContainer>
           {selectedClassroom?.name === classroom.name && this.state.showClassroomUsers && this.renderClassroomUsers(classroom)}
 
