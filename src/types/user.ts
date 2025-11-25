@@ -10,6 +10,7 @@ export type User = {
   interfaceMode: InterfaceMode;
   projects: (Project | SimClassroomProject)[];
   classroomName?: string;
+  displayName?: string;
 };
 
 export type UploadedUser = {
