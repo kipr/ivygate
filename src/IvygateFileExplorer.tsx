@@ -63,6 +63,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onProjectSelected?: (user: User, project: Project | SimClassroomProject, fileName: string, activeLanguage: ProgrammingLanguage) => void;
   onFileSelected?: (classroom: Classroom, user: User, project: Project, fileName: string, activeLanguage: ProgrammingLanguage, fileType: string) => void;
   onUserSelected?: (user: User) => void;
+  onClassroomSelected?: (classroom: Classroom) => void;
   onAddNewClassroom?: (classroom: Classroom) => void;
   onAddNewUser?: (classroom: Classroom) => void;
   onAddNewProject?: (user: User, classroom?: Classroom) => void;
@@ -1707,13 +1708,15 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 theme={theme}
                 onContextMenu={(e) => this.handleUserRightClick(e, user)}
               >
-                {LocalizedString.lookup(tr(`${user.userName}`), locale)}
+                {user.displayName ? LocalizedString.lookup(tr(`${user.displayName}`), locale) : LocalizedString.lookup(tr(`${user.userName}`), locale)}
               </SectionName>
             </UserTitleContainer>
 
-            {(LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
+            {user.displayName? (LocalizedString.lookup(tr(this.state.selectedUser.displayName), locale)) === `${user.displayName}` && this.state.showProjects && (
+              this.renderProjects(user.projects || []) ) : (LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
               this.renderProjects(user.projects || [])
             )}
+            
           </React.Fragment>
 
         ))}
