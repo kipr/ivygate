@@ -6,6 +6,7 @@ type Classroom = {
   name: string;
   users: User[];
   classroomInvitationCode?: string;
+  type: "classroom";
 }
 
 

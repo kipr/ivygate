@@ -11,6 +11,7 @@ export type User = {
   projects: (Project | SimClassroomProject)[];
   classroomName?: string;
   displayName?: string;
+  type: 'user';
 };
 
 export type UploadedUser = {
@@ -21,7 +22,7 @@ export type UploadedUser = {
    classroomName?: string; 
 };
 
-export const BLANK_USER: User = {userName: '', interfaceMode: InterfaceMode.SIMPLE, projects: [], classroomName: ''};
+export const BLANK_USER: User = {userName: '', interfaceMode: InterfaceMode.SIMPLE, projects: [], classroomName: '', type: 'user'};
 
 export const BLANK_UPLOAD_USER: UploadedUser = {configFile: {
   name: '',
