@@ -7,7 +7,7 @@ import { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER, UploadedUser } from './types/user';
 import { Project, BLANK_PROJECT, UploadedProject, SimClassroomProject } from './types/project';
 import { InterfaceMode } from './types/interface';
-import { faUsersRectangle, faUser, faFolderOpen, faFileCode, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faUsersRectangle, faUser, faFolderOpen, faFileCode, faTrash, faUserTimes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProgrammingLanguage from './types/programmingLanguage';
 import ScrollArea from './components/interface/ScrollArea';
@@ -130,6 +130,7 @@ interface IvygateFileExplorerState {
   uploadType: 'project' | 'include' | 'src' | 'data' | 'none' | 'user';
   toCopyObject?: { copyObjectUser: User, copyObjectProject?: Project, copyObjectFile?: string };
   hoveredClassroom: string
+  hoveredUser: string;
 }
 
 type Props = IvygateFileExplorerProps & IvygateFileExplorerPrivateProps;
@@ -517,7 +518,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       selectedUser: {
         userName: '',
         interfaceMode: InterfaceMode.SIMPLE,
-        projects: []
+        projects: [],
+        type: 'user'
       },
       selectedProject: {
         projectName: '',
@@ -553,7 +555,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       classroomCreationType: ClassroomCreationType.ADD,
       projectCreationType: ProjectCreationType.ADD,
       userCreationType: UserCreationType.ADD,
-      hoveredClassroom: null as string | null
+      hoveredClassroom: null as string | null,
+      hoveredUser: null as string | null
     };
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
@@ -1700,23 +1703,31 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
               theme={theme}
               selected={selectedUser?.userName === user.userName}
-              onClick={() => this.setSelectedUser(user, classroom)}
+
+              onMouseEnter={() => this.setState({ hoveredUser: user.displayName ? user.displayName : user.userName })}
+              onMouseLeave={() => this.setState({ hoveredUser: null })}
             >
               <ItemIcon icon={faUser} />
 
               <SectionName
                 theme={theme}
                 onContextMenu={(e) => this.handleUserRightClick(e, user)}
+                onClick={() => this.setSelectedUser(user, classroom)}
               >
                 {user.displayName ? LocalizedString.lookup(tr(`${user.displayName}`), locale) : LocalizedString.lookup(tr(`${user.userName}`), locale)}
               </SectionName>
+              {user.displayName ? this.state.hoveredUser === user.displayName && (<ItemIcon icon={faUserTimes} onClick={() => this.deleteUser(user)} />)
+                : this.state.hoveredUser === user.userName && (
+                  <ItemIcon icon={faUserTimes} onClick={() => this.deleteUser(user)} />
+                )
+              }
             </UserTitleContainer>
 
-            {user.displayName? (LocalizedString.lookup(tr(this.state.selectedUser.displayName), locale)) === `${user.displayName}` && this.state.showProjects && (
-              this.renderProjects(user.projects || []) ) : (LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
-              this.renderProjects(user.projects || [])
-            )}
-            
+            {user.displayName ? (LocalizedString.lookup(tr(this.state.selectedUser.displayName), locale)) === `${user.displayName}` && this.state.showProjects && (
+              this.renderProjects(user.projects || [])) : (LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
+                this.renderProjects(user.projects || [])
+              )}
+
           </React.Fragment>
 
         ))}
