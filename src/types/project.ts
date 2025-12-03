@@ -2,6 +2,7 @@ import ProgrammingLanguage from './programmingLanguage';
 import { FileInfo } from './fileInfo';
 import LocalizedString from '../util/LocalizedString';
 import tr from '../i18n';
+import Dict from './Dict';
 
 interface ProjectBase {
   projectName: string;
@@ -17,6 +18,9 @@ export interface Project extends ProjectBase {
 export interface SimClassroomProject extends ProjectBase {
   type: string; //Default, JBC0, JBC1, etc.
   code: string;
+  eventStates: Dict<{eventName: string, completed: boolean}>;
+  challenge?: any;
+  challengeCompletion?: any;
 }
 
 
