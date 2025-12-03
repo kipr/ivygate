@@ -27,6 +27,7 @@ import Dict from './types/Dict';
 
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
 
+  ChallengeComponent?: React.ComponentType<any>;
   config?: { appName?: string };
   propsSelectedProjectName?: string;
   propFileName?: string;
@@ -149,7 +150,7 @@ const FileExplorerContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   minWidth: '12vw',
   width: 'auto',
-  height: 'calc(100vh - 300px)',
+  height: 'calc(100vh - 210px)',
   overflow: 'hidden',
   paddingBottom: '5em'
 }));
@@ -162,19 +163,13 @@ const ItemIcon = styled(Fa, {
 
 });
 
-
-const TrashItemIcon = styled(Fa, {
-  paddingLeft: '10px',
-  paddingRight: '10px',
+const InvitationCodeContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
   alignItems: 'center',
-  height: '30px',
-  opacity: '0',
 
-  ':hover': {
-    opacity: '1',
-  }
+}));
 
-});
 
 const Container = styled('ul', {
   display: 'flex',
@@ -210,7 +205,7 @@ const ProjectContainer = styled('div', (props: ThemeProps) => ({
   boxShadow: '4px 4px 4px rgba(0,0,0,0.2)',
   //width: '99%',
   //height: '100vh',
-  maxHeight: 'calc(100vh - 300px)'
+
 }));
 
 const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
@@ -245,8 +240,8 @@ const FileTypeTitle = styled('div', {
 
 const EditorContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
-  flexDirection: 'column',
-  height: '555px',
+  flexDirection: 'row',
+  height: '33vh',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
   border: 'none',
@@ -295,6 +290,27 @@ const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) =>
     cursor: 'pointer',
     backgroundColor: props.theme.hoverFileBackground
   },
+}));
+
+const ChallengeProgressContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: '33%',
+
+
+}));
+
+const ChallengeContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: '1 1',
+  color: props.theme.color,
+}));
+
+const ChallengeProgressTitle = styled('div', (props: ThemeProps) => ({
+  fontSize: '1.2em',
+  textAlign: 'center',
+
 }));
 
 const FileTypeTitleContainer = styled('div', (props: ThemeProps) => ({
@@ -566,6 +582,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
 
   async componentDidMount(): Promise<void> {
+
+    console.log("Rendering ChallengeComponent:", this.props.ChallengeComponent);
 
     console.log("Using WOOOOO Erin's local!");////
 
@@ -1210,6 +1228,26 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     );
   }
 
+  renderChallengeProgress(project: SimClassroomProject) {
+    const { selectedUser } = this.state;
+    const { theme, style, ChallengeComponent} = this.props;
+    console.log("renderChallengeProgress project: ", project);
+    return (
+      <ChallengeProgressContainer theme={theme}>
+        <ChallengeProgressTitle theme={theme}>
+          Challenge Progress
+        </ChallengeProgressTitle>
+        {ChallengeComponent ? (
+          <ChallengeComponent theme={theme} challenge={project.challenge} challengeCompletion={project.challengeCompletion} />
+        ) : (
+          <div>No component received</div>
+        )}
+
+      </ChallengeProgressContainer>
+    );
+
+  }
+
   private onFileUploadClose_ = (files: FileInfo[]) => {
     this.props.onUploadFiles(this.state.selectedUser, this.state.selectedProject as Project, files);
   };
@@ -1682,9 +1720,9 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         <ProjectHeaderContainer theme={theme}>
           <ProjectTitle>{LocalizedString.lookup(tr("Users"), locale)}</ProjectTitle>
           {hostApp === 'Simulator' ?
-            <div>
-              <h3>Classroom Invitation Code: {classroom.classroomInvitationCode}</h3>
-            </div>
+            <InvitationCodeContainer theme={theme}>
+              <ProjectTitle>{LocalizedString.lookup(tr("Classroom Invitation Code:"), locale)}</ProjectTitle>{classroom.classroomInvitationCode}
+            </InvitationCodeContainer>
             : <StyledResizeableComboBox
               options={USER_OPTIONS}
               index={USER_OPTIONS.findIndex(opt => opt.data === userCreationType)}
@@ -1745,7 +1783,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
     const userProjects = Object.values(this.props.propUsers).find((user) => user.userName === selectedUser.userName)?.projects || [];
     const simProjects = Object.values(this.props.propClassrooms).find((classroom) => classroom.name === selectedUser.classroomName)?.users?.find((user) => user.userName === selectedUser.userName)?.projects || [];
-
+    console.log("ivygateFileExplorer renderProjects simProjects: ", simProjects);
     // Determine projects visual display based on host app (Simulator vs IDE (Voldigate))
     const renderedProjects = this.hostApp === 'Simulator' ? simProjects : userProjects;
     return (
@@ -1803,10 +1841,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                       editable={false}
                       theme={"DARK"}
 
-                    >
-
-
-                    </Ivygate>
+                    />
+                    {this.renderChallengeProgress(project as SimClassroomProject)}
                   </EditorContainer>
                 )
                   : (
@@ -2014,7 +2050,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
 
     const { props, state } = this;
-    const { theme, propUsers, locale, propSettings, propClassrooms, config } = props;
+    const { theme, propUsers, locale, propSettings, propClassrooms, config} = props;
     const {
       selectedUser,
       selectedClassroom,
@@ -2119,12 +2155,14 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
     return (
       <div onClick={this.closeContextMenu}>
+
         <FileExplorerContainer
           theme={theme}
           style={{
             flex: 1,
           }}
         >
+
 
           <ExplorerContainer theme={theme}>
             <h2 style={{ marginLeft: '6px', fontSize: '1.728em' }}>{LocalizedString.lookup(tr(`Explorer - ${propSettings.classroomView === true ? 'Classrooms' : 'Users'}`), locale)}</h2>
