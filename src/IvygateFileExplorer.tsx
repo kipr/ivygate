@@ -583,11 +583,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   async componentDidMount(): Promise<void> {
 
-    console.log("Rendering ChallengeComponent:", this.props.ChallengeComponent);
-
-    console.log("Using WOOOOO Erin's local!");////
-
-    if (this.props.propUserShown !== undefined) {
+   if (this.props.propUserShown !== undefined) {
 
       if (this.props.propsSelectedProjectName !== '') {
         const selectedProject = this.props.propUserShown.projects.find((project) => {
@@ -623,21 +619,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   async componentDidUpdate(prevProps: Props, prevState: State) {
 
-    console.log('IvygateFileExplorer componentDidUpdate state: ', this.state);
-    console.log('IvygateFileExplorer componentDidUpdate props: ', this.props);
-
-
     if (prevProps.propClassrooms !== this.props.propClassrooms) {
-      console.log('Classrooms updated: ', this.props.propClassrooms);
       if (this.props.propUserShown !== undefined) {
         this.setState({
           selectedClassroom: this.props.propClassrooms.find(
             (classroom) => classroom.name === this.props.propUserShown.classroomName
           ),
           selectedUser: this.props.propUserShown,
-          // selectedProject: this.props.propUserData.find(
-          //   (project) => project.projectName === this.props.propsSelectedProjectName
-          // ),
           selectedProject: this.props.propProjectShown || this.props.propUserData.find(
             (project) => project.projectName === this.props.propsSelectedProjectName
           ),
@@ -913,7 +901,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
     const adjustedX = Math.min(x, viewportWidth - menuWidth);
     const adjustedY = Math.min(y, viewportHeight - menuHeight);
-    console.log("IFE renderClassroomContextMenu: ", this.state.contextMenuClassroom);
     return (
       <ContextMenu x={adjustedX} y={adjustedY} theme={theme} onClick={this.closeContextMenu}>
         <ContextMenuItem theme={theme}>
@@ -1231,7 +1218,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   renderChallengeProgress(project: SimClassroomProject) {
     const { selectedUser } = this.state;
     const { theme, style, ChallengeComponent} = this.props;
-    console.log("renderChallengeProgress project: ", project);
     return (
       <ChallengeProgressContainer theme={theme}>
         <ChallengeProgressTitle theme={theme}>
@@ -1260,7 +1246,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   };
 
   private onUserUploadClose_ = (user: UploadedUser) => {
-    console.log("User uploaded: ", user);
     this.setState({
       showUserUploader: false,
     })
@@ -1328,7 +1313,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   private setSelectedUser = async (user: User, classroom?: Classroom) => {
     const { selectedUser } = this.state;
-    console.log("ivygatefileexplorer setselecteduser: ", user);
     const sameUserClicked = selectedUser.userName === user.userName;
     if (sameUserClicked) {
 
@@ -1777,13 +1761,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   renderProjects = (projects: (Project | SimClassroomProject)[]) => {
     const { theme, style } = this.props;
     const { projectCreationType, selectedUser, showProjectFiles } = this.state;
-    console.log("renderProjects props:", this.props);
-    console.log("renderProjects state:", this.state);
-
-
     const userProjects = Object.values(this.props.propUsers).find((user) => user.userName === selectedUser.userName)?.projects || [];
     const simProjects = Object.values(this.props.propClassrooms).find((classroom) => classroom.name === selectedUser.classroomName)?.users?.find((user) => user.userName === selectedUser.userName)?.projects || [];
-    console.log("ivygateFileExplorer renderProjects simProjects: ", simProjects);
     // Determine projects visual display based on host app (Simulator vs IDE (Voldigate))
     const renderedProjects = this.hostApp === 'Simulator' ? simProjects : userProjects;
     return (
@@ -2066,8 +2045,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       classroomCreationType
     } = state;
     const hostApp = config?.appName || 'Default';
-    console.log("IvygateFileExplorer host app:", hostApp);
-    console.log("IvygateFileExplorer props:", this.props);
     const usersArray = Object.values(propUsers || {});
 
     const userSections = usersArray.map((user: User) => {

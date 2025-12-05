@@ -178,7 +178,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   };
 
   render() {
-    console.log("Using Ivygate's DocumentationWindow component.");
     const { props, state } = this;
     const {
       locale,
