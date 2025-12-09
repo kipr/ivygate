@@ -23,6 +23,13 @@ export interface SimClassroomProject extends ProjectBase {
   challengeCompletion?: any;
 }
 
+export interface SimEditorProject extends ProjectBase {
+  srcFiles: Dict<{fileName: string, fileContent: string}>;
+  includeFiles?: Dict<{fileName: string, fileContent: string}>;
+  userDataFiles?: Dict<{fileName: string, fileContent: string}>;
+
+}
+
 
 
 export type UploadedProject = {
