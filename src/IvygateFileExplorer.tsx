@@ -1883,14 +1883,25 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 (this.hostApp === "Simulator" && config?.component === 'SimClassrooms' ? (
                   this.renderSimClassroomsProject(project as SimClassroomProject)
                 )
-                  : (
+                  : (config?.component === 'SimEditor' ?
+                     ( (
                     project.projectLanguage === "graphical" ? (
-                      this.graphicalView(project as Project | SimEditorProject)
-                    ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
-                      this.simpleView(project as Project | SimEditorProject)
-                    ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
-                      this.advancedView(project as Project)
+                      this.graphicalView(project as SimEditorProject)
+                    ) : (project.interfaceMode === InterfaceMode.SIMPLE ? (
+                      this.simpleView(project as SimEditorProject)
+                    ) : (project.interfaceMode === InterfaceMode.ADVANCED ? (
+                      this.advancedView(project as SimEditorProject)
                     ) : null))
+                  ))
+                    : (
+                      project.projectLanguage === "graphical" ? (
+                        this.graphicalView(project as Project | SimEditorProject)
+                      ) : (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE ? (
+                        this.simpleView(project as Project | SimEditorProject)
+                      ) : (this.state.selectedUser.interfaceMode === InterfaceMode.ADVANCED ? (
+                        this.advancedView(project as Project)
+                      ) : null))
+                    )
                   )
                 )
               }
@@ -1975,9 +1986,14 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     </FileTypeContainer>
   };
 
-  advancedView = (project: Project) => {
-    const { theme } = this.props;
+  advancedView = (project: Project | SimEditorProject) => {
+    const { theme,config } = this.props;
     const { fileCreationTypeAction } = this.state;
+    const includeFolderFiles = config?.component === 'SimEditor' ? Object.keys((project as SimEditorProject).includeFiles) : (project as Project).includeFolderFiles;
+    const srcFolderFiles = config?.component === 'SimEditor' ? Object.keys((project as SimEditorProject).srcFiles) : (project as Project).srcFolderFiles;
+    const dataFolderFiles = config?.component === 'SimEditor' ? Object.keys((project as SimEditorProject).userDataFiles) : (project as Project).dataFolderFiles;
+
+
     return (<FileTypeContainer theme={theme} selected={false}>
       {project.projectLanguage != "python" && (
         <FileTypeItem theme={theme} key={`IncludeFileHeader-${project.projectName}`}>
@@ -1995,7 +2011,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
             />
           </FileTypeTitleContainer>
           <FileContainer theme={theme}>
-            {project.includeFolderFiles.map((file, i) => (
+            {includeFolderFiles.map((file, i) => (
               <IndividualFile
                 key={`include-${i}`}
                 theme={theme}
@@ -2029,7 +2045,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           />
         </FileTypeTitleContainer>
         <FileContainer theme={theme}>
-          {project.srcFolderFiles.map((file, i) => (
+          {srcFolderFiles.map((file, i) => (
             <IndividualFile
               key={`src-${i}`}
               theme={theme}
@@ -2062,7 +2078,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           />
         </FileTypeTitleContainer>
         <FileContainer theme={theme}>
-          {project.dataFolderFiles.map((file, i) => (
+          {dataFolderFiles.map((file, i) => (
             <IndividualFile
               key={`data-${i}`}
               theme={theme}
