@@ -1,0 +1,1426 @@
+msgid ""
+msgstr ""
+
+msgid "The selected file is already included in the project."
+msgstr "選択されたファイルはすでにプロジェクトに含まれている。"
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "選択されたファイルは期待された言語${currentLanguage}と一致しない。"
+
+msgid "The selected file must have a .h extension."
+msgstr "選択したファイルの拡張子は.hでなければならない。"
+
+msgid "The selected file does not match the expected language."
+msgstr "選択されたファイルが期待された言語と一致しない。"
+
+msgid "The selected file must have a .txt extension."
+msgstr "選択したファイルの拡張子は.txtでなければならない。"
+
+msgid "Some files have errors"
+msgstr "いくつかのファイルにエラーがある"
+
+msgid "Upload File"
+msgstr "ファイルをアップロードする"
+
+msgid "Selected File Upload Language: "
+msgstr "選択されたファイルアップロード言語："
+
+msgid "Select a file from your computer to upload"
+msgstr "アップロードするファイルをコンピュータから選択する"
+
+msgid "Upload Include File"
+msgstr "インクルード・ファイルをアップロードする"
+
+msgid "Upload Source File"
+msgstr "ソースファイルをアップロードする"
+
+msgid "Upload User Data File"
+msgstr "ユーザー・データ・ファイルをアップロードする"
+
+msgid "No file selected"
+msgstr "ファイルが選択されていない"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "この名前のプロジェクトはすでに存在する。別の名前を選んでください。"
+
+msgid "File uploaded does not match selected project language."
+msgstr "アップロードされたファイルが選択したプロジェクトの言語と一致しない。"
+
+msgid "Folder name does not match project name in config file."
+msgstr "フォルダ名が設定ファイルのプロジェクト名と一致しない。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "ファイルがプロジェクトの言語と異なる言語として検出された。すべてのソースファイルが選択したプロジェクトの言語と一致していることを確認してください。"
+
+msgid "Please remove all spaces in the name."
+msgstr "氏名のスペースはすべて削除すること。"
+
+msgid "Please remove all special characters in the name."
+msgstr "名前に含まれる特殊文字はすべて削除すること。"
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "ファイル名の長さが最大50文字を超えている。"
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "コンピュータからプロジェクトを選択してアップロードする"
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "階層形式が次のようになっていることを確認する。"
+
+msgid "Project Name"
+msgstr "プロジェクト名"
+
+msgid "include"
+msgstr "含む"
+
+msgid "includeFile1.h (optional)"
+msgstr "includeFile1.h（オプション）"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeFile2.h（オプション）"
+
+msgid "src"
+msgstr "src"
+
+msgid "NOTE: file extension must match project language"
+msgstr "注：ファイルの拡張子はプロジェクトの言語と一致していなければならない"
+
+msgid "srcFile1.*"
+msgstr "srcFile1.*."
+
+msgid "srcFile2.*"
+msgstr "srcFile2.*."
+
+msgid "data"
+msgstr "データ"
+
+msgid "dataFile1.txt (optional)"
+msgstr "dataFile1.txt（オプション）"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile2.txt（オプション）"
+
+msgid "bin"
+msgstr "ビン"
+
+msgid "Select Project Language:"
+msgstr "プロジェクト言語を選択する："
+
+msgid "Choose Folder"
+msgstr "フォルダを選択する"
+
+msgid "Config File"
+msgstr "設定ファイル"
+
+msgid "No files selected."
+msgstr "ファイルが選択されていない。"
+
+msgid "Include Files"
+msgstr "ファイルを含める"
+
+msgid "Source Files"
+msgstr "ソースファイル"
+
+msgid "User Data Files"
+msgstr "ユーザー・データ・ファイル"
+
+msgid "Selected Project Folder: "
+msgstr "厳選されたプロジェクトフォルダー"
+
+msgid "Selected Project Language: "
+msgstr "厳選されたプロジェクト言語："
+
+msgid "Choose a different project"
+msgstr "別のプロジェクトを選択する"
+
+msgid "Upload Project"
+msgstr "プロジェクトのアップロード"
+
+msgid "The selected project already exists for this user."
+msgstr "選択したプロジェクトは、このユーザーにはすでに存在している。"
+
+msgid "Please choose a different project."
+msgstr "別のプロジェクトを選んでほしい。"
+
+msgid "+"
+msgstr "+"
+
+msgid "Create Project"
+msgstr "プロジェクトを作成する"
+
+msgid "Create File"
+msgstr "ファイル作成"
+
+msgid "Create Classroom"
+msgstr "教室を作る"
+
+msgid "Create User"
+msgstr "ユーザーを作成する"
+
+msgid "Upload User"
+msgstr "ユーザーをアップロードする"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "その名前のユーザーがすでにこの教室に存在する。フォルダの名前を変えてもう一度試してみて。"
+
+msgid "Folder name does not match user name in config file."
+msgstr "フォルダ名が設定ファイルのユーザー名と一致しない。"
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "インターフェイスモードで検出されたファイルが、プロジェクトのインターフェイスモードと一致しない。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "ファイルがプロジェクトの言語と異なる言語として検出された。すべてのソースファイルがプロジェクトの言語と一致していることを確認してほしい。"
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "不明なファイルタイプで、デフォルトはプレーンテキストである。"
+
+msgid "Project must contain a main file"
+msgstr "プロジェクトにはメイン・ファイルが含まれていなければならない"
+
+msgid "Select a User from your computer to upload\n"
+msgstr "コンピュータからユーザーを選択してアップロードする"
+
+msgid "User Name"
+msgstr "ユーザー名"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "(少なくとも1つのプロジェクトがUserフォルダになければならない）"
+
+msgid "Project Name 1"
+msgstr "プロジェクト名 1"
+
+msgid "Project Name 2"
+msgstr "プロジェクト名 2"
+
+msgid "Select User Interface Mode:"
+msgstr "ユーザーインターフェースモードを選択する："
+
+msgid "Selected User Folder: "
+msgstr "選択されたユーザーフォルダ："
+
+msgid "Selected User Interface Mode: "
+msgstr "ユーザーインターフェースモードを選択した："
+
+msgid "Choose a different User"
+msgstr "別のユーザーを選択する"
+
+msgid "The selected user already exists in this classroom."
+msgstr "選択されたユーザーはすでにこの教室に存在している。"
+
+msgid "Please choose a different user."
+msgstr "別のユーザーを選択してほしい。"
+
+msgid "Choose a different user"
+msgstr "別のユーザーを選択する"
+
+msgid "Delete Classroom"
+msgstr "教室を削除する"
+
+msgid "Rename Classroom"
+msgstr "教室名を変更する"
+
+msgid "Delete User"
+msgstr "ユーザーを削除する"
+
+msgid "Download User"
+msgstr "ダウンロードユーザー"
+
+msgid "Rename User"
+msgstr "ユーザー名を変更する"
+
+msgid "Remove User from Classroom"
+msgstr "教室からユーザーを削除する"
+
+msgid "Move User to Classroom"
+msgstr "ユーザーを教室に移動させる"
+
+msgid "Paste Project"
+msgstr "貼り付けプロジェクト"
+
+msgid "Delete Project"
+msgstr "プロジェクトを削除する"
+
+msgid "Download Project"
+msgstr "ダウンロード・プロジェクト"
+
+msgid "Rename Project"
+msgstr "プロジェクト名を変更する"
+
+msgid "Move Project"
+msgstr "ムーブ・プロジェクト"
+
+msgid "Copy Project"
+msgstr "コピープロジェクト"
+
+msgid "Paste File"
+msgstr "ファイルを貼り付ける"
+
+msgid "Delete File"
+msgstr "ファイルを削除する"
+
+msgid "Download File"
+msgstr "ダウンロードファイル"
+
+msgid "Rename File"
+msgstr "ファイル名を変更する"
+
+msgid "Copy File"
+msgstr "コピーファイル"
+
+msgid "Users"
+msgstr "ユーザー"
+
+msgid "Classroom Invitation Code:"
+msgstr "教室招待コード："
+
+msgid "Projects"
+msgstr "プロジェクト"
+
+msgid "Explorer - Classrooms"
+msgstr "エクスプローラー - 教室"
+
+msgid "Explorer - Users"
+msgstr "エクスプローラー - ユーザー"
+
+msgid "Users without Classrooms"
+msgstr "教室を持たないユーザー"
+
+msgid "Motor 0"
+msgstr "モーター 0"
+
+msgid "Motor 1"
+msgstr "モーター1"
+
+msgid "Motor 2"
+msgstr "モーター2"
+
+msgid "Motor 3"
+msgstr "モーター3"
+
+msgid "Velocity"
+msgstr "速度"
+
+msgid "Power"
+msgstr "パワー"
+
+msgid "Servo 0"
+msgstr "サーボ 0"
+
+msgid "Servo 1"
+msgstr "サーボ 1"
+
+msgid "Servo 2"
+msgstr "サーボ 2"
+
+msgid "Servo 3"
+msgstr "サーボ 3"
+
+msgid "analog(0)"
+msgstr "アナログ(0)"
+
+msgid "analog(1)"
+msgstr "アナログ(1)"
+
+msgid "analog(2)"
+msgstr "アナログ(2)"
+
+msgid "analog(3)"
+msgstr "アナログ(3)"
+
+msgid "analog(4)"
+msgstr "アナログ(4)"
+
+msgid "analog(5)"
+msgstr "アナログ(5)"
+
+msgid "digital(0)"
+msgstr "デジタル(0)"
+
+msgid "digital(1)"
+msgstr "デジタル(1)"
+
+msgid "digital(2)"
+msgstr "デジタル(2)"
+
+msgid "digital(3)"
+msgstr "デジタル(3)"
+
+msgid "digital(4)"
+msgstr "デジタル(4)"
+
+msgid "digital(5)"
+msgstr "デジタル(5)"
+
+msgid "digital(6)"
+msgstr "デジタル(6)"
+
+msgid "digital(7)"
+msgstr "デジタル(7)"
+
+msgid "digital(8)"
+msgstr "デジタル(8)"
+
+msgid "digital(9)"
+msgstr "デジタル(9)"
+
+msgid "accel_x()"
+msgstr "accel_x()"
+
+msgid "accel_y()"
+msgstr "accel_y()"
+
+msgid "accel_z()"
+msgstr "accel_z()"
+
+msgid "gyro_x()"
+msgstr "gyro_x()"
+
+msgid "gyro_y()"
+msgstr "gyro_y()"
+
+msgid "gyro_z()"
+msgstr "gyro_z()"
+
+msgid "magneto_x()"
+msgstr "magneto_x()"
+
+msgid "magneto_y()"
+msgstr "magneto_y()"
+
+msgid "magneto_z()"
+msgstr "magneto_z()"
+
+msgid "right_button()"
+msgstr "右ボタン()"
+
+msgid "Reverse"
+msgstr "リバース"
+
+msgid "Forward"
+msgstr "フォワード"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "警告この範囲ではサーボを損傷する可能性がある"
+
+msgid "Motor Velocity Plot"
+msgstr "モーター速度プロット"
+
+msgid "Motor Position Plot"
+msgstr "モーター位置プロット"
+
+msgid "Servo Position Plot"
+msgstr "サーボ位置プロット"
+
+msgid "View:"
+msgstr "眺める："
+
+msgid "Motor Port:"
+msgstr "モーターポート："
+
+msgid "Clear Motor Position"
+msgstr "クリアモーターポジション"
+
+msgid "Stop All Motors"
+msgstr "すべてのモーターを止める"
+
+msgid "Stop Current Motor"
+msgstr "電流停止モーター"
+
+msgid "Motor Velocities"
+msgstr "モーター速度"
+
+msgid "Motor Positions"
+msgstr "モーターポジション"
+
+msgid "Servo Port:"
+msgstr "サーボポート："
+
+msgid "Enable All Servos"
+msgstr "すべてのサーボを有効にする"
+
+msgid "Disable All Servos"
+msgstr "すべてのサーボを無効にする"
+
+msgid "Disable Servo"
+msgstr "サーボを無効にする"
+
+msgid "Enable Servo"
+msgstr "サーボを有効にする"
+
+msgid "Servo Positions"
+msgstr "サーボポジション"
+
+msgid "Analog Sensors"
+msgstr "アナログセンサー"
+
+msgid "Digital Sensors"
+msgstr "デジタルセンサー"
+
+msgid "Accelerometers"
+msgstr "加速度計"
+
+msgid "Gyroscopes"
+msgstr "ジャイロスコープ"
+
+msgid "Magnetometers"
+msgstr "磁力計"
+
+msgid "Buttons"
+msgstr "ボタン"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "モーター、サーボ、センサー"
+
+msgid "Motor"
+msgstr "モーター"
+
+msgid "Servo"
+msgstr "サーボ"
+
+msgid "Sensor"
+msgstr "センサー"
+
+msgid "Modules"
+msgstr "モジュール"
+
+msgid "Functions"
+msgstr "機能"
+
+msgid "Structures"
+msgstr "構造"
+
+msgid "Enumerations"
+msgstr "列挙"
+
+msgid "Files"
+msgstr "ファイル"
+
+msgid "Search..."
+msgstr "検索..."
+
+msgid "Detailed Description"
+msgstr "詳細"
+
+msgid "Parameters"
+msgstr "パラメーター"
+
+msgid "Return Value"
+msgstr "戻り値"
+
+msgid "Fields"
+msgstr "フィールド"
+
+msgid "Common Functions"
+msgstr "共通機能"
+
+msgid "Full Documentation"
+msgstr "完全ドキュメント"
+
+msgctxt "func:a_button:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Aボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:a_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Aボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:alloff:brief"
+msgid "Turns all motors off."
+msgstr "すべてのモーターをオフにする。"
+
+msgctxt "func:analog10:detailed"
+msgid "Gets the 10-bit analog value of a port."
+msgstr "ポートの10ビットアナログ値を取得する。"
+
+msgctxt "func:analog10:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "0から5までの値で、読み取るセンサーを指定する。"
+
+msgctxt "func:analog12:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "ポートの12ビットアナログ値を取得する。"
+
+msgctxt "func:analog12:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "0から5までの値で、読み取るセンサーを指定する。"
+
+msgctxt "func:analog8:detailed"
+msgid "Gets the 8-bit analog value of a port."
+msgstr "ポートの8ビットアナログ値を取得する。"
+
+msgctxt "func:analog8:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "0から5までの値で、読み取るセンサーを指定する。"
+
+msgctxt "func:analog:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "ポートの12ビットアナログ値を取得する。"
+
+msgctxt "func:analog:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "0から5までの値で、読み取るセンサーを指定する。"
+
+msgctxt "func:analog_et:detailed"
+msgid ""
+"Gets the 10-bit analog value of an ET sensor on the given port. "
+"Deprecateddefaulting to analog() on the Wallaby"
+msgstr "与えられたポートのETセンサーの10ビットアナログ値を取得する。Deprecateddefaulting to analog() on the Wallaby"
+
+msgctxt "func:analog_et:param:port:description"
+msgid "A value between 0 and 7 specifying the ET sensor to read from."
+msgstr "0から7までの値で、読み取るETセンサーを指定する。"
+
+msgctxt "func:any_button:detailed"
+msgid "Determines whether or not any of the buttons are pressed."
+msgstr "いずれかのボタンが押されたかどうかを判断する。"
+
+msgctxt "func:ao:brief"
+msgid "Turns all motors off."
+msgstr "すべてのモーターをオフにする。"
+
+msgctxt "func:b_button:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Bボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:b_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Aボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:baasbennaguui:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "パーセントの速度でモーターを動かす。"
+
+msgctxt "func:baasbennaguui:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:baasbennaguui:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "モーターの速度のパーセントを-100から100の間で指定する。"
+
+msgctxt "func:bk:brief"
+msgid "Moves the given motor backward at full power."
+msgstr "与えられたモーターをフルパワーで後方に動かす。"
+
+msgctxt "func:bk:param:motor:description"
+msgid "the motor's port."
+msgstr "モーターのポートに取り付ける。"
+
+msgctxt "func:black_button:detailed"
+msgid ""
+"Gets the black button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "黒いボタンの状態（押されているか、押されていないか）を取得する。 非推奨ワラビーには存在しない。"
+
+msgctxt "func:block_motor_done:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "モーターがゴールするまで待つ。"
+
+msgctxt "func:block_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:bmd:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "モーターがゴールするまで待つ。"
+
+msgctxt "func:bmd:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:c_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Cボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:c_button_clicked:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Bボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:clear_motor_position_counter:brief"
+msgid "Clears the motor position counter."
+msgstr "モータ位置カウンタをクリアする。"
+
+msgctxt "func:clear_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:cmpc:brief"
+msgid "Clears the motor position counter."
+msgstr "モータ位置カウンタをクリアする。"
+
+msgctxt "func:cmpc:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:console_clear:detailed"
+msgid "Clears the UI's console."
+msgstr "UIのコンソールをクリアする。"
+
+msgctxt "func:create_point2:brief"
+msgid "Create a point2 object."
+msgstr "point2 オブジェクトを作成する。"
+
+msgctxt "func:create_point2:param:x:description"
+msgid "- the x value of the point"
+msgstr "- 点のx値"
+
+msgctxt "func:create_point2:param:y:description"
+msgid "- the y value of the point"
+msgstr "- 点のy値"
+
+msgctxt "func:create_point3:brief"
+msgid "Create a point3 object."
+msgstr "point3 オブジェクトを作成する。"
+
+msgctxt "func:create_point3:param:x:description"
+msgid "- the x value of the point"
+msgstr "- 点のx値"
+
+msgctxt "func:create_point3:param:y:description"
+msgid "- the y value of the point"
+msgstr "- 点のy値"
+
+msgctxt "func:create_point3:param:z:description"
+msgid "- the z value of the point"
+msgstr "- 点のz値"
+
+msgctxt "func:create_rectangle:brief"
+msgid "Create a rectangle object."
+msgstr "矩形オブジェクトを作成する。"
+
+msgctxt "func:create_rectangle:param:height:description"
+msgid "- the height of the rectangle"
+msgstr "- 矩形の高さ"
+
+msgctxt "func:create_rectangle:param:ulx:description"
+msgid "- the x value of the rectangle's upper left"
+msgstr "- 矩形の左上のxの値"
+
+msgctxt "func:create_rectangle:param:uly:description"
+msgid "- the y value of the rectangle's upper left"
+msgstr "- 矩形の左上のyの値"
+
+msgctxt "func:create_rectangle:param:width:description"
+msgid "- the width of the rectangle"
+msgstr "- 矩形の幅"
+
+msgctxt "func:disable_servo:brief"
+msgid "Disable a specific servo."
+msgstr "特定のサーボを無効にする。"
+
+msgctxt "func:disable_servo:param:port:description"
+msgid "The port, between 0 and 3, to disable"
+msgstr "無効にするポートを0から3の間で指定する。"
+
+msgctxt "func:disable_servos:brief"
+msgid "Disable all four servo channels."
+msgstr "4つのサーボチャンネルをすべて無効にする。"
+
+msgctxt "func:enable_servo:brief"
+msgid "Enable a specific servo."
+msgstr "特定のサーボを有効にする。"
+
+msgctxt "func:enable_servo:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "有効にするポートを0から3の間で指定する。"
+
+msgctxt "func:enable_servos:brief"
+msgid "Enable all four servo channels."
+msgstr "4つのサーボチャンネルをすべて有効にする。"
+
+msgctxt "func:extra_buttons_hide:detailed"
+msgid "Hides the X, Y, and Z buttons. This is the default."
+msgstr "X、Y、Zボタンを隠す。これはデフォルトである。"
+
+msgctxt "func:extra_buttons_show:detailed"
+msgid "Shows the X, Y, and Z buttons."
+msgstr "X、Y、Zボタンを表示する。"
+
+msgctxt "func:fd:brief"
+msgid "Moves the given motor forward at full power."
+msgstr "与えられたモーターをフルパワーで前進させる。"
+
+msgctxt "func:fd:param:motor:description"
+msgid "the motor's port."
+msgstr "モーターのポートに取り付ける。"
+
+msgctxt "func:freeze:brief"
+msgid "Active braking to stop a motor."
+msgstr "モーターを停止させるためのアクティブブレーキ。"
+
+msgctxt "func:freeze:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:get_analog_pullup:detailed"
+msgid ""
+"Gets the analog pullup status for one portt. Deprecatedno effect on the "
+"Wallaby"
+msgstr "1ポートのアナログ・プルアップ・ステータスを取得する。非推奨ワラビーには影響しない"
+
+msgctxt "func:get_analog_pullup:param:port:description"
+msgid "A value between 0 and 7 specifying the analog sensor to read from."
+msgstr "0から7までの値で、読み出すアナログセンサーを指定する。"
+
+msgctxt "func:get_digital_output:detailed"
+msgid "Gets the current digital mode"
+msgstr "現在のデジタルモードを取得する"
+
+msgctxt "func:get_digital_pullup:detailed"
+msgid ""
+"Gets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "現在のデジタル・プルアップの状態を取得 非推奨 Wallabyでは適用されない"
+
+msgctxt "func:get_digital_value:detailed"
+msgid "Gets the current value of the digital port."
+msgstr "デジタル・ポートの現在値を取得する。"
+
+msgctxt "func:get_extra_buttons_visible:detailed"
+msgid "Determines whether or not the X, Y, and Z buttons are visible."
+msgstr "X、Y、Zボタンを表示するかどうかを決定する。"
+
+msgctxt "func:get_motor_done:brief"
+msgid "Check if the motor has reached it's goal."
+msgstr "モーターがゴールに達したかどうかを確認する。"
+
+msgctxt "func:get_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:get_motor_position_counter:brief"
+msgid "Gets the current motor position."
+msgstr "現在のモーター位置を取得する。"
+
+msgctxt "func:get_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:get_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "モーターのPIDゲインを設定する。"
+
+msgctxt "func:get_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "D（微分）ゲイン分子"
+
+msgctxt "func:get_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "D（微分）ゲインの分母"
+
+msgctxt "func:get_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "I（積分）ゲイン分子"
+
+msgctxt "func:get_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "I（積分）ゲインの分母"
+
+msgctxt "func:get_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:get_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "P（比例）ゲイン分子"
+
+msgctxt "func:get_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "P（比例）ゲインの分母"
+
+msgctxt "func:get_servo_enabled:brief"
+msgid "Check if a servo is enabled."
+msgstr "サーボが有効かどうかをチェックする。"
+
+msgctxt "func:get_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3"
+msgstr "ポート。"
+
+msgctxt "func:get_servo_position:brief"
+msgid "Get the most recent commanded servo position."
+msgstr "最新のサーボ位置を取得する。"
+
+msgctxt "func:get_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "サーボのポート"
+
+msgctxt "func:getpwm:brief"
+msgid "Get the current motor pwm command."
+msgstr "現在のモーターpwmコマンドを取得する。"
+
+msgctxt "func:getpwm:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:gmpc:brief"
+msgid "Gets the current motor position."
+msgstr "現在のモーター位置を取得する。"
+
+msgctxt "func:gmpc:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:left_button:detailed"
+msgid "Gets the left button's state (pressed or not pressed.)"
+msgstr "左ボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:mav:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "目標速度を1秒あたりの刻みで設定する。"
+
+msgctxt "func:mav:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:mav:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "目標速度は-1500～1500ティック/秒で設定する。"
+
+msgctxt "func:motor:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "パーセントの速度でモーターを動かす。"
+
+msgctxt "func:motor:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:motor:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "モーターの速度のパーセントを-100から100の間で指定する。"
+
+msgctxt "func:motor_power:brief"
+msgid "Moves a motor at a percent power."
+msgstr "パーセントの出力でモーターを動かす。"
+
+msgctxt "func:motor_power:param:motor:description"
+msgid "the motor port."
+msgstr "モーター・ポート"
+
+msgctxt "func:motor_power:param:percent:description"
+msgid "The power of the motor, between -100 and 100."
+msgstr "モーターのパワーを-100から100の間で指定する。"
+
+msgctxt "func:move_at_velocity:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "目標速度を1秒あたりの刻みで設定する。"
+
+msgctxt "func:move_at_velocity:detailed"
+msgid ""
+"The range is -1500 to 1500, though motor position accuracy may be decreased "
+"outside of -1000 to 1000"
+msgstr "範囲は-1500から1500だが、-1000から1000の範囲外ではモーターの位置精度が低下する可能性がある。"
+
+msgctxt "func:move_at_velocity:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:move_at_velocity:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "目標速度は-1500～1500ティック/秒で設定する。"
+
+msgctxt "func:move_relative_position:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "現在の位置から相対的に、モーターが移動する目標位置を（ティック単位で）設定する。"
+
+msgctxt "func:move_relative_position:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "現在の位置から（ティック単位で）移動する位置"
+
+msgctxt "func:move_relative_position:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:move_relative_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移動速度。-1500から1500ティック/秒の間で指定する。"
+
+msgctxt "func:move_to_position:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "モーターが移動する目標位置（刻み）を設定する。"
+
+msgctxt "func:move_to_position:detailed"
+msgid ""
+"There are approximately 1500 ticks per motor revolution.This function is "
+"more accurate if speeds between -1000 and 1000 are used."
+msgstr "この機能は、速度が-1000から1000の間で使用される場合、より正確である。"
+
+msgctxt "func:move_to_position:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "移動する位置（ティック単位）"
+
+msgctxt "func:move_to_position:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:move_to_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移動速度。-1500から1500ティック/秒の間で指定する。"
+
+msgctxt "func:mrp:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "現在の位置から相対的に、モーターが移動する目標位置を（ティック単位で）設定する。"
+
+msgctxt "func:mrp:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "現在の位置から（ティック単位で）移動する位置"
+
+msgctxt "func:mrp:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:mrp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移動速度。-1500から1500ティック/秒の間で指定する。"
+
+msgctxt "func:mtp:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "モーターが移動する目標位置（刻み）を設定する。"
+
+msgctxt "func:mtp:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "移動する位置（ティック単位）"
+
+msgctxt "func:mtp:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:mtp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移動速度。-1500から1500ティック/秒の間で指定する。"
+
+msgctxt "func:off:brief"
+msgid "Turns the specified motor off."
+msgstr "指定されたモーターをオフにする。"
+
+msgctxt "func:off:param:motor:description"
+msgid "the motor's port."
+msgstr "モーターのポートに取り付ける。"
+
+msgctxt "func:push_button:detailed"
+msgid "Gets the ousg button's state (pressed or not pressed.)"
+msgstr "ousg ボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:right_button:detailed"
+msgid "Gets the right button's state (pressed or not pressed.)"
+msgstr "右ボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:set_a_button_text:detailed"
+msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
+msgstr "Aボタンのテキストを更新する。非推奨ワラビーでは予定されていない"
+
+msgctxt "func:set_a_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "表示するテキスト。16文字まで。"
+
+msgctxt "func:set_analog_pullup:detailed"
+msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
+msgstr "1つのポートのアナログ・プルアップ・ステータスを設定する。非推奨ワラビーには影響しない"
+
+msgctxt "func:set_analog_pullup:param:port:description"
+msgid "A value between 0 and 5 specifying the analog sensor to read from."
+msgstr "0から5までの値で、読み取るアナログセンサーを指定する。"
+
+msgctxt "func:set_analog_pullup:param:pullup:description"
+msgid "A value of 0 (inactive) or 1 (active)."
+msgstr "0（非アクティブ）または1（アクティブ）。"
+
+msgctxt "func:set_b_button_text:detailed"
+msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
+msgstr "Bボタンのテキストを更新する。非推奨ワラビーでは予定されていない"
+
+msgctxt "func:set_b_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "表示するテキスト。16文字まで。"
+
+msgctxt "func:set_c_button_text:detailed"
+msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
+msgstr "Cボタンのテキストを更新する。非推奨ワラビーでは予定されていない"
+
+msgctxt "func:set_c_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "表示するテキスト。16文字まで。"
+
+msgctxt "func:set_digital_output:detailed"
+msgid "Sets the digital mode."
+msgstr "デジタルモードを設定する。"
+
+msgctxt "func:set_digital_output:param:out:description"
+msgid "1 for output mode, 0 for input mode."
+msgstr "出力モードなら1、入力モードなら0となる。"
+
+msgctxt "func:set_digital_output:param:port:description"
+msgid "The port to modify."
+msgstr "変更するポート。"
+
+msgctxt "func:set_digital_pullup:detailed"
+msgid ""
+"Sets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "現在のデジタルプルアップの状態を設定する。"
+
+msgctxt "func:set_digital_pullup:param:port:description"
+msgid "The port to modify"
+msgstr "変更するポート"
+
+msgctxt "func:set_digital_pullup:param:pullup:description"
+msgid "The pullup state 1: active 0: inactive"
+msgstr "プルアップ状態 1: アクティブ 0: 非アクティブ"
+
+msgctxt "func:set_digital_value:detailed"
+msgid "Sets the value of the digital port in output mode."
+msgstr "出力モードのデジタル・ポートの値を設定する。"
+
+msgctxt "func:set_extra_buttons_visible:detailed"
+msgid "Sets whether or not the X, Y, and Z buttons are visible."
+msgstr "X、Y、Zボタンを表示するかどうかを設定する。"
+
+msgctxt "func:set_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "モーターのPIDゲインを設定する。"
+
+msgctxt "func:set_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "D（微分）ゲイン分子"
+
+msgctxt "func:set_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "D（微分）ゲインの分母"
+
+msgctxt "func:set_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "I（積分）ゲイン分子"
+
+msgctxt "func:set_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "I（積分）ゲインの分母"
+
+msgctxt "func:set_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:set_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "P（比例）ゲイン分子"
+
+msgctxt "func:set_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "P（比例）ゲインの分母"
+
+msgctxt "func:set_servo_enabled:brief"
+msgid "Enable or disable a specific servo."
+msgstr "特定のサーボを有効または無効にする。"
+
+msgctxt "func:set_servo_enabled:param:enabled:description"
+msgid "The new enable setting 0: disabled 1: enabled"
+msgstr "新しいイネーブル設定 0: 無効 1: 有効"
+
+msgctxt "func:set_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "有効にするポートを0から3の間で指定する。"
+
+msgctxt "func:set_servo_position:brief"
+msgid "Set a new servo goal position."
+msgstr "新しいサーボのゴール位置を設定する。"
+
+msgctxt "func:set_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "サーボのポート"
+
+msgctxt "func:set_servo_position:param:position:description"
+msgid "The new servo position, between 0 and 2047"
+msgstr "新しいサーボの位置（0 から 2047 の間"
+
+msgctxt "func:set_x_button_text:detailed"
+msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
+msgstr "Xボタンのテキストを更新する。非推奨ワラビーでは予定されていない"
+
+msgctxt "func:set_x_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "表示するテキスト。16文字まで。"
+
+msgctxt "func:set_y_button_text:detailed"
+msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
+msgstr "Yボタンのテキストを更新する。非推奨ワラビーでは予定されていない"
+
+msgctxt "func:set_y_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "表示するテキスト。16文字まで。"
+
+msgctxt "func:set_z_button_text:detailed"
+msgid "Updates the Z button's text. Deprecatednot planned for the Wallaby"
+msgstr "Zボタンのテキストを更新する。非推奨ワラビーでは予定されていない"
+
+msgctxt "func:set_z_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "表示するテキスト。16文字まで。"
+
+msgctxt "func:setpwm:brief"
+msgid "Set the motor pwm (percent power) command."
+msgstr "モーターpwm（パーセントパワー）コマンドを設定する。"
+
+msgctxt "func:setpwm:param:motor:description"
+msgid "The motor port."
+msgstr "モーターポートだ。"
+
+msgctxt "func:setpwm:param:pwm:description"
+msgid "A new motor pwm command between 0 and 100"
+msgstr "0から100の間の新しいモーターpwmコマンド"
+
+msgctxt "func:shut_down_in:detailed"
+msgid "Register an event to stop the user program after s seconds"
+msgstr "s秒後にユーザープログラムを停止するイベントを登録する"
+
+msgctxt "func:shut_down_in:param:s:description"
+msgid "The number of seconds to wait before the end of program"
+msgstr "プログラム終了までの待機秒数"
+
+msgctxt "func:side_button:detailed"
+msgid ""
+"Gets the side button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "サイドボタンの状態（押されているか、押されていないか）を取得する。 非推奨ワラビーには存在しない。"
+
+msgctxt "func:side_button_clicked:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Zボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:wait_for_a_button:detailed"
+msgid "Waits (blocks) until the a button has been pressed."
+msgstr "ボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_a_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the a button has been pressed and then subsequently "
+"released."
+msgstr "ボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_any_button:detailed"
+msgid "Waits (blocks) until any system button has been pressed."
+msgstr "システムボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_b_button:detailed"
+msgid "Waits (blocks) until the b button has been pressed."
+msgstr "bボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_b_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the b button has been pressed and then subsequently "
+"released."
+msgstr "bボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_c_button:detailed"
+msgid "Waits (blocks) until the c button has been pressed."
+msgstr "cボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_c_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the c button has been pressed and then subsequently "
+"released."
+msgstr "cボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_light:detailed"
+msgid ""
+"Initiate a calibration and wait for light sequence which is a normal early "
+"step in Botball programs"
+msgstr "キャリブレーションを開始し、点灯するまで待つ。"
+
+msgctxt "func:wait_for_light:param:light_port_:description"
+msgid "The analog port and light sensor to use."
+msgstr "アナログポートと光センサーを使用する。"
+
+msgctxt "func:wait_for_milliseconds:detailed"
+msgid "Waits (blocks) for the given number of milliseconds."
+msgstr "与えられたミリ秒数だけ待つ（ブロックする）。"
+
+msgctxt "func:wait_for_milliseconds:param:msecs:description"
+msgid "the number of milliseconds to sleep"
+msgstr "スリープするミリ秒数"
+
+msgctxt "func:wait_for_side_button:detailed"
+msgid "Waits (blocks) until the side button has been pressed."
+msgstr "サイドボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_side_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the side button has been pressed and then subsequently "
+"released."
+msgstr "サイドボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_touch:detailed"
+msgid ""
+"Waits (blocks) until the digital sensor on the given port has been "
+"activated."
+msgstr "与えられたポートのデジタルセンサーがアクティブになるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_touch:param:port:description"
+msgid "The port to wait for activation on"
+msgstr "で起動を待つポート。"
+
+msgctxt "func:wait_for_x_button:detailed"
+msgid "Waits (blocks) until the x button has been pressed."
+msgstr "xボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_x_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the x button has been pressed and then subsequently "
+"released."
+msgstr "xボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_y_button:detailed"
+msgid "Waits (blocks) until the y button has been pressed."
+msgstr "yボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_y_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the y button has been pressed and then subsequently "
+"released."
+msgstr "yボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_z_button:detailed"
+msgid "Waits (blocks) until the z button has been pressed."
+msgstr "zボタンが押されるまで待つ（ブロックする）。"
+
+msgctxt "func:wait_for_z_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the z button has been pressed and then subsequently "
+"released."
+msgstr "zボタンが押され、その後離されるまで待つ（ブロックする）。"
+
+msgctxt "func:x_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Cボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:x_button_clicked:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Cボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:y_button:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Yボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:y_button_clicked:detailed"
+msgid "Gets the X button's state (pressed or not pressed.)"
+msgstr "Xボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:z_button:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Zボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "func:z_button_clicked:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Yボタンの状態（押されているか、押されていないか）を取得する。"
+
+msgctxt "struct:kipr::create::CreatePackets::_101:detailed"
+msgid "Create OI Packet 101"
+msgstr "OIパケット101を作成する"
+
+msgctxt "struct:kipr::create::CreatePackets::_1:detailed"
+msgid "Create OI Packet 1"
+msgstr "OIパケット1を作成する"
+
+msgctxt "struct:kipr::create::CreatePackets::_2:detailed"
+msgid "Create OI Packet 2"
+msgstr "OIパケット2を作成する"
+
+msgctxt "struct:kipr::create::CreatePackets::_3:detailed"
+msgid "Create OI Packet 3"
+msgstr "OIパケット3を作成する"
+
+msgctxt "struct:kipr::create::CreatePackets::_4:detailed"
+msgid "Create OI Packet 4"
+msgstr "OIパケットを作成する 4"
+
+msgctxt "struct:kipr::create::CreatePackets::_5:detailed"
+msgid "Create OI Packet 5"
+msgstr "OIパケットを作成する 5"
+
+msgctxt "struct:kipr::create::CreateState:detailed"
+msgid "Locally stored state information"
+msgstr "ローカルに保存された状態情報"
+
+msgctxt "struct:mutex:brief"
+msgid "A mutex, or lock."
+msgstr "ミューテックス（ロック）。"
+
+msgctxt "struct:mutex:detailed"
+msgid ""
+"mutexes are used to prevent memory errors when two programs or threads need "
+"to access the same variable."
+msgstr "ミューテックスは、2つのプログラムやスレッドが同じ変数にアクセスする必要がある場合に、メモリーエラーを防ぐために使われる。"
+
+msgctxt "struct:mutex:member:data:brief"
+msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
+msgstr "C++ Mutexオブジェクトをvoid*にキャストしたもの。アクセスされることを意図していない。"
+
+msgctxt "struct:point2:brief"
+msgid "A 2D point; has x and y."
+msgstr "2次元の点。xとyを持つ。"
+
+msgctxt "struct:point2:member:x:brief"
+msgid "the x value of the point"
+msgstr "点のx値"
+
+msgctxt "struct:point2:member:y:brief"
+msgid "the y value of the point"
+msgstr "点のy値"
+
+msgctxt "struct:point3:brief"
+msgid "A 3D point; has x, y, and z."
+msgstr "x、y、zを持つ。"
+
+msgctxt "struct:point3:member:x:brief"
+msgid "the x value of the point"
+msgstr "点のx値"
+
+msgctxt "struct:point3:member:y:brief"
+msgid "the y value of the point"
+msgstr "点のy値"
+
+msgctxt "struct:point3:member:z:brief"
+msgid "the z value of the point"
+msgstr "点のz値"
+
+msgctxt "struct:rectangle:brief"
+msgid "A rectangle object."
+msgstr "矩形オブジェクト。"
+
+msgctxt "struct:rectangle:member:height:brief"
+msgid "the height of the rectangle"
+msgstr "矩形の高さ"
+
+msgctxt "struct:rectangle:member:ulx:brief"
+msgid "the x value of the rectangle's upper left"
+msgstr "矩形の左上のxの値"
+
+msgctxt "struct:rectangle:member:uly:brief"
+msgid "the y value of the rectangle's upper left"
+msgstr "矩形の左上のyの値"
+
+msgctxt "struct:rectangle:member:width:brief"
+msgid "the width of the rectangle"
+msgstr "矩形の幅"
+
+msgctxt "struct:thread:brief"
+msgid "A thread, or separate process."
+msgstr "スレッド、または別のプロセスである。"
+
+msgctxt "struct:thread:detailed"
+msgid ""
+"a thread runs a function \"in the background\" (while another function is "
+"executing)."
+msgstr "スレッドが関数を実行する。）"
+
+msgctxt "struct:thread:member:data:brief"
+msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
+msgstr "C++ Threadオブジェクトをvoid*にキャストしたもの。アクセスされることを意図していない。"
