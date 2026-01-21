@@ -182,7 +182,7 @@ class FileUploader extends React.Component<Props, State> {
             }
             language = await this.detectLanguage(file);
             if (language !== 'c') {
-              errorMessage = LocalizedString.lookup(tr(`The selected file is in ${language} and does not match the expected language ${currentLanguage}.`), this.props.locale);
+              errorMessage = LocalizedString.lookup(tr('The selected file does not match the expected language ${currentLanguage}.'), this.props.locale);
             }
             if (!file.name.endsWith('.h')) {
               errorMessage = LocalizedString.lookup(tr('The selected file must have a .h extension.'), this.props.locale);
@@ -196,7 +196,7 @@ class FileUploader extends React.Component<Props, State> {
             }
             language = await this.detectLanguage(file);
             if (language !== this.props.currentLanguage) {
-              errorMessage =  LocalizedString.lookup(tr(`The selected file is in ${language} and does not match the expected language ${currentLanguage}.`), this.props.locale);
+              errorMessage =  LocalizedString.lookup(tr('The selected file does not match the expected language.'), this.props.locale);
             
             }
           }
@@ -331,7 +331,7 @@ onDeleteFile = (fileInfo: FileInfo) => {
 
     return {
       selectedFiles: updatedFiles,
-      errorMessage: hasError ? "Some files have errors" : ""
+      errorMessage: hasError ? LocalizedString.lookup(tr('Some files have errors'), this.props.locale) : ""
     };
   }, () => {
     console.log("Updated state: ", this.state);
@@ -416,7 +416,7 @@ onDeleteFile = (fileInfo: FileInfo) => {
             theme={theme}
             disabled={this.state.selectedFiles.length === 0 || this.state.errorMessage !== ''}
             onClick={() => this.onUploadClick()} >
-            Upload File
+            {LocalizedString.lookup(tr('Upload File'), locale)}
           </UploadFileButton>
 
         </Container>

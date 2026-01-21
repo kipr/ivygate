@@ -296,7 +296,8 @@ class UserUploader extends React.Component<Props, State> {
           userName: '',
           interfaceMode: InterfaceMode.SIMPLE,
           projects: [],
-          classroomName: ''
+          classroomName: '',
+          type: 'user'
         }
       },
 
@@ -374,7 +375,7 @@ class UserUploader extends React.Component<Props, State> {
         console.log("this.props.currentClassroom.users: ", this.props.currentClassroom.users);
 
         this.setState({
-          duplicateUserErrorMessage: `User with name "${folderName}" already exists. Please choose a different name.`,
+          duplicateUserErrorMessage: LocalizedString.lookup(tr('A user with that name already exists in this classroom. Please rename your folder and try again.'), this.props.locale),
           selectedFiles: null,
           projectErrorMessage: ''
         })
@@ -405,14 +406,14 @@ class UserUploader extends React.Component<Props, State> {
 
                   //Error handling for folder name not matching userName in config file
                   if (parsedConfig.userName && parsedConfig.userName !== folderName) {
-                    errorMessage = `Folder name "${folderName}" does not match user name "${parsedConfig.userName}" in config file.`;
+                    errorMessage = LocalizedString.lookup(tr('Folder name does not match user name in config file.'), this.props.locale);
                   }
 
                   //Get user interface mode from config file
                   const interfaceMode = await this.getUserInterfaceFromConfig(file);
 
                   if (interfaceMode && interfaceMode !== this.state.interfaceMode) {
-                    errorMessage = `File ${file.name} detected with interface mode ${interfaceMode}, not matching project interface mode ${this.state.interfaceMode}.`;
+                    errorMessage = LocalizedString.lookup(tr('File detected with interface mode does not match project interface mode.'), this.props.locale);
                   }
 
                   this.setState(prevState => ({
@@ -482,8 +483,7 @@ class UserUploader extends React.Component<Props, State> {
                     }
                     else {
                       uploadType = 'src';
-                      errorMessage = `File ${file.name} detected as ${detectedLanguage}, not matching project language ${this.projectRefs.current.get(projectName)?.projectLanguage}.
-                  Please ensure all source files match the project language.`;
+                      errorMessage = LocalizedString.lookup(tr('File detected as different language than project language. Please ensure all source files match the project language.'), this.props.locale);
 
                     }
                   }
@@ -502,7 +502,7 @@ class UserUploader extends React.Component<Props, State> {
               default:
                 uploadType = 'none';
                 language = 'plaintext'; // Default to plaintext for unknown extensions
-                console.warn(`Unknown file type for ${file.name}, defaulting to plaintext.`);
+                console.warn(LocalizedString.lookup(tr('Unknown file type, defaulting to plaintext.'), this.props.locale));
             }
 
             if (errorMessage) {
@@ -542,7 +542,7 @@ class UserUploader extends React.Component<Props, State> {
 
           this.setState({
             projectErrorMessage: this.state.selectedFiles?.some(file => file.name.includes('main.'))
-              ? '' : `Project must contain a main.${extension} file`,
+              ? '' : LocalizedString.lookup(tr('Project must contain a main file'), this.props.locale),
 
             sourceFiles: this.state.selectedFiles?.filter(
               (f) => f.uploadType === 'src'
@@ -702,11 +702,11 @@ class UserUploader extends React.Component<Props, State> {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <FilePreviewItem theme={theme} >
             <SubItemIcon icon={faFileCode} />
-            {LocalizedString.lookup(tr(`includeFile1.h (optional)`), locale)}
+            {LocalizedString.lookup(tr('includeFile1.h (optional)'), locale)}
           </FilePreviewItem>
           <FilePreviewItem theme={theme} >
             <SubItemIcon icon={faFileCode} />
-            {LocalizedString.lookup(tr(`includeFile2.h (optional)`), locale)}
+            {LocalizedString.lookup(tr('includeFile2.h (optional)'), locale)}
           </FilePreviewItem>
         </div>
       </FilePreviewContainer>
@@ -720,7 +720,7 @@ class UserUploader extends React.Component<Props, State> {
         <SubItemIcon icon={faFolderOpen} />
         {LocalizedString.lookup(tr('src'), locale)}
         <span style={{ fontWeight: 'bold', color: '#d9534f', marginLeft: '10px' }}>
-          {LocalizedString.lookup(tr(`NOTE: file extension must match project language`), locale)}
+          {LocalizedString.lookup(tr('NOTE: file extension must match project language'), locale)}
         </span>
       </SubFolderListTitle>
       <FilePreviewContainer theme={theme} style={{ display: 'flex' }}>
@@ -728,12 +728,12 @@ class UserUploader extends React.Component<Props, State> {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <FilePreviewItem theme={theme} >
             <SubItemIcon icon={faFileCode} />
-            {LocalizedString.lookup(tr(`srcFile1.*`), locale)}
+            {LocalizedString.lookup(tr('srcFile1.*'), locale)}
 
           </FilePreviewItem>
           <FilePreviewItem theme={theme} >
             <SubItemIcon icon={faFileCode} />
-            {LocalizedString.lookup(tr(`srcFile2.*`), locale)}
+            {LocalizedString.lookup(tr('srcFile2.*'), locale)}
           </FilePreviewItem>
         </div>
       </FilePreviewContainer></>)
@@ -755,11 +755,11 @@ class UserUploader extends React.Component<Props, State> {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <FilePreviewItem theme={theme} >
             <SubItemIcon icon={faFileCode} />
-            {LocalizedString.lookup(tr(`dataFile1.txt (optional)`), locale)}
+            {LocalizedString.lookup(tr('dataFile1.txt (optional)'), locale)}
           </FilePreviewItem>
           <FilePreviewItem theme={theme} >
             <SubItemIcon icon={faFileCode} />
-            {LocalizedString.lookup(tr(`dataFile2.txt (optional)`), locale)}
+            {LocalizedString.lookup(tr('dataFile2.txt (optional)'), locale)}
           </FilePreviewItem>
         </div>
       </FilePreviewContainer></>)
@@ -799,7 +799,7 @@ class UserUploader extends React.Component<Props, State> {
               <ItemIcon icon={faFolderOpen} />
               {LocalizedString.lookup(tr("User Name"), locale)}
               <span style={{ fontWeight: 'bold', color: '#d9534f', marginLeft: '7px' }}>
-                {LocalizedString.lookup(tr(`(At least 1 project must be in the User folder)`), locale)}
+                {LocalizedString.lookup(tr('(At least 1 project must be in the User folder)'), locale)}
               </span>
             </ListTitle>
             <div style={{ display: 'flex', marginLeft: '3em' }}>
@@ -845,7 +845,7 @@ class UserUploader extends React.Component<Props, State> {
         </StyledScrollArea>
 
         <UploadFolderPreviewButtonContainer style={{ padding: '0.5em 0', alignItems: "center" }} theme={theme}>
-          <ComboBoxLabel theme={theme}>Select User Interface Mode:</ComboBoxLabel>
+          <ComboBoxLabel theme={theme}>{LocalizedString.lookup(tr('Select User Interface Mode:'), locale)}</ComboBoxLabel>
           <StyledResizeableComboBox
             options={INTERFACEMODE_OPTIONS}
             index={INTERFACEMODE_OPTIONS.findIndex(opt => opt.data === interfaceMode)}
@@ -1140,11 +1140,11 @@ class UserUploader extends React.Component<Props, State> {
         <TitleContainer theme={theme}>
           <Title theme={theme}>
             <strong>
-              {LocalizedString.lookup(tr(`The selected user ${folderName} already exists in this classroom.`), locale)}
+              {LocalizedString.lookup(tr('The selected user already exists in this classroom.'), locale)}
             </strong>
             <br />
             <strong>
-              {LocalizedString.lookup(tr(`Please choose a different user.`), locale)}
+              {LocalizedString.lookup(tr('Please choose a different user.'), locale)}
             </strong>
           </Title>
         </TitleContainer>
