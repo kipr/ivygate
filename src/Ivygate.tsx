@@ -57,7 +57,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     super(props);
 
   }
-  private editor_: monaco.editor.ICodeEditor;
+  private editor_: monaco.editor.IStandaloneCodeEditor;
   get editor() { return this.editor_; }
   depth = 0;
 
@@ -78,6 +78,11 @@ export class Ivygate extends React.PureComponent<Props, State> {
     monaco.languages.register({ id: 'customCpp' });
 
     monaco.languages.setLanguageConfiguration('customCpp', {
+      comments: {
+        lineComment: '//',
+        blockComment: ['/*', '*/'],
+      },
+
       brackets: [
         ['{', '}'],
         ['[', ']'],
@@ -107,6 +112,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     monaco.languages.register({ id: 'customPython' });
     monaco.languages.setLanguageConfiguration('customPython', {
+      comments: {
+        lineComment: '#',
+      },
       brackets: [
         ['{', '}'],
         ['[', ']'],
@@ -160,6 +168,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         }
       ]
     });
+
     monaco.languages.setMonarchTokensProvider('customCpp', {
       brackets: [
         { open: '{', close: '}', token: 'root.curlyBracket' },
@@ -533,10 +542,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'variable.special.this.cpp', foreground: '#0C969B' },
         { token: 'constant.caps', foreground: '#4876D6' },
         { token: 'keyword.argument.function-call.python', foreground: '#403F53' },
-        { token: 'entity.name.function.python', foreground: '#4876D6' },
+        { token: 'entity.name.function.python', foreground: '#000000ff' },
         { token: 'function-call.python', foreground: '#0C969B' },
         { token: 'function-call.arguments.python', foreground: '#4876D6' },
-        { token: 'function.declaration', foreground: '#3e7ada' },
+        { token: 'function.declaration', foreground: '#000000ff' },
         { token: 'function.declaration.python', foreground: '#0C969B' },
         { token: 'builtin.function', foreground: '#4876D6' },
         { token: 'macro', foreground: '#2fa2a6' },
@@ -554,7 +563,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'keyword', foreground: '#8439ac' },
         { token: 'keyword.boldBlue', foreground: '#2751ff', fontStyle: 'bold' },
         { token: 'operator', foreground: '#8439ac' },
-        { token: 'print.token', foreground: '#3e7ada' },
+        { token: 'print.token', foreground: '#000000ff' },
         { token: 'class', foreground: '#8439ac' },
         { token: 'class.name', foreground: '#0C969B' },
         { token: 'string', foreground: '#c96765' },
@@ -627,8 +636,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'macro', foreground: '#7FDBCA' },
         { token: 'python.def', foreground: '#8439ac' },
         { token: 'def.variable', foreground: '#0C969B' },
-        { token: 'preprocessor.define', foreground: '#C792EA' },
-        { token: 'preprocessor.include', foreground: '#C792EA' },
+        { token: 'preprocessor.define', foreground: '#47dd44' },
+        { token: 'preprocessor.include', foreground: '#47dd44' },
         { token: 'placeholder', foreground: '#4876D6' },
         { token: 'delimiter', foreground: '#1331de' },
         { token: 'formatSpecifier.python', foreground: '#994CC3' },
@@ -693,10 +702,24 @@ export class Ivygate extends React.PureComponent<Props, State> {
       bracketPairColorization: {
         enabled: true
       },
+      autoClosingBrackets: autocomplete ? 'languageDefined' : 'never',
+      autoClosingOvertype: autocomplete ? 'always' : 'never',
+      autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
+      autoSurround: autocomplete ? 'languageDefined' : 'never',
+      suggest: {
+        showWords: autocomplete,
+      },
       readOnly: !this.props.editable
     });
 
     this.editor_.setValue(code);
+    this.editor_.addAction({
+      id: 'toggle-line-comment',
+      label: 'Toggle Line Comment',
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash],
+      run: (ed) => ed.getAction('editor.action.commentLine')?.run(),
+    });
+    console.log(this.editor_.getModel()?.getLanguageId());
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
@@ -752,15 +775,22 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!this.editor_) return;
-    const { code, language, autocomplete, theme } = this.props;
+        const { code, language, autocomplete, theme } = this.props;
+
+    console.log("Component did update:", { code, language, autocomplete, theme });
+    console.log("ivygate compdidupdate this.editor_:", this.editor_);
+    if (!this.editor_) {
+      console.log("Editor not initialized yet.");
+      return;
+    }
+
 
     if (language === 'customCpp' || language === 'customPython' || language === 'plaintext') {
       this.changeFormatter(format);
     }
 
-    if (theme !== this.props.theme) {
-
+    if (prevProps.theme !== this.props.theme) {
+      console.log("Updating theme to:", this.props.theme);
       monaco.editor.setTheme(this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme');
     }
 
@@ -773,7 +803,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
     const monacoMessages = (this.props.messages || []).map(Message.toMonaco).reduce((a, b) => [...a, ...b], []);
     monaco.editor.setModelMarkers(model, '', monacoMessages);
 
-    if (autocomplete !== this.props.autocomplete) {
+    console.log("Ivygate compdidupdate autocomplete check:", { prevAutocomplete: prevProps.autocomplete, currentAutocomplete: autocomplete });
+    if (prevProps.autocomplete !== this.props.autocomplete) {
+      console.log("Updating autocomplete options:", autocomplete);
       this.editor_.updateOptions(Ivygate.getAutocompleteEditorOptions(autocomplete));
     }
   }
