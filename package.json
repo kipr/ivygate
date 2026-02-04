@@ -7,7 +7,7 @@
   "author": "Braden McDorman",
   "license": "GPL-3.0-only",
   "files": [
-    "dist/src"
+    "dist"
   ],
   "scripts": {
     "build": "tsc",
