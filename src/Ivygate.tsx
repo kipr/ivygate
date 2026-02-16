@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { StyleProps } from './components/constants/style';
 import server from './server';
 import { Message } from './Message';
@@ -743,6 +743,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     server.open('');
+
   }
 
   private guard_ = false;
@@ -775,7 +776,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-        const { code, language, autocomplete, theme } = this.props;
+    const { code, language, autocomplete, theme } = this.props;
 
     console.log("Component did update:", { code, language, autocomplete, theme });
     console.log("ivygate compdidupdate this.editor_:", this.editor_);
