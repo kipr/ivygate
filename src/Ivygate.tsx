@@ -55,8 +55,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
+    console.log('using local asdf');
   }
+
   private editor_: monaco.editor.IStandaloneCodeEditor;
   get editor() { return this.editor_; }
   depth = 0;
@@ -639,7 +640,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'preprocessor.define', foreground: '#47dd44' },
         { token: 'preprocessor.include', foreground: '#47dd44' },
         { token: 'placeholder', foreground: '#4876D6' },
-        { token: 'delimiter', foreground: '#1331de' },
+        { token: 'delimiter', foreground: '#d6deeb' },
         { token: 'formatSpecifier.python', foreground: '#994CC3' },
         { token: 'format.placeholder.python', foreground: '#4876D6' },
         { token: 'storage.type.function.lambda.python', foreground: '#994CC3' },
@@ -677,7 +678,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'test1', foreground: '#ff0000' },
       ],
       colors: {
-        'editor.background': '#011627',
+        'editor.background': '#1e1e1e',
         'editor.foreground': '#D6DEEB',
         'editorCursor.foreground': '#80a4c2',
         'editor.lineHighlightBackground': '#072434',
