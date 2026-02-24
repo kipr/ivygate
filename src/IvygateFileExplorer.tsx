@@ -493,9 +493,9 @@ export const getProjectCreationOptions = (locale: LocalizedString.Language): Com
     text: LocalizedString.lookup(PROJECT_CREATION_LABEL[value], locale), // label
     data: value, // stable id
   }
-)
-  
-);
+  )
+
+  );
 export const getFileCreationOptions = (locale: LocalizedString.Language): ComboBox.Option[] =>
   Object.values(FileCreationTypeAction).map((value) => ({
     text: LocalizedString.lookup(FILE_CREATION_LABEL[value], locale), // label
@@ -558,10 +558,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
     this.hostApp = this.getHostApp();
-        console.log("Using aadfasdff local ivygate");
+    console.log("Using aadfasdff local ivygate");
     console.log("IvygateFileExplorer initialized with props:", this.props);
   }
-///
+  ///
 
 
   async componentDidMount(): Promise<void> {
@@ -953,7 +953,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.downloadUser(this.state.contextMenuUser);
             }}
           >
-           {LocalizedString.lookup(tr("Download User"), this.props.locale)}
+            {LocalizedString.lookup(tr("Download User"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -1002,7 +1002,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.pasteObject(this.state.toCopyObject, this.state.contextMenuUser);
               }}
             >
-                {LocalizedString.lookup(tr("Paste Project"), this.props.locale)}
+              {LocalizedString.lookup(tr("Paste Project"), this.props.locale)}
             </li>
           </ContextMenuItem>)}
       </ContextMenu>
@@ -1123,7 +1123,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.downloadFile(this.state.contextMenuFile);
             }}
           >
-           {LocalizedString.lookup(tr("Download File"), this.props.locale)}
+            {LocalizedString.lookup(tr("Download File"), this.props.locale)}
           </li>
         </ContextMenuItem>
         {this.state.contextMenuFile !== `main.${ProgrammingLanguage.FILE_EXTENSION[this.state.activeLanguage]}` && (
@@ -1748,7 +1748,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   renderProjects = () => {
-    const { theme, locale,style, config, propUsers, propClassrooms, simEditorProjects } = this.props;
+    const { theme, locale, style, config, propUsers, propClassrooms, simEditorProjects } = this.props;
     const { projectCreationType, selectedUser, showProjectFiles } = this.state;
     const userProjects =
       propUsers
@@ -1773,7 +1773,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       <ProjectContainer theme={theme} >
         <ProjectHeaderContainer theme={theme}>
           <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Projects"), this.props.locale)}</ProjectTitle>
-          {config?.component === 'SimulatorClassrooms' ? null : <StyledResizeableComboBox
+          {config?.component === 'SimClassrooms' ? null : <StyledResizeableComboBox
             options={projectOptions}
             index={projectOptions.findIndex(opt => opt.data === projectCreationType)}
             onSelect={this.onProjectCreationSelect}
@@ -1816,15 +1816,15 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                   this.renderSimClassroomsProject(project as SimClassroomProject)
                 )
                   : (config?.component === 'SimEditor' ?
-                     ( (
-                    project.projectLanguage === "graphical" ? (
-                      this.graphicalView(project as SimEditorProject)
-                    ) : (project.interfaceMode === InterfaceMode.SIMPLE ? (
-                      this.simpleView(project as SimEditorProject)
-                    ) : (project.interfaceMode === InterfaceMode.ADVANCED ? (
-                      this.advancedView(project as SimEditorProject)
-                    ) : null))
-                  ))
+                    ((
+                      project.projectLanguage === "graphical" ? (
+                        this.graphicalView(project as SimEditorProject)
+                      ) : (project.interfaceMode === InterfaceMode.SIMPLE ? (
+                        this.simpleView(project as SimEditorProject)
+                      ) : (project.interfaceMode === InterfaceMode.ADVANCED ? (
+                        this.advancedView(project as SimEditorProject)
+                      ) : null))
+                    ))
                     : (
                       project.projectLanguage === "graphical" ? (
                         this.graphicalView(project as Project | SimEditorProject)
@@ -1885,7 +1885,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
           <FileTypeTitle theme={theme}>{LocalizedString.lookup(tr("Source Files"), this.props.locale)}</FileTypeTitle>
-          </FileTypeTitleContainer>
+        </FileTypeTitleContainer>
         <FileContainer theme={theme}>
           {Object.values(srcFolderFiles).map((file, i) => (
             <IndividualFile
@@ -1909,7 +1909,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   };
 
   advancedView = (project: Project | SimEditorProject) => {
-    const { theme,config, locale} = this.props;
+    const { theme, config, locale } = this.props;
     const { fileCreationTypeAction } = this.state;
     const includeFolderFiles = config?.component === 'SimEditor' ? Object.keys((project as SimEditorProject).includeFiles) : (project as Project).includeFolderFiles;
     const srcFolderFiles = config?.component === 'SimEditor' ? Object.keys((project as SimEditorProject).srcFiles) : (project as Project).srcFolderFiles;
