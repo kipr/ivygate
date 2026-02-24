@@ -55,7 +55,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    console.log('using local asdf');
+
   }
 
   private editor_: monaco.editor.IStandaloneCodeEditor;
