@@ -55,8 +55,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    console.log("using eeerqwer");
-    console.log("Using props: ", props);
   }
 
   private editor_: monaco.editor.IStandaloneCodeEditor;
@@ -728,7 +726,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash],
       run: (ed) => ed.getAction('editor.action.commentLine')?.run(),
     });
-    console.log(this.editor_.getModel()?.getLanguageId());
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
     model.onDidChangeContent(this.onContentChange_);
@@ -787,10 +784,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props) {
     const { code, language, autocomplete, theme } = this.props;
 
-    console.log("Component did update:", { code, language, autocomplete, theme });
-    console.log("ivygate compdidupdate this.editor_:", this.editor_);
     if (!this.editor_) {
-      console.log("Editor not initialized yet.");
       return;
     }
 
@@ -800,7 +794,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
     }
 
     if (prevProps.theme !== this.props.theme) {
-      console.log("Updating theme to:", this.props.theme);
       monaco.editor.setTheme(this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme');
     }
 
@@ -813,9 +806,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
     const monacoMessages = (this.props.messages || []).map(Message.toMonaco).reduce((a, b) => [...a, ...b], []);
     monaco.editor.setModelMarkers(model, '', monacoMessages);
 
-    console.log("Ivygate compdidupdate autocomplete check:", { prevAutocomplete: prevProps.autocomplete, currentAutocomplete: autocomplete });
+
     if (prevProps.autocomplete !== this.props.autocomplete) {
-      console.log("Updating autocomplete options:", autocomplete);
       this.editor_.updateOptions(Ivygate.getAutocompleteEditorOptions(autocomplete));
     }
   }
