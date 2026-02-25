@@ -55,7 +55,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
+    console.log("using eeerqwer");
+    console.log("Using props: ", props);
   }
 
   private editor_: monaco.editor.IStandaloneCodeEditor;
@@ -74,9 +75,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
     const { props } = this;
     const { code, language, autocomplete } = props;
 
-
-    // Register the customCpp language and tokenizer
     monaco.languages.register({ id: 'customCpp' });
+    monaco.languages.register({ id: 'customPython' });
+    monaco.languages.register({ id: 'plaintext' });
 
     monaco.languages.setLanguageConfiguration('customCpp', {
       comments: {
@@ -221,7 +222,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
           [/[+\-*\/%=!&|^<>]=?|&&|\|\||<=|>=|(?!->)\b(?:[^\s\w]+)\b/, 'operator'],
           [/\[/, { token: 'bracket.level0', }],
-          [/\(/, { token: 'test1', next: '@nestedParens' }],
+          [/\(/, { token: 'root.parenthesis', next: '@nestedParens' }],
           [/\b[A-Z0-9_]+\b/, 'macro.constant'],
 
           [/\s*!?defined\b/, { token: 'keyword.defined', next: '@defined' }],
@@ -247,7 +248,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         defined: [
           [/\b[A-Z0-9_]+\b/, 'macro.constant'],
           [/\b[a-z0-9_]+\b/, 'macro.constant'],
-          [/\)/, 'test1', '@pop'],
+          [/\)/, 'root.parenthesis', '@pop'],
         ],
         string_double: [
           [/[^"\\]+/, 'string'],  // Match everything inside the quotes
@@ -274,7 +275,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/\b(?:long|double|return|void|operator|while|for|char|bool|int|string|\?)\b/, 'keyword.boldBlue'],
           [/"/, 'delimiter.quote', '@string_double'],
           [/'/, 'delimiter.quote', '@string_single'],
-          [/\)/, 'test1', '@pop'],
+          [/\)/, 'root.parenthesis', '@pop'],
           [/\s*!?defined\b/, { token: 'keyword.defined', next: '@defined' }],
           [/\b_[A-Z0-9_]+\b/, 'source'],
           [/\b_[a-z0-9_]+\b/, 'source'],
@@ -614,9 +615,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
       base: 'vs-dark',
       inherit: true,
       rules: [
-        { token: 'root.curlyBracket', foreground: '#2751ff' }, //blue
-        { token: 'root.parenthesis', foreground: '#2751ff' }, //blue
-        { token: 'root.square', foreground: '#2751ff' }, //blue
+        { token: 'root.curlyBracket', foreground: '2751ff' }, //blue
+        { token: 'root.parenthesis', foreground: '2751ff' }, //blue
+        { token: 'root.square', foreground: '2751ff' }, //blue
         { token: 'root.arrayName', foreground: '#C5E478' },
         { token: 'variable', foreground: '#4876D6' },
         { token: 'variable.instance', foreground: '#C5E478' },
@@ -630,15 +631,15 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'entity.name.function.python', foreground: '#4876D6' },
         { token: 'function-call.python', foreground: '#0C969B' },
         { token: 'function-call.arguments.python', foreground: '#4876D6' },
-        { token: 'function.declaration', foreground: '#82AAFF' },
+        { token: 'function.declaration', foreground: '#d4d4d4' },
         { token: 'function.declaration.python', foreground: '#0C969B' },
         { token: 'builtin.function', foreground: '#4876D6' },
         { token: 'built-in', foreground: '#C5E478' },
         { token: 'macro', foreground: '#7FDBCA' },
         { token: 'python.def', foreground: '#8439ac' },
         { token: 'def.variable', foreground: '#0C969B' },
-        { token: 'preprocessor.define', foreground: '#47dd44' },
-        { token: 'preprocessor.include', foreground: '#47dd44' },
+        { token: 'preprocessor.define', foreground: '#569cd6' },
+        { token: 'preprocessor.include', foreground: '#569cd6' },
         { token: 'placeholder', foreground: '#4876D6' },
         { token: 'delimiter', foreground: '#d6deeb' },
         { token: 'formatSpecifier.python', foreground: '#994CC3' },
@@ -664,9 +665,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'number', foreground: '#b5cea8' },
         { token: 'source', foreground: '#D6DEEB' },
         { token: 'header.library', foreground: '#ce9178' },
-        { token: 'delimiter.angle', foreground: '#D9F5DD' },
+        { token: 'delimiter.angle', foreground: '#569cd6' },
         { token: 'delimiter.curly', foreground: '#dcdcdc' },
-        { token: 'delimiter.parenthesis', foreground: '#dcdcdc' },
+        { token: 'delimiter.parenthesis.cpp', foreground: '40e018' },
         { token: 'delimiterPrint.parenthesis', foreground: '#dcdcdc' },
         { token: 'delimiter.brace', foreground: '#8439ac' },
         { token: 'delimiter.quote', foreground: '#D6DEEB' },
@@ -675,20 +676,26 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'user-defined-literal.suffix', foreground: '#569cd6' },
         { token: 'bracket.level0', foreground: '#ff6600' }, //orangeish
 
-        { token: 'test1', foreground: '#ff0000' },
+        { token: 'test1', foreground: 'ff0000' },
       ],
       colors: {
         'editor.background': '#1e1e1e',
         'editor.foreground': '#D6DEEB',
         'editorCursor.foreground': '#80a4c2',
-        'editor.lineHighlightBackground': '#072434',
-        "editorBracketMatch.background": "#062a30", // Light red highlight
-        "editorBracketMatch.border": "#888888"       // Red border around matched brackets
+        'editorBracketHighlight.foreground1': '#dcdcdc',
+        'editorBracketHighlight.foreground2': '#dcdcdc',
+        'editorBracketHighlight.foreground3': '#dcdcdc',
+        'editorBracketHighlight.foreground4': '#dcdcdc',
+        'editorBracketHighlight.foreground5': '#dcdcdc',
+        'editorBracketHighlight.foreground6': '#dcdcdc',
+
+        // matching bracket (cursor on bracket) styling
+        'editorBracketMatch.background': '#062a30',
+        'editorBracketMatch.border': '#888888',
+
       }
     });
-    monaco.languages.register({ id: 'customCpp' });
-    monaco.languages.register({ id: 'customPython' });
-    monaco.languages.register({ id: 'plaintext' });
+
 
     // Create Monaco editor with correct language and theme
     this.editor_ = monaco.editor.create(this.ref_, {
@@ -699,10 +706,11 @@ export class Ivygate extends React.PureComponent<Props, State> {
       language: language,
       theme: this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme',
       automaticLayout: true,
-      matchBrackets: "always",
+      matchBrackets: "never",
       bracketPairColorization: {
-        enabled: true
+        enabled: false
       },
+      guides: { bracketPairs: false, bracketPairsHorizontal: false, highlightActiveBracketPair: false },
       autoClosingBrackets: autocomplete ? 'languageDefined' : 'never',
       autoClosingOvertype: autocomplete ? 'always' : 'never',
       autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
