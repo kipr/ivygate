@@ -864,12 +864,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
       autoClosingOvertype: autocomplete ? 'always' : 'never',
       autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
       autoSurround: autocomplete ? 'languageDefined' : 'never',
-      // ✅ actually triggers suggestions while typing
       quickSuggestions: autocomplete,
       suggestOnTriggerCharacters: autocomplete,
-
-      // ✅ enables built-in word suggestions
-      wordBasedSuggestions: autocomplete ? 'currentDocument' : 'off',
       suggest: {
         showWords: autocomplete,
       }
