@@ -55,7 +55,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
+    console.log("using Ivygate toast");
   }
+
 
   private editor_: monaco.editor.IStandaloneCodeEditor;
   get editor() { return this.editor_; }
@@ -78,6 +80,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
     monaco.languages.register({ id: 'plaintext' });
 
     monaco.languages.setLanguageConfiguration('customCpp', {
+      wordPattern: /[A-Za-z_]\w*/,
       comments: {
         lineComment: '//',
         blockComment: ['/*', '*/'],
@@ -713,12 +716,17 @@ export class Ivygate extends React.PureComponent<Props, State> {
       autoClosingOvertype: autocomplete ? 'always' : 'never',
       autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
       autoSurround: autocomplete ? 'languageDefined' : 'never',
+      quickSuggestions: autocomplete,
+      suggestOnTriggerCharacters: autocomplete,
+
+      // ✅ enables built-in word suggestions
+      wordBasedSuggestions: autocomplete ? 'allDocuments' : 'off',
+      wordBasedSuggestionsMinWordLength: 1,
       suggest: {
-        showWords: autocomplete,
+        showWords: true,
       },
       readOnly: !this.props.editable
     });
-
     this.editor_.setValue(code);
     this.editor_.addAction({
       id: 'toggle-line-comment',
@@ -728,6 +736,40 @@ export class Ivygate extends React.PureComponent<Props, State> {
     });
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
+    console.log('word@pos', model.getWordAtPosition({ lineNumber: 1, column: 2 }));
+    console.log('wordUntil', model.getWordUntilPosition({ lineNumber: 1, column: 5 }));
+    const lang = model?.getLanguageId() ?? 'plaintext';
+
+    monaco.languages.registerCompletionItemProvider(lang, {
+      provideCompletionItems: (model, position) => {
+        const wordInfo = model.getWordUntilPosition(position);
+        const range = new monaco.Range(
+          position.lineNumber,
+          wordInfo.startColumn,
+          position.lineNumber,
+          wordInfo.endColumn
+        );
+
+        const prefix = wordInfo.word;
+        if (!prefix) return { suggestions: [] };
+
+        // Collect words from the document
+        const text = model.getValue();
+        const words = new Set(text.match(/[A-Za-z_]\w*/g) ?? []);
+
+        const suggestions = [...words]
+          .filter(w => w !== prefix && w.startsWith(prefix))
+          .slice(0, 200)
+          .map(w => ({
+            label: w,
+            kind: monaco.languages.CompletionItemKind.Text,
+            insertText: w,
+            range,
+          }));
+
+        return { suggestions };
+      },
+    });
     model.onDidChangeContent(this.onContentChange_);
 
   }
@@ -826,6 +868,12 @@ export class Ivygate extends React.PureComponent<Props, State> {
       autoClosingOvertype: autocomplete ? 'always' : 'never',
       autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
       autoSurround: autocomplete ? 'languageDefined' : 'never',
+      // ✅ actually triggers suggestions while typing
+      quickSuggestions: autocomplete,
+      suggestOnTriggerCharacters: autocomplete,
+
+      // ✅ enables built-in word suggestions
+      wordBasedSuggestions: autocomplete ? 'currentDocument' : 'off',
       suggest: {
         showWords: autocomplete,
       }
