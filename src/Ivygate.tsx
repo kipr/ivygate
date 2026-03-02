@@ -718,12 +718,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
       autoSurround: autocomplete ? 'languageDefined' : 'never',
       quickSuggestions: autocomplete,
       suggestOnTriggerCharacters: autocomplete,
-
-      // ✅ enables built-in word suggestions
-      wordBasedSuggestions: autocomplete ? 'allDocuments' : 'off',
-      wordBasedSuggestionsMinWordLength: 1,
       suggest: {
         showWords: true,
+        wordBasedSuggestions: autocomplete ? 'allDocuments' : 'off',
+        wordBasedSuggestionsMinWordLength: 1,
       },
       readOnly: !this.props.editable
     });
