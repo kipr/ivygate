@@ -55,7 +55,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    console.log("using Ivygate toast");
+
   }
 
 
@@ -720,8 +720,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
       suggestOnTriggerCharacters: autocomplete,
       suggest: {
         showWords: true,
-        wordBasedSuggestions: autocomplete ? 'allDocuments' : 'off',
-        wordBasedSuggestionsMinWordLength: 1,
+        // wordBasedSuggestions: autocomplete ? 'allDocuments' : 'off',
+        // wordBasedSuggestionsMinWordLength: 1,
       },
       readOnly: !this.props.editable
     });
@@ -734,8 +734,6 @@ export class Ivygate extends React.PureComponent<Props, State> {
     });
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
-    console.log('word@pos', model.getWordAtPosition({ lineNumber: 1, column: 2 }));
-    console.log('wordUntil', model.getWordUntilPosition({ lineNumber: 1, column: 5 }));
     const lang = model?.getLanguageId() ?? 'plaintext';
 
     monaco.languages.registerCompletionItemProvider(lang, {
