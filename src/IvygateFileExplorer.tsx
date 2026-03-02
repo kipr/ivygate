@@ -236,7 +236,18 @@ const ProjectTitle = styled('h2', (props: ThemeProps) => ({
   color: props.theme.color
   //paddingBottom: '0.5em',
 }));
-
+const InviteCode = styled('p', (props: ThemeProps) => ({
+  fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  flexShrink: 0,
+  textAlign: 'left',
+  paddingRight: '20px',
+  color: props.theme.color,
+  textDecoration: 'none'
+  //paddingBottom: '0.5em',
+}));
 const FileTypeTitle = styled('div', (props: ThemeProps) => ({
   width: '100%',
   fontSize: '1em',
@@ -1676,7 +1687,8 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Users"), locale)}</ProjectTitle>
           {hostApp === 'Simulator' ?
             <InvitationCodeContainer theme={theme}>
-              <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Classroom Invitation Code:"), locale)}</ProjectTitle>{classroom.classroomInvitationCode}
+              <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Classroom Invitation Code:"), locale)}</ProjectTitle>
+              <InviteCode theme={theme}>{classroom.classroomInvitationCode}</InviteCode>
             </InvitationCodeContainer>
             : <StyledResizeableComboBox
               options={USER_OPTIONS}
@@ -2161,7 +2173,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                       onSelect={this.onClassroomCreationSelect}
                       theme={theme}
                       mainWidth="5.5em"
-                      mainHeight="1.5em"
+                      mainHeight="1.2em"
                       mainFontSize="0.9em"
                     />
                   ) : (
@@ -2173,7 +2185,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                       onSelect={this.onUserCreationSelect}
                       theme={theme}
                       mainWidth="4em"
-                      mainHeight="1.5em"
+                      mainHeight="1.2em"
                       mainFontSize="0.9em"
                     />
                   )}
