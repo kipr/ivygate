@@ -1,12 +1,36 @@
 import ProgrammingLanguage from './programmingLanguage';
 import { FileInfo } from './fileInfo';
-export type Project = {
+import LocalizedString from '../util/LocalizedString';
+import tr from '../i18n';
+import Dict from './Dict';
+
+interface ProjectBase {
   projectName: string;
   projectLanguage: ProgrammingLanguage;
+}
+
+export interface Project extends ProjectBase {
   includeFolderFiles: string[];
   srcFolderFiles: string[];
   dataFolderFiles: string[];
-};
+}
+
+export interface SimClassroomProject extends ProjectBase {
+  type: string; //Default, JBC0, JBC1, etc.
+  code: string;
+  eventStates: Dict<{eventName: string, completed: boolean}>;
+  challenge?: any;
+  challengeCompletion?: any;
+}
+
+export interface SimEditorProject extends ProjectBase {
+  srcFiles: Dict<{fileName: string, fileContent: string}>;
+  includeFiles?: Dict<{fileName: string, fileContent: string}>;
+  userDataFiles?: Dict<{fileName: string, fileContent: string}>;
+
+}
+
+
 
 export type UploadedProject = {
   projectName: string;

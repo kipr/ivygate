@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { StyleProps } from './components/constants/style';
 import server from './server';
 import { Message } from './Message';
@@ -30,6 +30,7 @@ export interface IvygateProps extends StyleProps {
   autocomplete: boolean;
   onCodeChange: (code: string) => void;
   theme: string;
+  editable?: boolean;
 }
 
 interface IvygateState {
@@ -56,7 +57,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
     super(props);
 
   }
-  private editor_: monaco.editor.ICodeEditor;
+
+
+  private editor_: monaco.editor.IStandaloneCodeEditor;
   get editor() { return this.editor_; }
   depth = 0;
 
@@ -72,11 +75,17 @@ export class Ivygate extends React.PureComponent<Props, State> {
     const { props } = this;
     const { code, language, autocomplete } = props;
 
-
-    // Register the customCpp language and tokenizer
     monaco.languages.register({ id: 'customCpp' });
+    monaco.languages.register({ id: 'customPython' });
+    monaco.languages.register({ id: 'plaintext' });
 
     monaco.languages.setLanguageConfiguration('customCpp', {
+      wordPattern: /[A-Za-z_]\w*/,
+      comments: {
+        lineComment: '//',
+        blockComment: ['/*', '*/'],
+      },
+
       brackets: [
         ['{', '}'],
         ['[', ']'],
@@ -106,6 +115,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
     monaco.languages.register({ id: 'customPython' });
     monaco.languages.setLanguageConfiguration('customPython', {
+      comments: {
+        lineComment: '#',
+      },
       brackets: [
         ['{', '}'],
         ['[', ']'],
@@ -159,6 +171,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         }
       ]
     });
+
     monaco.languages.setMonarchTokensProvider('customCpp', {
       brackets: [
         { open: '{', close: '}', token: 'root.curlyBracket' },
@@ -210,7 +223,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
           [/[+\-*\/%=!&|^<>]=?|&&|\|\||<=|>=|(?!->)\b(?:[^\s\w]+)\b/, 'operator'],
           [/\[/, { token: 'bracket.level0', }],
-          [/\(/, { token: 'test1', next: '@nestedParens' }],
+          [/\(/, { token: 'root.parenthesis', next: '@nestedParens' }],
           [/\b[A-Z0-9_]+\b/, 'macro.constant'],
 
           [/\s*!?defined\b/, { token: 'keyword.defined', next: '@defined' }],
@@ -236,7 +249,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         defined: [
           [/\b[A-Z0-9_]+\b/, 'macro.constant'],
           [/\b[a-z0-9_]+\b/, 'macro.constant'],
-          [/\)/, 'test1', '@pop'],
+          [/\)/, 'root.parenthesis', '@pop'],
         ],
         string_double: [
           [/[^"\\]+/, 'string'],  // Match everything inside the quotes
@@ -263,7 +276,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
           [/\b(?:long|double|return|void|operator|while|for|char|bool|int|string|\?)\b/, 'keyword.boldBlue'],
           [/"/, 'delimiter.quote', '@string_double'],
           [/'/, 'delimiter.quote', '@string_single'],
-          [/\)/, 'test1', '@pop'],
+          [/\)/, 'root.parenthesis', '@pop'],
           [/\s*!?defined\b/, { token: 'keyword.defined', next: '@defined' }],
           [/\b_[A-Z0-9_]+\b/, 'source'],
           [/\b_[a-z0-9_]+\b/, 'source'],
@@ -532,10 +545,10 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'variable.special.this.cpp', foreground: '#0C969B' },
         { token: 'constant.caps', foreground: '#4876D6' },
         { token: 'keyword.argument.function-call.python', foreground: '#403F53' },
-        { token: 'entity.name.function.python', foreground: '#4876D6' },
+        { token: 'entity.name.function.python', foreground: '#000000ff' },
         { token: 'function-call.python', foreground: '#0C969B' },
         { token: 'function-call.arguments.python', foreground: '#4876D6' },
-        { token: 'function.declaration', foreground: '#3e7ada' },
+        { token: 'function.declaration', foreground: '#000000ff' },
         { token: 'function.declaration.python', foreground: '#0C969B' },
         { token: 'builtin.function', foreground: '#4876D6' },
         { token: 'macro', foreground: '#2fa2a6' },
@@ -553,7 +566,7 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'keyword', foreground: '#8439ac' },
         { token: 'keyword.boldBlue', foreground: '#2751ff', fontStyle: 'bold' },
         { token: 'operator', foreground: '#8439ac' },
-        { token: 'print.token', foreground: '#3e7ada' },
+        { token: 'print.token', foreground: '#000000ff' },
         { token: 'class', foreground: '#8439ac' },
         { token: 'class.name', foreground: '#0C969B' },
         { token: 'string', foreground: '#c96765' },
@@ -566,9 +579,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'source', foreground: '#000000' },
         { token: 'header.library', foreground: '#c96765' },
         { token: 'delimiter.angle', foreground: '#000000' },
-        { token: 'delimiter.curly', foreground: '#00cc00' },
-        { token: 'delimiter.parenthesis', foreground: '#00cc00' },
-        { token: 'delimiterPrint.parenthesis', foreground: '#00cc00' },
+        { token: 'delimiter.curly', foreground: '#dcdcdc' },
+        { token: 'delimiter.parenthesis', foreground: '#dcdcdc' },
+        { token: 'delimiterPrint.parenthesis', foreground: '#dcdcdc' },
         { token: 'delimiter.brace', foreground: '#8439ac' },
         { token: 'delimiter.quote', foreground: '#000000' },
         { token: 'delimiter.return.quote', foreground: '#C96765' },
@@ -603,9 +616,9 @@ export class Ivygate extends React.PureComponent<Props, State> {
       base: 'vs-dark',
       inherit: true,
       rules: [
-        { token: 'root.curlyBracket', foreground: '#2751ff' }, //blue
-        { token: 'root.parenthesis', foreground: '#2751ff' }, //blue
-        { token: 'root.square', foreground: '#2751ff' }, //blue
+        { token: 'root.curlyBracket', foreground: '2751ff' }, //blue
+        { token: 'root.parenthesis', foreground: '2751ff' }, //blue
+        { token: 'root.square', foreground: '2751ff' }, //blue
         { token: 'root.arrayName', foreground: '#C5E478' },
         { token: 'variable', foreground: '#4876D6' },
         { token: 'variable.instance', foreground: '#C5E478' },
@@ -619,65 +632,71 @@ export class Ivygate extends React.PureComponent<Props, State> {
         { token: 'entity.name.function.python', foreground: '#4876D6' },
         { token: 'function-call.python', foreground: '#0C969B' },
         { token: 'function-call.arguments.python', foreground: '#4876D6' },
-        { token: 'function.declaration', foreground: '#82AAFF' },
+        { token: 'function.declaration', foreground: '#d4d4d4' },
         { token: 'function.declaration.python', foreground: '#0C969B' },
         { token: 'builtin.function', foreground: '#4876D6' },
         { token: 'built-in', foreground: '#C5E478' },
         { token: 'macro', foreground: '#7FDBCA' },
         { token: 'python.def', foreground: '#8439ac' },
         { token: 'def.variable', foreground: '#0C969B' },
-        { token: 'preprocessor.define', foreground: '#C792EA' },
-        { token: 'preprocessor.include', foreground: '#C792EA' },
+        { token: 'preprocessor.define', foreground: '#569cd6' },
+        { token: 'preprocessor.include', foreground: '#569cd6' },
         { token: 'placeholder', foreground: '#4876D6' },
-        { token: 'delimiter', foreground: '#1331de' },
+        { token: 'delimiter', foreground: '#d6deeb' },
         { token: 'formatSpecifier.python', foreground: '#994CC3' },
         { token: 'format.placeholder.python', foreground: '#4876D6' },
         { token: 'storage.type.function.lambda.python', foreground: '#994CC3' },
         { token: 'storage.type.variable.lambda.python', foreground: '#0C969B' },
         { token: 'support.type.decorator', foreground: '#4876D6' },
-        { token: 'keyword', foreground: '#C792EA' },
-        { token: 'keyword.new', foreground: '#7FDBCA' },
-        { token: 'keyword.defined', foreground: '#C792EA' },
+        { token: 'keyword', foreground: '#569cd6' },
+        { token: 'keyword.new', foreground: '#020202' },
+        { token: 'keyword.defined', foreground: '#569cd6' },
         { token: 'comment', foreground: '#637777' },
-        { token: 'operator', foreground: '#C792EA' },
+        { token: 'operator', foreground: '#569cd6' },
         { token: 'operator.special.delete', foreground: '#7FDBCA' },
         { token: 'print.token', foreground: '#C5E478' },
         { token: 'class', foreground: '#8439ac' },
         { token: 'class.name', foreground: '#0C969B' },
-        { token: 'string', foreground: '#ECC48D' },
+        { token: 'string', foreground: '#ce9178' },
         { token: 'string.content', foreground: '#c96765' },
         { token: 'string.newline', foreground: '#AA0982' },
-        { token: 'character.escape', foreground: '#F78C6C' },
+        { token: 'character.escape', foreground: '#b5cea8' },
         { token: 'character.escape.python', foreground: '#AA0982' },
         { token: 'symbol.unicode', foreground: '#AA0982' },
-        { token: 'number', foreground: '#F78C6C' },
+        { token: 'number', foreground: '#b5cea8' },
         { token: 'source', foreground: '#D6DEEB' },
-        { token: 'header.library', foreground: '#ECC48D' },
-        { token: 'delimiter.angle', foreground: '#D9F5DD' },
-        { token: 'delimiter.curly', foreground: '#00cc00' },
-        { token: 'delimiter.parenthesis', foreground: '#00cc00' },
-        { token: 'delimiterPrint.parenthesis', foreground: '#00cc00' },
+        { token: 'header.library', foreground: '#ce9178' },
+        { token: 'delimiter.angle', foreground: '#569cd6' },
+        { token: 'delimiter.curly', foreground: '#dcdcdc' },
+        { token: 'delimiter.parenthesis.cpp', foreground: '40e018' },
+        { token: 'delimiterPrint.parenthesis', foreground: '#dcdcdc' },
         { token: 'delimiter.brace', foreground: '#8439ac' },
         { token: 'delimiter.quote', foreground: '#D6DEEB' },
         { token: 'delimiter.return.quote', foreground: '#C96765' },
-        { token: 'user-defined-literal', foreground: '#F78C6C' },
-        { token: 'user-defined-literal.suffix', foreground: '#C792EA' },
+        { token: 'user-defined-literal', foreground: '#b5cea8' },
+        { token: 'user-defined-literal.suffix', foreground: '#569cd6' },
         { token: 'bracket.level0', foreground: '#ff6600' }, //orangeish
 
-        { token: 'test1', foreground: '#ff0000' },
+        { token: 'test1', foreground: 'ff0000' },
       ],
       colors: {
-        'editor.background': '#011627',
+        'editor.background': '#1e1e1e',
         'editor.foreground': '#D6DEEB',
         'editorCursor.foreground': '#80a4c2',
-        'editor.lineHighlightBackground': '#072434',
-        "editorBracketMatch.background": "#062a30", // Light red highlight
-        "editorBracketMatch.border": "#888888"       // Red border around matched brackets
+        'editorBracketHighlight.foreground1': '#dcdcdc',
+        'editorBracketHighlight.foreground2': '#dcdcdc',
+        'editorBracketHighlight.foreground3': '#dcdcdc',
+        'editorBracketHighlight.foreground4': '#dcdcdc',
+        'editorBracketHighlight.foreground5': '#dcdcdc',
+        'editorBracketHighlight.foreground6': '#dcdcdc',
+
+        // matching bracket (cursor on bracket) styling
+        'editorBracketMatch.background': '#062a30',
+        'editorBracketMatch.border': '#888888',
+
       }
     });
-    monaco.languages.register({ id: 'customCpp' });
-    monaco.languages.register({ id: 'customPython' });
-    monaco.languages.register({ id: 'plaintext' });
+
 
     // Create Monaco editor with correct language and theme
     this.editor_ = monaco.editor.create(this.ref_, {
@@ -688,14 +707,65 @@ export class Ivygate extends React.PureComponent<Props, State> {
       language: language,
       theme: this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme',
       automaticLayout: true,
-      matchBrackets: "always",
+      matchBrackets: "never",
       bracketPairColorization: {
-        enabled: true
-      }
+        enabled: false
+      },
+      guides: { bracketPairs: false, bracketPairsHorizontal: false, highlightActiveBracketPair: false },
+      autoClosingBrackets: autocomplete ? 'languageDefined' : 'never',
+      autoClosingOvertype: autocomplete ? 'always' : 'never',
+      autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
+      autoSurround: autocomplete ? 'languageDefined' : 'never',
+      quickSuggestions: autocomplete,
+      suggestOnTriggerCharacters: autocomplete,
+      suggest: {
+        showWords: true,
+        // wordBasedSuggestions: autocomplete ? 'allDocuments' : 'off',
+        // wordBasedSuggestionsMinWordLength: 1,
+      },
+      readOnly: !this.props.editable
+    });
+    this.editor_.setValue(code);
+    this.editor_.addAction({
+      id: 'toggle-line-comment',
+      label: 'Toggle Line Comment',
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash],
+      run: (ed) => ed.getAction('editor.action.commentLine')?.run(),
     });
 
-    this.editor_.setValue(code);
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
+    const lang = model?.getLanguageId() ?? 'plaintext';
+
+    monaco.languages.registerCompletionItemProvider(lang, {
+      provideCompletionItems: (model, position) => {
+        const wordInfo = model.getWordUntilPosition(position);
+        const range = new monaco.Range(
+          position.lineNumber,
+          wordInfo.startColumn,
+          position.lineNumber,
+          wordInfo.endColumn
+        );
+
+        const prefix = wordInfo.word;
+        if (!prefix) return { suggestions: [] };
+
+        // Collect words from the document
+        const text = model.getValue();
+        const words = new Set(text.match(/[A-Za-z_]\w*/g) ?? []);
+
+        const suggestions = [...words]
+          .filter(w => w !== prefix && w.startsWith(prefix))
+          .slice(0, 200)
+          .map(w => ({
+            label: w,
+            kind: monaco.languages.CompletionItemKind.Text,
+            insertText: w,
+            range,
+          }));
+
+        return { suggestions };
+      },
+    });
     model.onDidChangeContent(this.onContentChange_);
 
   }
@@ -716,7 +786,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    server.open('')
+    server.open('');
+
   }
 
   private guard_ = false;
@@ -747,33 +818,34 @@ export class Ivygate extends React.PureComponent<Props, State> {
 
 
   }
-  //
-  componentDidUpdate(nextProps: Props) {
-    if (!this.editor_) return;
-    const { code, language, autocomplete, theme } = nextProps;
+
+  componentDidUpdate(prevProps: Props) {
+    const { code, language, autocomplete, theme } = this.props;
+
+    if (!this.editor_) {
+      return;
+    }
 
 
     if (language === 'customCpp' || language === 'customPython' || language === 'plaintext') {
       this.changeFormatter(format);
     }
 
-    if (theme !== this.props.theme) {
-
+    if (prevProps.theme !== this.props.theme) {
       monaco.editor.setTheme(this.props.theme === 'LIGHT' ? 'ideLightTheme' : 'ideDarkTheme');
     }
 
     const model = this.editor_.getModel() as monaco.editor.ITextModel;
-    if (!this.guard_ && code !== model.getValue()) {
-      model.setValue(nextProps.code);
-      this.guard_ = false;
-    }
+    if (!this.guard_ && code !== model.getValue()) model.setValue(code);
 
+    this.guard_ = false;
     monaco.editor.setModelLanguage(model, language);
 
     const monacoMessages = (this.props.messages || []).map(Message.toMonaco).reduce((a, b) => [...a, ...b], []);
     monaco.editor.setModelMarkers(model, '', monacoMessages);
 
-    if (autocomplete !== this.props.autocomplete) {
+
+    if (prevProps.autocomplete !== this.props.autocomplete) {
       this.editor_.updateOptions(Ivygate.getAutocompleteEditorOptions(autocomplete));
     }
   }
@@ -792,6 +864,8 @@ export class Ivygate extends React.PureComponent<Props, State> {
       autoClosingOvertype: autocomplete ? 'always' : 'never',
       autoClosingQuotes: autocomplete ? 'languageDefined' : 'never',
       autoSurround: autocomplete ? 'languageDefined' : 'never',
+      quickSuggestions: autocomplete,
+      suggestOnTriggerCharacters: autocomplete,
       suggest: {
         showWords: autocomplete,
       }

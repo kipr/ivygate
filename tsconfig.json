@@ -9,7 +9,12 @@
     "outDir": "dist",
     "lib": [ "DOM","ES2020", "WebWorker" ],
     "skipLibCheck": true,
-    "types": ["react", "react-dom"]
+    "typeRoots": [
+      "../Simulator/node_modules/@types",
+      "./node_modules/@types"
+    ],
+    "types": ["react", "react-dom"],
+      "preserveSymlinks": true
   },
   "include": [
     "src/**/*"

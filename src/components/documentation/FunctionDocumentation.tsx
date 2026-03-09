@@ -9,6 +9,7 @@ import { ThemeProps } from '../constants/theme';
 import { ParameterName, Type } from './common';
 import FunctionPrototype from './FunctionPrototype';
 import { toPythonType } from './util';
+import { DOC_TR } from '../../../i18n/docs.generated';
 
 import tr from '../../i18n';
 import LocalizedString from '../../util/LocalizedString';
@@ -52,12 +53,21 @@ const FunctionDocumentation = ({ language, func, style, className, theme, locale
       <StyledFunctionPrototype language={language} theme={theme} func={func} />
       {func.brief_description && func.brief_description.length > 0 && (
         <BriefDescription theme={theme}>
-          {func.brief_description}
+          {func.brief_description_key && DOC_TR[func.brief_description_key] ? (
+           <div>{ LocalizedString.lookup(DOC_TR[func.brief_description_key], locale)}</div>
+          ) : (
+            <div>{func.brief_description}</div>
+          )}
         </BriefDescription>
       )}
+
       {func.detailed_description && func.detailed_description.length > 0 && (
         <Section name={LocalizedString.lookup(tr('Detailed Description'), locale)} theme={theme}>
-          {func.detailed_description}
+          {func.detailed_description_key && DOC_TR[func.detailed_description_key] ? (
+            <div>{LocalizedString.lookup(DOC_TR[func.detailed_description_key], locale)}</div>
+          ) : (
+            <div>{func.detailed_description}</div>
+          )}
         </Section>
       )}
       {func.parameters.length > 0 && (
@@ -70,10 +80,13 @@ const FunctionDocumentation = ({ language, func, style, className, theme, locale
                   <ParameterName>{parameter.name}</ParameterName>
                 </ParameterPrototype>
                 {parameter.description && (
-                  <div>
-                    {parameter.description}
-                  </div>
+                  parameter.description_key ? (
+                    <div>{LocalizedString.lookup(DOC_TR[parameter.description_key], locale)}</div>
+                  ) : (
+                    <div>{parameter.description}</div>
+                  )
                 )}
+
               </ParameterContainer>
             ))
           ) : (

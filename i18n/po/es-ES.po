@@ -1,0 +1,1426 @@
+msgid ""
+msgstr "Content-Type: text/plain\n"
+
+msgid "The selected file is already included in the project."
+msgstr "El archivo seleccionado ya está incluido en el proyecto."
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "El archivo seleccionado no coincide con el idioma esperado ${idiomaactual}."
+
+msgid "The selected file must have a .h extension."
+msgstr "El archivo seleccionado debe tener una extensión .h."
+
+msgid "The selected file does not match the expected language."
+msgstr "El archivo seleccionado no coincide con el idioma esperado."
+
+msgid "The selected file must have a .txt extension."
+msgstr "El archivo seleccionado debe tener extensión .txt."
+
+msgid "Some files have errors"
+msgstr "Algunos archivos tienen errores"
+
+msgid "Upload File"
+msgstr "Subir archivo"
+
+msgid "Selected File Upload Language: "
+msgstr "Idioma de carga de archivos seleccionado:"
+
+msgid "Select a file from your computer to upload"
+msgstr "Selecciona un archivo de tu ordenador para subirlo"
+
+msgid "Upload Include File"
+msgstr "Subir archivo de inclusión"
+
+msgid "Upload Source File"
+msgstr "Cargar archivo fuente"
+
+msgid "Upload User Data File"
+msgstr "Cargar archivo de datos de usuario"
+
+msgid "No file selected"
+msgstr "No hay ningún archivo seleccionado"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "El proyecto con ese nombre ya existe. Por favor, elige un nombre diferente."
+
+msgid "File uploaded does not match selected project language."
+msgstr "El archivo cargado no coincide con el idioma del proyecto seleccionado."
+
+msgid "Folder name does not match project name in config file."
+msgstr "El nombre de la carpeta no coincide con el nombre del proyecto en el archivo de configuración."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "Se ha detectado un archivo en un idioma distinto al del proyecto. Asegúrate de que todos los archivos fuente coinciden con el idioma del proyecto seleccionado."
+
+msgid "Please remove all spaces in the name."
+msgstr "Por favor, elimina todos los espacios del nombre."
+
+msgid "Please remove all special characters in the name."
+msgstr "Por favor, elimina todos los caracteres especiales del nombre."
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "El nombre del archivo supera la longitud máxima de 50 caracteres."
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "Selecciona un Proyecto de tu ordenador para subirlo\n"
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "Asegúrate de que el formato de la jerarquía es el siguiente:\n"
+
+msgid "Project Name"
+msgstr "Nombre del proyecto"
+
+msgid "include"
+msgstr "incluye"
+
+msgid "includeFile1.h (optional)"
+msgstr "includeArchivo1.h (opcional)"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeArchivo2.h (opcional)"
+
+msgid "src"
+msgstr "src"
+
+msgid "NOTE: file extension must match project language"
+msgstr "NOTA: la extensión del archivo debe coincidir con el idioma del proyecto"
+
+msgid "srcFile1.*"
+msgstr "srcArchivo1.*"
+
+msgid "srcFile2.*"
+msgstr "srcArchivo2.*"
+
+msgid "data"
+msgstr "datos"
+
+msgid "dataFile1.txt (optional)"
+msgstr "archivodatos1.txt (opcional)"
+
+msgid "dataFile2.txt (optional)"
+msgstr "archivodatos2.txt (opcional)"
+
+msgid "bin"
+msgstr "papelera"
+
+msgid "Select Project Language:"
+msgstr "Selecciona la Lengua del Proyecto:"
+
+msgid "Choose Folder"
+msgstr "Elegir carpeta"
+
+msgid "Config File"
+msgstr "Archivo de configuración"
+
+msgid "No files selected."
+msgstr "No hay archivos seleccionados."
+
+msgid "Include Files"
+msgstr "Incluir archivos"
+
+msgid "Source Files"
+msgstr "Archivos fuente"
+
+msgid "User Data Files"
+msgstr "Archivos de datos de usuario"
+
+msgid "Selected Project Folder: "
+msgstr "Carpeta de proyectos seleccionados:"
+
+msgid "Selected Project Language: "
+msgstr "Lengua seleccionada del proyecto:"
+
+msgid "Choose a different project"
+msgstr "Elige otro proyecto"
+
+msgid "Upload Project"
+msgstr "Subir proyecto"
+
+msgid "The selected project already exists for this user."
+msgstr "El proyecto seleccionado ya existe para este usuario."
+
+msgid "Please choose a different project."
+msgstr "Por favor, elige otro proyecto."
+
+msgid "+"
+msgstr "+"
+
+msgid "Create Project"
+msgstr "Crear proyecto"
+
+msgid "Create File"
+msgstr "Crear archivo"
+
+msgid "Create Classroom"
+msgstr "Crear aula"
+
+msgid "Create User"
+msgstr "Crear usuario"
+
+msgid "Upload User"
+msgstr "Cargar usuario"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "Ya existe un usuario con ese nombre en esta aula. Por favor, cambia el nombre de tu carpeta e inténtalo de nuevo."
+
+msgid "Folder name does not match user name in config file."
+msgstr "El nombre de la carpeta no coincide con el nombre de usuario del archivo de configuración."
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "El archivo detectado con el modo de interfaz no coincide con el modo de interfaz del proyecto."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "Se ha detectado un archivo en un idioma distinto al del proyecto. Asegúrate de que todos los archivos fuente coinciden con el idioma del proyecto."
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "Tipo de archivo desconocido, por defecto texto plano."
+
+msgid "Project must contain a main file"
+msgstr "El proyecto debe contener un archivo principal"
+
+msgid "Select a User from your computer to upload\n"
+msgstr "Selecciona un Usuario de tu ordenador para subir\n"
+
+msgid "User Name"
+msgstr "Nombre de usuario"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "(Al menos 1 proyecto debe estar en la carpeta Usuario)"
+
+msgid "Project Name 1"
+msgstr "Nombre del proyecto 1"
+
+msgid "Project Name 2"
+msgstr "Nombre del proyecto 2"
+
+msgid "Select User Interface Mode:"
+msgstr "Selecciona el modo de interfaz de usuario:"
+
+msgid "Selected User Folder: "
+msgstr "Carpeta de usuario seleccionada:"
+
+msgid "Selected User Interface Mode: "
+msgstr "Modo de interfaz de usuario seleccionado:"
+
+msgid "Choose a different User"
+msgstr "Elige otro Usuario"
+
+msgid "The selected user already exists in this classroom."
+msgstr "El usuario seleccionado ya existe en esta aula."
+
+msgid "Please choose a different user."
+msgstr "Por favor, elige otro usuario."
+
+msgid "Choose a different user"
+msgstr "Elige otro usuario"
+
+msgid "Delete Classroom"
+msgstr "Borrar Aula"
+
+msgid "Rename Classroom"
+msgstr "Cambiar el nombre del aula"
+
+msgid "Delete User"
+msgstr "Eliminar usuario"
+
+msgid "Download User"
+msgstr "Descargar Usuario"
+
+msgid "Rename User"
+msgstr "Cambiar nombre de usuario"
+
+msgid "Remove User from Classroom"
+msgstr "Eliminar usuario del aula"
+
+msgid "Move User to Classroom"
+msgstr "Mover al usuario al aula"
+
+msgid "Paste Project"
+msgstr "Proyecto Pegar"
+
+msgid "Delete Project"
+msgstr "Eliminar proyecto"
+
+msgid "Download Project"
+msgstr "Descargar proyecto"
+
+msgid "Rename Project"
+msgstr "Cambiar el nombre del proyecto"
+
+msgid "Move Project"
+msgstr "Proyecto Move"
+
+msgid "Copy Project"
+msgstr "Copiar Proyecto"
+
+msgid "Paste File"
+msgstr "Pegar archivo"
+
+msgid "Delete File"
+msgstr "Eliminar archivo"
+
+msgid "Download File"
+msgstr "Descargar archivo"
+
+msgid "Rename File"
+msgstr "Renombrar archivo"
+
+msgid "Copy File"
+msgstr "Copiar archivo"
+
+msgid "Users"
+msgstr "Usuarios"
+
+msgid "Classroom Invitation Code:"
+msgstr "Código de invitación a clase:"
+
+msgid "Projects"
+msgstr "Proyectos"
+
+msgid "Explorer - Classrooms"
+msgstr "Explorador - Aulas"
+
+msgid "Explorer - Users"
+msgstr "Explorador - Usuarios"
+
+msgid "Users without Classrooms"
+msgstr "Usuarios sin Aulas"
+
+msgid "Motor 0"
+msgstr "Motor 0"
+
+msgid "Motor 1"
+msgstr "Motor 1"
+
+msgid "Motor 2"
+msgstr "Motor 2"
+
+msgid "Motor 3"
+msgstr "Motor 3"
+
+msgid "Velocity"
+msgstr "Velocidad"
+
+msgid "Power"
+msgstr "Potencia"
+
+msgid "Servo 0"
+msgstr "Servo 0"
+
+msgid "Servo 1"
+msgstr "Servo 1"
+
+msgid "Servo 2"
+msgstr "Servo 2"
+
+msgid "Servo 3"
+msgstr "Servo 3"
+
+msgid "analog(0)"
+msgstr "analógico(0)"
+
+msgid "analog(1)"
+msgstr "analógico(1)"
+
+msgid "analog(2)"
+msgstr "analógico(2)"
+
+msgid "analog(3)"
+msgstr "analógico(3)"
+
+msgid "analog(4)"
+msgstr "analógico(4)"
+
+msgid "analog(5)"
+msgstr "analógico(5)"
+
+msgid "digital(0)"
+msgstr "digital(0)"
+
+msgid "digital(1)"
+msgstr "digital(1)"
+
+msgid "digital(2)"
+msgstr "digital(2)"
+
+msgid "digital(3)"
+msgstr "digital(3)"
+
+msgid "digital(4)"
+msgstr "digital(4)"
+
+msgid "digital(5)"
+msgstr "digital(5)"
+
+msgid "digital(6)"
+msgstr "digital(6)"
+
+msgid "digital(7)"
+msgstr "digital(7)"
+
+msgid "digital(8)"
+msgstr "digital(8)"
+
+msgid "digital(9)"
+msgstr "digital(9)"
+
+msgid "accel_x()"
+msgstr "aceler_x()"
+
+msgid "accel_y()"
+msgstr "acel_y()"
+
+msgid "accel_z()"
+msgstr "acel_z()"
+
+msgid "gyro_x()"
+msgstr "giro_x()"
+
+msgid "gyro_y()"
+msgstr "giro_y()"
+
+msgid "gyro_z()"
+msgstr "giro_z()"
+
+msgid "magneto_x()"
+msgstr "magneto_x()"
+
+msgid "magneto_y()"
+msgstr "magneto_y()"
+
+msgid "magneto_z()"
+msgstr "magneto_z()"
+
+msgid "right_button()"
+msgstr "botón_derecho()"
+
+msgid "Reverse"
+msgstr "Invierte"
+
+msgid "Forward"
+msgstr "Adelante"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "Advertencia Podría dañar el servo en este rango"
+
+msgid "Motor Velocity Plot"
+msgstr "Gráfico de velocidad del motor"
+
+msgid "Motor Position Plot"
+msgstr "Gráfico de posición del motor"
+
+msgid "Servo Position Plot"
+msgstr "Gráfico de posición del servo"
+
+msgid "View:"
+msgstr "Ver:"
+
+msgid "Motor Port:"
+msgstr "Puerto del motor:"
+
+msgid "Clear Motor Position"
+msgstr "Borrar posición del motor"
+
+msgid "Stop All Motors"
+msgstr "Parar todos los motores"
+
+msgid "Stop Current Motor"
+msgstr "Corriente de parada Motor"
+
+msgid "Motor Velocities"
+msgstr "Velocidades del motor"
+
+msgid "Motor Positions"
+msgstr "Posiciones del motor"
+
+msgid "Servo Port:"
+msgstr "Servopuerto:"
+
+msgid "Enable All Servos"
+msgstr "Activar todos los servos"
+
+msgid "Disable All Servos"
+msgstr "Desactivar todos los servos"
+
+msgid "Disable Servo"
+msgstr "Desactivar Servo"
+
+msgid "Enable Servo"
+msgstr "Activar Servo"
+
+msgid "Servo Positions"
+msgstr "Posiciones del servo"
+
+msgid "Analog Sensors"
+msgstr "Sensores analógicos"
+
+msgid "Digital Sensors"
+msgstr "Sensores digitales"
+
+msgid "Accelerometers"
+msgstr "Acelerómetros"
+
+msgid "Gyroscopes"
+msgstr "Giroscopios"
+
+msgid "Magnetometers"
+msgstr "Magnetómetros"
+
+msgid "Buttons"
+msgstr "Botones"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "Motores, servos y sensores"
+
+msgid "Motor"
+msgstr "Motor"
+
+msgid "Servo"
+msgstr "Servo"
+
+msgid "Sensor"
+msgstr "Sensor"
+
+msgid "Modules"
+msgstr "Módulos"
+
+msgid "Functions"
+msgstr "Funciones"
+
+msgid "Structures"
+msgstr "Estructuras"
+
+msgid "Enumerations"
+msgstr "Enumeraciones"
+
+msgid "Files"
+msgstr "Archivos"
+
+msgid "Search..."
+msgstr "Busca..."
+
+msgid "Detailed Description"
+msgstr "Descripción detallada"
+
+msgid "Parameters"
+msgstr "Parámetros"
+
+msgid "Return Value"
+msgstr "Valor de retorno"
+
+msgid "Fields"
+msgstr "Campos"
+
+msgid "Common Functions"
+msgstr "Funciones comunes"
+
+msgid "Full Documentation"
+msgstr "Documentación completa"
+
+msgctxt "func:a_button:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón A (pulsado o no pulsado.)"
+
+msgctxt "func:a_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón A (pulsado o no pulsado.)"
+
+msgctxt "func:alloff:brief"
+msgid "Turns all motors off."
+msgstr "Apaga todos los motores."
+
+msgctxt "func:analog10:detailed"
+msgid "Gets the 10-bit analog value of a port."
+msgstr "Obtiene el valor analógico de 10 bits de un puerto."
+
+msgctxt "func:analog10:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Un valor entre 0 y 5 que especifica el sensor del que leer."
+
+msgctxt "func:analog12:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "Obtiene el valor analógico de 12 bits de un puerto."
+
+msgctxt "func:analog12:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Un valor entre 0 y 5 que especifica el sensor del que leer."
+
+msgctxt "func:analog8:detailed"
+msgid "Gets the 8-bit analog value of a port."
+msgstr "Obtiene el valor analógico de 8 bits de un puerto."
+
+msgctxt "func:analog8:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Un valor entre 0 y 5 que especifica el sensor del que leer."
+
+msgctxt "func:analog:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "Obtiene el valor analógico de 12 bits de un puerto."
+
+msgctxt "func:analog:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Un valor entre 0 y 5 que especifica el sensor del que leer."
+
+msgctxt "func:analog_et:detailed"
+msgid ""
+"Gets the 10-bit analog value of an ET sensor on the given port. "
+"Deprecateddefaulting to analog() on the Wallaby"
+msgstr "Obtiene el valor analógico de 10 bits de un sensor ET en el puerto dado. ObsoletoPor defecto se utiliza analog() en el Wallaby"
+
+msgctxt "func:analog_et:param:port:description"
+msgid "A value between 0 and 7 specifying the ET sensor to read from."
+msgstr "Un valor entre 0 y 7 que especifica el sensor ET del que leer."
+
+msgctxt "func:any_button:detailed"
+msgid "Determines whether or not any of the buttons are pressed."
+msgstr "Determina si se pulsa o no alguno de los botones."
+
+msgctxt "func:ao:brief"
+msgid "Turns all motors off."
+msgstr "Apaga todos los motores."
+
+msgctxt "func:b_button:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón B (pulsado o no pulsado.)"
+
+msgctxt "func:b_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón A (pulsado o no pulsado.)"
+
+msgctxt "func:baasbennaguui:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "Mueve un motor a una velocidad porcentual."
+
+msgctxt "func:baasbennaguui:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:baasbennaguui:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "El porcentaje de la velocidad de los motores, entre -100 y 100."
+
+msgctxt "func:bk:brief"
+msgid "Moves the given motor backward at full power."
+msgstr "Mueve el motor dado hacia atrás a plena potencia."
+
+msgctxt "func:bk:param:motor:description"
+msgid "the motor's port."
+msgstr "el puerto del motor."
+
+msgctxt "func:black_button:detailed"
+msgid ""
+"Gets the black button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "Obtiene el estado del botón negro (pulsado o no pulsado) DeprecatedNo presente en el Wallaby"
+
+msgctxt "func:block_motor_done:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "Espera a que el motor llegue a su meta."
+
+msgctxt "func:block_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:bmd:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "Espera a que el motor llegue a su meta."
+
+msgctxt "func:bmd:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:c_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón C (pulsado o no pulsado.)"
+
+msgctxt "func:c_button_clicked:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón B (pulsado o no pulsado.)"
+
+msgctxt "func:clear_motor_position_counter:brief"
+msgid "Clears the motor position counter."
+msgstr "Borra el contador de posiciones del motor."
+
+msgctxt "func:clear_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:cmpc:brief"
+msgid "Clears the motor position counter."
+msgstr "Borra el contador de posiciones del motor."
+
+msgctxt "func:cmpc:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:console_clear:detailed"
+msgid "Clears the UI's console."
+msgstr "Borra la consola de la interfaz de usuario."
+
+msgctxt "func:create_point2:brief"
+msgid "Create a point2 object."
+msgstr "Crea un objeto punto2."
+
+msgctxt "func:create_point2:param:x:description"
+msgid "- the x value of the point"
+msgstr "- el valor x del punto"
+
+msgctxt "func:create_point2:param:y:description"
+msgid "- the y value of the point"
+msgstr "- el valor y del punto"
+
+msgctxt "func:create_point3:brief"
+msgid "Create a point3 object."
+msgstr "Crea un objeto punto3."
+
+msgctxt "func:create_point3:param:x:description"
+msgid "- the x value of the point"
+msgstr "- el valor x del punto"
+
+msgctxt "func:create_point3:param:y:description"
+msgid "- the y value of the point"
+msgstr "- el valor y del punto"
+
+msgctxt "func:create_point3:param:z:description"
+msgid "- the z value of the point"
+msgstr "- el valor z del punto"
+
+msgctxt "func:create_rectangle:brief"
+msgid "Create a rectangle object."
+msgstr "Crea un objeto rectángulo."
+
+msgctxt "func:create_rectangle:param:height:description"
+msgid "- the height of the rectangle"
+msgstr "- la altura del rectángulo"
+
+msgctxt "func:create_rectangle:param:ulx:description"
+msgid "- the x value of the rectangle's upper left"
+msgstr "- el valor x de la parte superior izquierda del rectángulo"
+
+msgctxt "func:create_rectangle:param:uly:description"
+msgid "- the y value of the rectangle's upper left"
+msgstr "- el valor y de la parte superior izquierda del rectángulo"
+
+msgctxt "func:create_rectangle:param:width:description"
+msgid "- the width of the rectangle"
+msgstr "- la anchura del rectángulo"
+
+msgctxt "func:disable_servo:brief"
+msgid "Disable a specific servo."
+msgstr "Desactiva un servo concreto."
+
+msgctxt "func:disable_servo:param:port:description"
+msgid "The port, between 0 and 3, to disable"
+msgstr "El puerto, entre 0 y 3, a desactivar"
+
+msgctxt "func:disable_servos:brief"
+msgid "Disable all four servo channels."
+msgstr "Desactiva los cuatro canales del servo."
+
+msgctxt "func:enable_servo:brief"
+msgid "Enable a specific servo."
+msgstr "Activa un servo específico."
+
+msgctxt "func:enable_servo:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "El puerto, entre 0 y 3, para activar"
+
+msgctxt "func:enable_servos:brief"
+msgid "Enable all four servo channels."
+msgstr "Habilita los cuatro canales del servo."
+
+msgctxt "func:extra_buttons_hide:detailed"
+msgid "Hides the X, Y, and Z buttons. This is the default."
+msgstr "Oculta los botones X, Y y Z. Este es el valor por defecto."
+
+msgctxt "func:extra_buttons_show:detailed"
+msgid "Shows the X, Y, and Z buttons."
+msgstr "Muestra los botones X, Y y Z."
+
+msgctxt "func:fd:brief"
+msgid "Moves the given motor forward at full power."
+msgstr "Mueve el motor dado hacia delante a plena potencia."
+
+msgctxt "func:fd:param:motor:description"
+msgid "the motor's port."
+msgstr "el puerto del motor."
+
+msgctxt "func:freeze:brief"
+msgid "Active braking to stop a motor."
+msgstr "Frenado activo para detener un motor."
+
+msgctxt "func:freeze:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:get_analog_pullup:detailed"
+msgid ""
+"Gets the analog pullup status for one portt. Deprecatedno effect on the "
+"Wallaby"
+msgstr "Obtiene el estado de pullup analógico de un puertot. No tiene efecto en el Wallaby"
+
+msgctxt "func:get_analog_pullup:param:port:description"
+msgid "A value between 0 and 7 specifying the analog sensor to read from."
+msgstr "Un valor entre 0 y 7 que especifica el sensor analógico del que leer."
+
+msgctxt "func:get_digital_output:detailed"
+msgid "Gets the current digital mode"
+msgstr "Obtiene el modo digital actual"
+
+msgctxt "func:get_digital_pullup:detailed"
+msgid ""
+"Gets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "Obtiene el estado actual del pullup digital Deprecatedno aplicable en el Wallaby"
+
+msgctxt "func:get_digital_value:detailed"
+msgid "Gets the current value of the digital port."
+msgstr "Obtiene el valor actual del puerto digital."
+
+msgctxt "func:get_extra_buttons_visible:detailed"
+msgid "Determines whether or not the X, Y, and Z buttons are visible."
+msgstr "Determina si los botones X, Y y Z están visibles o no."
+
+msgctxt "func:get_motor_done:brief"
+msgid "Check if the motor has reached it's goal."
+msgstr "Comprueba si el motor ha alcanzado su objetivo."
+
+msgctxt "func:get_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:get_motor_position_counter:brief"
+msgid "Gets the current motor position."
+msgstr "Obtiene la posición actual del motor."
+
+msgctxt "func:get_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:get_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "Ajusta las ganancias PID del motor, representadas como fracciones."
+
+msgctxt "func:get_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "El numerador de la ganancia D (derivada)"
+
+msgctxt "func:get_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "El denominador de la ganancia D (derivada)"
+
+msgctxt "func:get_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "El numerador de la ganancia I (integral)"
+
+msgctxt "func:get_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "El denominador de la ganancia I (integral)"
+
+msgctxt "func:get_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:get_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "El numerador de la ganancia P (proporcional)"
+
+msgctxt "func:get_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "El denominador de la ganancia P (proporcional)"
+
+msgctxt "func:get_servo_enabled:brief"
+msgid "Check if a servo is enabled."
+msgstr "Comprueba si un servo está activado."
+
+msgctxt "func:get_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3"
+msgstr "El puerto, entre 0 y 3"
+
+msgctxt "func:get_servo_position:brief"
+msgid "Get the most recent commanded servo position."
+msgstr "Obtén la posición del servo comandada más reciente."
+
+msgctxt "func:get_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "El puerto del servo"
+
+msgctxt "func:getpwm:brief"
+msgid "Get the current motor pwm command."
+msgstr "Obtener el comando pwm actual del motor."
+
+msgctxt "func:getpwm:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:gmpc:brief"
+msgid "Gets the current motor position."
+msgstr "Obtiene la posición actual del motor."
+
+msgctxt "func:gmpc:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:left_button:detailed"
+msgid "Gets the left button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón izquierdo (pulsado o no pulsado.)"
+
+msgctxt "func:mav:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "Establece una velocidad objetivo en ticks por segundo."
+
+msgctxt "func:mav:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:mav:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "La velocidad del objetivo en -1500 a 1500 ticks / segundo"
+
+msgctxt "func:motor:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "Mueve un motor a una velocidad porcentual."
+
+msgctxt "func:motor:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:motor:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "El porcentaje de la velocidad de los motores, entre -100 y 100."
+
+msgctxt "func:motor_power:brief"
+msgid "Moves a motor at a percent power."
+msgstr "Mueve un motor a un porcentaje de potencia."
+
+msgctxt "func:motor_power:param:motor:description"
+msgid "the motor port."
+msgstr "el puerto del motor."
+
+msgctxt "func:motor_power:param:percent:description"
+msgid "The power of the motor, between -100 and 100."
+msgstr "La potencia del motor, entre -100 y 100."
+
+msgctxt "func:move_at_velocity:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "Establece una velocidad objetivo en ticks por segundo."
+
+msgctxt "func:move_at_velocity:detailed"
+msgid ""
+"The range is -1500 to 1500, though motor position accuracy may be decreased "
+"outside of -1000 to 1000"
+msgstr "El rango es de -1500 a 1500, aunque la precisión de la posición del motor puede disminuir fuera de -1000 a 1000"
+
+msgctxt "func:move_at_velocity:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:move_at_velocity:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "La velocidad del objetivo en -1500 a 1500 ticks / segundo"
+
+msgctxt "func:move_relative_position:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "Establece una posición objetivo (en ticks) a la que debe desplazarse el motor, respecto a la posición actual."
+
+msgctxt "func:move_relative_position:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "La posición a la que moverse (en ticks) dada la posición actual"
+
+msgctxt "func:move_relative_position:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:move_relative_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "La velocidad a la que moverse, entre -1500 y 1500 ticks / segundo"
+
+msgctxt "func:move_to_position:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "Establece una posición objetivo (en ticks) a la que debe desplazarse el motor."
+
+msgctxt "func:move_to_position:detailed"
+msgid ""
+"There are approximately 1500 ticks per motor revolution.This function is "
+"more accurate if speeds between -1000 and 1000 are used."
+msgstr "Hay aproximadamente 1500 ticks por revolución del motor.Esta función es más precisa si se utilizan velocidades entre -1000 y 1000."
+
+msgctxt "func:move_to_position:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "La posición a la que moverte (en ticks)"
+
+msgctxt "func:move_to_position:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:move_to_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "La velocidad a la que moverse, entre -1500 y 1500 ticks / segundo"
+
+msgctxt "func:mrp:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "Establece una posición objetivo (en ticks) a la que debe desplazarse el motor, respecto a la posición actual."
+
+msgctxt "func:mrp:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "La posición a la que moverse (en ticks) dada la posición actual"
+
+msgctxt "func:mrp:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:mrp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "La velocidad a la que moverse, entre -1500 y 1500 ticks / segundo"
+
+msgctxt "func:mtp:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "Establece una posición objetivo (en ticks) a la que debe desplazarse el motor."
+
+msgctxt "func:mtp:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "La posición a la que moverte (en ticks)"
+
+msgctxt "func:mtp:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:mtp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "La velocidad a la que moverse, entre -1500 y 1500 ticks / segundo"
+
+msgctxt "func:off:brief"
+msgid "Turns the specified motor off."
+msgstr "Apaga el motor especificado."
+
+msgctxt "func:off:param:motor:description"
+msgid "the motor's port."
+msgstr "el puerto del motor."
+
+msgctxt "func:push_button:detailed"
+msgid "Gets the ousg button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón ousg (pulsado o no pulsado.)"
+
+msgctxt "func:right_button:detailed"
+msgid "Gets the right button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón derecho (pulsado o no pulsado.)"
+
+msgctxt "func:set_a_button_text:detailed"
+msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
+msgstr "Actualiza el texto del botón A. ObsoletoNo está previsto para el Wallaby"
+
+msgctxt "func:set_a_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "El texto a mostrar. Límite de 16 caracteres."
+
+msgctxt "func:set_analog_pullup:detailed"
+msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
+msgstr "Establece el estado de pullup analógico de un puerto. No tiene efecto en el Wallaby"
+
+msgctxt "func:set_analog_pullup:param:port:description"
+msgid "A value between 0 and 5 specifying the analog sensor to read from."
+msgstr "Un valor entre 0 y 5 que especifica el sensor analógico del que leer."
+
+msgctxt "func:set_analog_pullup:param:pullup:description"
+msgid "A value of 0 (inactive) or 1 (active)."
+msgstr "Un valor de 0 (inactivo) o 1 (activo)."
+
+msgctxt "func:set_b_button_text:detailed"
+msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
+msgstr "Actualiza el texto del botón B. ObsoletoNo está previsto para el Wallaby"
+
+msgctxt "func:set_b_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "El texto a mostrar. Límite de 16 caracteres."
+
+msgctxt "func:set_c_button_text:detailed"
+msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
+msgstr "Actualiza el texto del botón C. ObsoletoNo previsto para el Wallaby"
+
+msgctxt "func:set_c_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "El texto a mostrar. Límite de 16 caracteres."
+
+msgctxt "func:set_digital_output:detailed"
+msgid "Sets the digital mode."
+msgstr "Establece el modo digital."
+
+msgctxt "func:set_digital_output:param:out:description"
+msgid "1 for output mode, 0 for input mode."
+msgstr "1 para el modo de salida, 0 para el modo de entrada."
+
+msgctxt "func:set_digital_output:param:port:description"
+msgid "The port to modify."
+msgstr "El puerto a modificar."
+
+msgctxt "func:set_digital_pullup:detailed"
+msgid ""
+"Sets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "Establece el estado del pullup digital actual Deprecatedno aplicable en el Wallaby"
+
+msgctxt "func:set_digital_pullup:param:port:description"
+msgid "The port to modify"
+msgstr "El puerto a modificar"
+
+msgctxt "func:set_digital_pullup:param:pullup:description"
+msgid "The pullup state 1: active 0: inactive"
+msgstr "El estado pullup 1: activo 0: inactivo"
+
+msgctxt "func:set_digital_value:detailed"
+msgid "Sets the value of the digital port in output mode."
+msgstr "Establece el valor del puerto digital en modo salida."
+
+msgctxt "func:set_extra_buttons_visible:detailed"
+msgid "Sets whether or not the X, Y, and Z buttons are visible."
+msgstr "Establece si los botones X, Y y Z son visibles o no."
+
+msgctxt "func:set_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "Ajusta las ganancias PID del motor, representadas como fracciones."
+
+msgctxt "func:set_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "El numerador de la ganancia D (derivada)"
+
+msgctxt "func:set_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "El denominador de la ganancia D (derivada)"
+
+msgctxt "func:set_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "El numerador de la ganancia I (integral)"
+
+msgctxt "func:set_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "El denominador de la ganancia I (integral)"
+
+msgctxt "func:set_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:set_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "El numerador de la ganancia P (proporcional)"
+
+msgctxt "func:set_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "El denominador de la ganancia P (proporcional)"
+
+msgctxt "func:set_servo_enabled:brief"
+msgid "Enable or disable a specific servo."
+msgstr "Activa o desactiva un servo concreto."
+
+msgctxt "func:set_servo_enabled:param:enabled:description"
+msgid "The new enable setting 0: disabled 1: enabled"
+msgstr "El nuevo ajuste de activación 0: desactivado 1: activado"
+
+msgctxt "func:set_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "El puerto, entre 0 y 3, para activar"
+
+msgctxt "func:set_servo_position:brief"
+msgid "Set a new servo goal position."
+msgstr "Establece una nueva posición de meta del servo."
+
+msgctxt "func:set_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "El puerto del servo"
+
+msgctxt "func:set_servo_position:param:position:description"
+msgid "The new servo position, between 0 and 2047"
+msgstr "La nueva posición del servo, entre 0 y 2047"
+
+msgctxt "func:set_x_button_text:detailed"
+msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
+msgstr "Actualiza el texto del botón X. ObsoletoNo previsto para el Wallaby"
+
+msgctxt "func:set_x_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "El texto a mostrar. Límite de 16 caracteres."
+
+msgctxt "func:set_y_button_text:detailed"
+msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
+msgstr "Actualiza el texto del botón Y. ObsoletoNo previsto para el Wallaby"
+
+msgctxt "func:set_y_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "El texto a mostrar. Límite de 16 caracteres."
+
+msgctxt "func:set_z_button_text:detailed"
+msgid "Updates the Z button's text. Deprecatednot planned for the Wallaby"
+msgstr "Actualiza el texto del botón Z. ObsoletoNo previsto para el Wallaby"
+
+msgctxt "func:set_z_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "El texto a mostrar. Límite de 16 caracteres."
+
+msgctxt "func:setpwm:brief"
+msgid "Set the motor pwm (percent power) command."
+msgstr "Configura el comando pwm (porcentaje de potencia) del motor."
+
+msgctxt "func:setpwm:param:motor:description"
+msgid "The motor port."
+msgstr "El puerto del motor."
+
+msgctxt "func:setpwm:param:pwm:description"
+msgid "A new motor pwm command between 0 and 100"
+msgstr "Una nueva orden pwm del motor entre 0 y 100"
+
+msgctxt "func:shut_down_in:detailed"
+msgid "Register an event to stop the user program after s seconds"
+msgstr "Registra un evento para detener el programa de usuario tras s segundos"
+
+msgctxt "func:shut_down_in:param:s:description"
+msgid "The number of seconds to wait before the end of program"
+msgstr "El número de segundos que hay que esperar antes de finalizar el programa"
+
+msgctxt "func:side_button:detailed"
+msgid ""
+"Gets the side button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "Obtiene el estado del botón lateral (pulsado o no pulsado) DeprecatedNo presente en el Wallaby"
+
+msgctxt "func:side_button_clicked:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón Z (pulsado o no pulsado.)"
+
+msgctxt "func:wait_for_a_button:detailed"
+msgid "Waits (blocks) until the a button has been pressed."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón a."
+
+msgctxt "func:wait_for_a_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the a button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que el botón a haya sido pulsado y posteriormente soltado."
+
+msgctxt "func:wait_for_any_button:detailed"
+msgid "Waits (blocks) until any system button has been pressed."
+msgstr "Espera (bloquea) hasta que se pulse cualquier botón del sistema."
+
+msgctxt "func:wait_for_b_button:detailed"
+msgid "Waits (blocks) until the b button has been pressed."
+msgstr "Espera (bloquea) hasta que se pulse el botón b."
+
+msgctxt "func:wait_for_b_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the b button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón b y se haya soltado posteriormente."
+
+msgctxt "func:wait_for_c_button:detailed"
+msgid "Waits (blocks) until the c button has been pressed."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón c."
+
+msgctxt "func:wait_for_c_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the c button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón c y se haya soltado posteriormente."
+
+msgctxt "func:wait_for_light:detailed"
+msgid ""
+"Initiate a calibration and wait for light sequence which is a normal early "
+"step in Botball programs"
+msgstr "Inicia una calibración y espera la secuencia de luces, que es un paso inicial normal en los programas Botball"
+
+msgctxt "func:wait_for_light:param:light_port_:description"
+msgid "The analog port and light sensor to use."
+msgstr "El puerto analógico y el sensor de luz a utilizar."
+
+msgctxt "func:wait_for_milliseconds:detailed"
+msgid "Waits (blocks) for the given number of milliseconds."
+msgstr "Espera (bloquea) durante el número de milisegundos dado."
+
+msgctxt "func:wait_for_milliseconds:param:msecs:description"
+msgid "the number of milliseconds to sleep"
+msgstr "el número de milisegundos para dormir"
+
+msgctxt "func:wait_for_side_button:detailed"
+msgid "Waits (blocks) until the side button has been pressed."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón lateral."
+
+msgctxt "func:wait_for_side_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the side button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón lateral y se haya soltado posteriormente."
+
+msgctxt "func:wait_for_touch:detailed"
+msgid ""
+"Waits (blocks) until the digital sensor on the given port has been "
+"activated."
+msgstr "Espera (bloquea) hasta que se active el sensor digital del puerto dado."
+
+msgctxt "func:wait_for_touch:param:port:description"
+msgid "The port to wait for activation on"
+msgstr "El puerto en el que esperar la activación"
+
+msgctxt "func:wait_for_x_button:detailed"
+msgid "Waits (blocks) until the x button has been pressed."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón x."
+
+msgctxt "func:wait_for_x_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the x button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón x y se haya soltado posteriormente."
+
+msgctxt "func:wait_for_y_button:detailed"
+msgid "Waits (blocks) until the y button has been pressed."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón y."
+
+msgctxt "func:wait_for_y_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the y button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón y y se haya soltado posteriormente."
+
+msgctxt "func:wait_for_z_button:detailed"
+msgid "Waits (blocks) until the z button has been pressed."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón z."
+
+msgctxt "func:wait_for_z_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the z button has been pressed and then subsequently "
+"released."
+msgstr "Espera (bloquea) hasta que se haya pulsado el botón z y se haya soltado posteriormente."
+
+msgctxt "func:x_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón C (pulsado o no pulsado.)"
+
+msgctxt "func:x_button_clicked:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón C (pulsado o no pulsado.)"
+
+msgctxt "func:y_button:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón Y (pulsado o no pulsado.)"
+
+msgctxt "func:y_button_clicked:detailed"
+msgid "Gets the X button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón X (pulsado o no pulsado.)"
+
+msgctxt "func:z_button:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón Z (pulsado o no pulsado.)"
+
+msgctxt "func:z_button_clicked:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Obtiene el estado del botón Y (pulsado o no pulsado.)"
+
+msgctxt "struct:kipr::create::CreatePackets::_101:detailed"
+msgid "Create OI Packet 101"
+msgstr "Crear paquete OI 101"
+
+msgctxt "struct:kipr::create::CreatePackets::_1:detailed"
+msgid "Create OI Packet 1"
+msgstr "Crear paquete OI 1"
+
+msgctxt "struct:kipr::create::CreatePackets::_2:detailed"
+msgid "Create OI Packet 2"
+msgstr "Crear paquete OI 2"
+
+msgctxt "struct:kipr::create::CreatePackets::_3:detailed"
+msgid "Create OI Packet 3"
+msgstr "Crear paquete OI 3"
+
+msgctxt "struct:kipr::create::CreatePackets::_4:detailed"
+msgid "Create OI Packet 4"
+msgstr "Crear paquete OI 4"
+
+msgctxt "struct:kipr::create::CreatePackets::_5:detailed"
+msgid "Create OI Packet 5"
+msgstr "Crear paquete OI 5"
+
+msgctxt "struct:kipr::create::CreateState:detailed"
+msgid "Locally stored state information"
+msgstr "Información de estado almacenada localmente"
+
+msgctxt "struct:mutex:brief"
+msgid "A mutex, or lock."
+msgstr "Un mutex o bloqueo."
+
+msgctxt "struct:mutex:detailed"
+msgid ""
+"mutexes are used to prevent memory errors when two programs or threads need "
+"to access the same variable."
+msgstr "los mutex se utilizan para evitar errores de memoria cuando dos programas o hilos necesitan acceder a la misma variable."
+
+msgctxt "struct:mutex:member:data:brief"
+msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
+msgstr "un objeto Mutex C++ convertido en un void*. No está pensado para ser accedido."
+
+msgctxt "struct:point2:brief"
+msgid "A 2D point; has x and y."
+msgstr "Un punto 2D; tiene x e y."
+
+msgctxt "struct:point2:member:x:brief"
+msgid "the x value of the point"
+msgstr "el valor x del punto"
+
+msgctxt "struct:point2:member:y:brief"
+msgid "the y value of the point"
+msgstr "el valor y del punto"
+
+msgctxt "struct:point3:brief"
+msgid "A 3D point; has x, y, and z."
+msgstr "Un punto 3D; tiene x, y y z."
+
+msgctxt "struct:point3:member:x:brief"
+msgid "the x value of the point"
+msgstr "el valor x del punto"
+
+msgctxt "struct:point3:member:y:brief"
+msgid "the y value of the point"
+msgstr "el valor y del punto"
+
+msgctxt "struct:point3:member:z:brief"
+msgid "the z value of the point"
+msgstr "el valor z del punto"
+
+msgctxt "struct:rectangle:brief"
+msgid "A rectangle object."
+msgstr "Un objeto rectángulo."
+
+msgctxt "struct:rectangle:member:height:brief"
+msgid "the height of the rectangle"
+msgstr "la altura del rectángulo"
+
+msgctxt "struct:rectangle:member:ulx:brief"
+msgid "the x value of the rectangle's upper left"
+msgstr "el valor x de la parte superior izquierda del rectángulo"
+
+msgctxt "struct:rectangle:member:uly:brief"
+msgid "the y value of the rectangle's upper left"
+msgstr "el valor y de la parte superior izquierda del rectángulo"
+
+msgctxt "struct:rectangle:member:width:brief"
+msgid "the width of the rectangle"
+msgstr "la anchura del rectángulo"
+
+msgctxt "struct:thread:brief"
+msgid "A thread, or separate process."
+msgstr "Un hilo, o proceso independiente."
+
+msgctxt "struct:thread:detailed"
+msgid ""
+"a thread runs a function \"in the background\" (while another function is "
+"executing)."
+msgstr "un hilo ejecuta una función \ejecutando)."
+
+msgctxt "struct:thread:member:data:brief"
+msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
+msgstr "un objeto Hilo C++ convertido a void*. No está pensado para ser accedido."
