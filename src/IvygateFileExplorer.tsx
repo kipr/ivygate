@@ -569,11 +569,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
     this.hostApp = this.getHostApp();
-    console.log("Using aadfasdff local ivygate");
-    console.log("IvygateFileExplorer initialized with props:", this.props);
   }
-  ///
-
 
   async componentDidMount(): Promise<void> {
 
@@ -613,8 +609,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   async componentDidUpdate(prevProps: Props, prevState: State) {
 
-    console.log("IvygateFileExplorer componentDidUpdate called with props:", this.props, "and state:", this.state);
-    console.log("Previous props:", prevProps, "Previous state:", prevState);
 
     if (prevProps.propClassrooms !== this.props.propClassrooms) {
       if (this.props.propUserShown !== undefined) {
@@ -1530,7 +1524,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private handleProjectClick = async (project: Project | SimClassroomProject | SimEditorProject, user: User, language: ProgrammingLanguage) => {
     const { config, onSimProjectSelected } = this.props;
     let mainFile: string;
-    console.log("handleProjectClick state:", this.state);
     if (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE && config?.component !== 'SimEditor') {
       if ('srcFolderFiles' in project && Array.isArray(project.srcFolderFiles)) {
         mainFile = project.srcFolderFiles.find(file =>
@@ -1550,9 +1543,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         showProjectFiles: prevState.selectedProject === project ? false : true,
         selectedProject: prevState.selectedProject === project ? BLANK_PROJECT : project,
         activeLanguage: prevState.selectedProject === project ? null : language
-      }), () => {
-        console.log("handleProjectClick updated state:", this.state);
-      });
+      }));
 
   };
 
@@ -1560,8 +1551,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const { selectedUser, selectedProject, selectedClassroom, fileType } = this.state;
     const { onFileSelected, onSimFileSelected, config } = this.props;
 
-    console.log('handleFileClick called with fileName:', fileName, 'and projectDetails:', projectDetails);
-    console.log("handleFileClick state before setState:", this.state);
     if (this.previousSelectedFileFE.current === null) {
       this.previousSelectedFileFE.current = fileName;
     }
@@ -1601,7 +1590,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         break;
     }
 
-    console.log("handleFileClick selectedLanguage:", selectedLanguage, "and fileType:", fileT);
     this.setState({
       fileType: extension,
       selectedFile: fileName
@@ -1772,8 +1760,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const SimClassroomsProjects = propClassrooms ?
       Object.values(propClassrooms).find((classroom) => classroom.name === selectedUser.classroomName)?.users?.find((user) => user.userName === selectedUser.userName)?.projects || [] : null;
 
-    console.log("simEditorProjects", simEditorProjects);
-
     const SimEditorProjects = simEditorProjects ? Object.values(simEditorProjects) : [];
 
 
@@ -1892,7 +1878,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const { theme, config } = this.props;
     const { fileCreationTypeAction } = this.state;
     const srcFolderFiles = config?.component === 'SimEditor' ? Object.keys((project as SimEditorProject).srcFiles) : (project as Project).srcFolderFiles;
-    console.log("render simple view");
     return <FileTypeContainer theme={theme} selected={false}>
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
@@ -2056,8 +2041,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const hostApp = config?.appName || 'Default';
     const component = config?.component;
     const usersArray = Object.values(propUsers || {});
-    console.log("Rendering File Explorer with users:", usersArray);
-
     const userSections = usersArray.map((user: User) => {
       const projects = user.projects || [];
 
