@@ -72,9 +72,9 @@ const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean
   display: 'flex',
   alignItems: 'center',
   height: 'auto',
-  backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : props.$tour ? '#dcdcdc' : 'undefined',
+  backgroundColor: props.$selected ? props.$tour ? '#707070' : `rgba(255, 255, 255, 0.1)` : props.$tour ? '#dcdcdc' : 'undefined',
   ':hover': {
-    backgroundColor: props.theme.hoverOptionBackground
+    backgroundColor: props.$tour ? '#dcdcdcab' : props.theme.hoverOptionBackground,
   },
   ':last-child': {
     borderBottomLeftRadius: `${props.theme.borderRadius}px`,
@@ -181,6 +181,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
       COMBO_BOX_ROOT.onclick = undefined;
     }
 
+
     return (
       <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal} $width={mainWidth} $height={mainHeight} data-tour={tourId}>
         <CurrentOptionContainer theme={theme}><Text style={{ fontSize: props.mainFontSize, }} text={options[index].text} /></CurrentOptionContainer>
@@ -197,7 +198,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                       key={i}
                       onClick={this.onOptionClick_(i)}
                       $height={props.mainHeight}
-                      $tour={true}
+
                     >
                       <Text
                         style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
@@ -208,7 +209,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                 </DropDown>
               </TourTarget>
 
-            ) : (
+            ) : tourMenuId === 'guided-tour-section-select' ? ((
               <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
                 {options.map((option, i) => (
                   <OptionContainer
@@ -217,6 +218,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                     key={i}
                     onClick={this.onOptionClick_(i)}
                     $height={props.mainHeight}
+                    $tour={true}
                   >
                     <Text
                       style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
@@ -225,31 +227,14 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                   </OptionContainer>
                 ))}
               </DropDown>
-            )
+            )) :
+              (
+                undefined
+              )
           )
           : null
           , COMBO_BOX_ROOT)}
-        {/* {ReactDom.createPortal((focus && this.ref_)
-          ? (
-            <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
-              {options.map((option, i) => (
-                <OptionContainer
-                  $selected={i === index}
-                  theme={theme}
-                  key={i}
-                  onClick={this.onOptionClick_(i)}
-                  $height={props.mainHeight}
-                >
-                  <Text
-                    style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
-                    text={option.text}
-                  />
-                </OptionContainer>
-              ))}
-            </DropDown>
-          )
-          : null
-          , COMBO_BOX_ROOT)} */}
+
       </Container>
     );
   }
