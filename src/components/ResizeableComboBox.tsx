@@ -66,13 +66,13 @@ const CurrentOptionContainer = styled('div', (props: ThemeProps & { $focus?: boo
 
 }));
 
-const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean; $height?: string }) => ({
+const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean; $height?: string; $tour?: boolean }) => ({
   padding: `${props.theme.itemPadding * 2}px`,
   userSelect: 'none',
   display: 'flex',
   alignItems: 'center',
   height: 'auto',
-  backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : undefined,
+  backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : props.$tour ? '#dcdcdc' : 'undefined',
   ':hover': {
     backgroundColor: props.theme.hoverOptionBackground
   },
@@ -189,7 +189,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
           ? (
             props.tourregistry && tourMenuId ? (
               <TourTarget registry={props.tourregistry} targetKey={tourMenuId} >
-                <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
+                <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId} >
                   {options.map((option, i) => (
                     <OptionContainer
                       $selected={i === index}
@@ -197,6 +197,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                       key={i}
                       onClick={this.onOptionClick_(i)}
                       $height={props.mainHeight}
+                      $tour={true}
                     >
                       <Text
                         style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
