@@ -296,7 +296,8 @@ class UserUploader extends React.Component<Props, State> {
           userName: '',
           interfaceMode: InterfaceMode.SIMPLE,
           projects: [],
-          classroomName: ''
+          classroomName: '',
+          type: 'user'
         }
       },
 
