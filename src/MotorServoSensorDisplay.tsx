@@ -12,7 +12,7 @@ import ResizeableComboBox from './components/ResizeableComboBox';
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import SensorWidget from './components/SensorWidget';
 import ScrollArea from './components/interface/ScrollArea';
-
+import { SENSOR_LABEL } from "../i18n/sensorLabels";
 
 export interface MotorServoSensorDisplayProps extends ThemeProps, StyleProps {
 
@@ -143,11 +143,11 @@ const SettingContainer = styled('div', (props: ThemeProps) => ({
     padding: `${props.theme.itemPadding * 1}px`,
 }));
 
-const SensorTypeContainer = styled('div', (props: ThemeProps & {$stacked: boolean}) => ({
+const SensorTypeContainer = styled('div', (props: ThemeProps & { $stacked: boolean }) => ({
     display: props.$stacked ? 'flex' : 'grid',
     flexDirection: props.$stacked ? 'column' : null,
-    gridTemplateColumns: props.$stacked ? null: 'repeat(2, 1fr)',
-    gridTemplateRows: props.$stacked ? null: 'auto',
+    gridTemplateColumns: props.$stacked ? null : 'repeat(2, 1fr)',
+    gridTemplateRows: props.$stacked ? null : 'auto',
     alignItems: 'start',
     alignContent: 'center',
     justifyContent: 'center',
@@ -508,7 +508,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
     }
 
     async componentDidMount(): Promise<void> {
-         this.checkLayout();
+        this.checkLayout();
         window.addEventListener('resize', this.checkLayout);
         this.newMotorRef.current = Motors.MOTOR0;
 
@@ -524,7 +524,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             });
         }
     }
-   checkLayout = () => {
+    checkLayout = () => {
         const availableWidth = window.innerWidth;
         // Example threshold: if there's at least 600px, stack
         const stack = availableWidth < 700;
@@ -532,7 +532,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
     };
 
     componentWillUnmount(): void {
-            window.removeEventListener('resize', this.checkLayout);
+        window.removeEventListener('resize', this.checkLayout);
         this.props.sensorDisplayShown(false);
     }
 
@@ -552,14 +552,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     limit: 0,
                     color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                     tooltip: {
-                        text: 'Reverse'
+                        text: LocalizedString.lookup(tr('Reverse'), this.props.locale)
                     }
                 },
                 {
                     limit: 1500,
                     color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
                     tooltip: {
-                        text: 'Forward'
+                        text: LocalizedString.lookup(tr('Forward'), this.props.locale)
                     }
                 }];
             }
@@ -568,14 +568,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                     limit: 0,
                     color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                     tooltip: {
-                        text: 'Reverse'
+                        text: LocalizedString.lookup(tr('Reverse'), this.props.locale)
                     }
                 },
                 {
                     limit: 100,
                     color: this.props.theme.themeName === 'DARK' ? '#4aad52' : '#2BDE3F',
                     tooltip: {
-                        text: 'Forward'
+                        text: LocalizedString.lookup(tr('Forward'), this.props.locale)
                     }
                 }];
             }
@@ -587,7 +587,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                         limit: 100,
                         color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                         tooltip: {
-                            text: 'Warning! Could damage servo in this range'
+                            text: LocalizedString.lookup(tr('Warning! Could damage servo in this range'), this.props.locale)
                         }
                     },
                     {
@@ -598,7 +598,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                         limit: 2047,
                         color: this.props.theme.themeName === 'DARK' ? '#AD4C4B' : '#FF4E4E',
                         tooltip: {
-                            text: 'Warning! Could damage servo in this range'
+                            text: LocalizedString.lookup(tr('Warning! Could damage servo in this range'), this.props.locale)
                         }
                     }
                 ],
@@ -885,29 +885,34 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             propedButtonValues,
             locale
         } = this.props;
-        const {stackVertically} = this.state;
+        const { stackVertically } = this.state;
+        let name: string;
         switch (sensor) {
             case 'Analog':
                 return (
+
                     <SensorTypeContainer theme={theme} $stacked={stackVertically}>
 
-                        {Object.entries(this.state.sensorValues.Analogs).map(([key, value], index) => (
-                            <SelectedGraphTypeContainer  theme={theme} >
-                                <SubGraphTypeDropDownContainer theme={theme}>
-                                    <Row key={`${key}`} theme={theme}>
-                                        <SensorWidget
-                                           
-                                            value={propedAnalogValues && propedAnalogValues[index] !== undefined ? propedAnalogValues[index] : value}
-                                            name={`${key}`}
-                                            plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
-                                            theme={theme}
-                                        />
-                                    </Row>
-                                </SubGraphTypeDropDownContainer>
+                        {Object.entries(this.state.sensorValues.Analogs).map(([key, value], index) => {
+                            const nameLS = SENSOR_LABEL[key];
 
-                            </SelectedGraphTypeContainer>
+                            return (
+                                <SelectedGraphTypeContainer theme={theme} >
+                                    <SubGraphTypeDropDownContainer theme={theme}>
+                                        <Row key={`${key}`} theme={theme}>
+                                            <SensorWidget
 
-                        ))}
+                                                value={propedAnalogValues && propedAnalogValues[index] !== undefined ? propedAnalogValues[index] : value}
+                                                     name={nameLS ? LocalizedString.lookup(nameLS, locale) : key}
+                                                plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
+                                                theme={theme}
+                                            />
+                                        </Row>
+                                    </SubGraphTypeDropDownContainer>
+
+                                </SelectedGraphTypeContainer>)
+
+                        })}
 
                     </SensorTypeContainer>
                 );
@@ -920,7 +925,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                     <Row key={`${key}`} theme={theme}>
                                         <SensorWidget
                                             value={propedDigitalValues && propedDigitalValues[index] !== undefined ? propedDigitalValues[index] : value}
-                                            name={`${key}`}
+                                            name={LocalizedString.lookup(tr(`${key}`), locale)}
                                             plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
                                             theme={theme}
 
@@ -941,7 +946,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 <Row key={`${key}`} theme={theme}>
                                     <SensorWidget
                                         value={propedAccelValues && propedAccelValues[index] !== undefined ? propedAccelValues[index] : value}
-                                        name={`${key}`}
+                                        name={LocalizedString.lookup(tr(`${key}`), locale)}
                                         plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
                                         theme={theme}
 
@@ -956,13 +961,14 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 );
             case 'Gyroscope':
                 return (<SensorTypeContainer theme={theme} $stacked={stackVertically}>
+
                     {Object.entries(this.state.sensorValues.Gyroscopes).map(([key, value], index) => (
                         <SelectedGraphTypeContainer theme={theme} >
                             <SubGraphTypeDropDownContainer theme={theme}>
                                 <Row key={`${key}`} theme={theme}>
                                     <SensorWidget
                                         value={propedGyroValues && propedGyroValues[index] !== undefined ? propedGyroValues[index] : value}
-                                        name={`${key}`}
+                                        name={LocalizedString.lookup(tr(`${key}`), locale)}
                                         plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
                                         theme={theme}
 
@@ -983,7 +989,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 <Row key={`${key}`} theme={theme}>
                                     <SensorWidget
                                         value={propedMagnetoValues && propedMagnetoValues[index] !== undefined ? propedMagnetoValues[index] : value}
-                                        name={`${key}`}
+                                        name={LocalizedString.lookup(tr(`${key}`), locale)}
                                         plotTitle={LocalizedString.lookup(tr(`${key} Plot`), locale)}
                                         theme={theme}
 
@@ -1002,7 +1008,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                                 <Row key={'Button'} theme={theme}>
                                     <SensorWidget
                                         value={propedButtonValues && propedButtonValues[0] !== undefined ? propedButtonValues[0] : 0}
-                                        name={'right_button()'}
+                                        name={LocalizedString.lookup(tr(`right_button()`), locale)}
                                         plotTitle={LocalizedString.lookup(tr(`Button Plot`), locale)}
                                         theme={theme}
 
@@ -1030,7 +1036,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
 
                         value={(this.state.shownMotorView === MotorView.VELOCITY ? (this.props.propedProgramRunning ? this.props.propedMotorVelocities[`Motor ${i}`] : this.state.motorPositions[`Motor ${i}`]) : 0) ||
                             (this.state.shownMotorView === MotorView.POWER ? (this.props.propedProgramRunning ? this.props.propedMotorPositions[`Motor ${i}`] : this.state.motorPositions[`Motor ${i}`]) : 0)}
-                        name={`motor(${i}) velocity`}
+                        name={LocalizedString.lookup(tr(`motor(${i}) velocity`), locale)}
                         plotTitle={LocalizedString.lookup(tr('Motor Velocity Plot'), locale)}
                         theme={theme}
 
@@ -1042,7 +1048,7 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
                 <Row key={`motor-position-${i}`} theme={theme}>
                     <SensorWidget
                         value={this.props.propedMotorPositions ? this.props.propedMotorPositions[`Motor ${i}`] : 0}
-                        name={`get_motor_position_counter(${i})`}
+                        name={LocalizedString.lookup(tr(`get_motor_position_counter(${i})`), locale)}
                         plotTitle={LocalizedString.lookup(tr('Motor Position Plot'), locale)}
                         theme={theme}
 
@@ -1359,17 +1365,17 @@ export class MotorServoSensorDisplay extends React.PureComponent<Props & MotorSe
             <SidePanel
                 theme={theme}
             >
-                <h2 style={{ marginLeft: '6px', }}>Motors, Servos and Sensors</h2>
+                <h2 style={{ marginLeft: '6px', }}>{LocalizedString.lookup(tr('Motors, Servos, and Sensors'), locale)}</h2>
                 <StyledScrollArea theme={theme} >
                     <MotorServoSensorContainer theme={theme} style={{ marginBottom: '10px' }}>
                         <SectionName theme={theme} selected={selectedSection === "Motor"} onClick={() => this.onSectionSelect_("Motor")}>
-                            Motor
+                            {LocalizedString.lookup(tr('Motor'), locale)}
                         </SectionName>
                         <SectionName theme={theme} selected={selectedSection === "Servo"} onClick={() => this.onSectionSelect_("Servo")}>
-                            Servo
+                            {LocalizedString.lookup(tr('Servo'), locale)}
                         </SectionName>
                         <SectionName theme={theme} selected={selectedSection === "Sensor"} onClick={() => this.onSectionSelect_("Sensor")}>
-                            Sensor
+                            {LocalizedString.lookup(tr('Sensor'), locale)}
                         </SectionName>
                         {selectedSection == "Motor" && motorSection()}
                         {selectedSection == "Servo" && servoSection()}

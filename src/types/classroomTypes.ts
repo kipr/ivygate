@@ -15,17 +15,21 @@ namespace Classroom {
     name: string;
     users: User[];
     classroomInvitationCode?: string;
+    type: "classroom";
   };
 
   export const EMPTY_CLASSROOM: Classroom = {
     name: '',
     users: [],
-    classroomInvitationCode: undefined
+    classroomInvitationCode: undefined,
+    type: "classroom"
   };
   export const NO_CLASSROOM: Classroom = {
     name: 'No Classroom',
     users: [],
-    classroomInvitationCode: undefined
+    classroomInvitationCode: undefined,
+    type: "classroom"
+    
   };
 }
 

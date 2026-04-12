@@ -1,5 +1,4 @@
-import * as monaco from 'monaco-editor';
-
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
 
 export interface Message {
@@ -26,7 +25,7 @@ export namespace Message {
     line: number;
     col: number;
   }
-  
+
   export interface Range {
     start: Index;
     end: Index;

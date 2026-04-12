@@ -20,11 +20,17 @@ import ComboBox from './components/ComboBox';
 import { ClassroomCreationType, FileCreationTypeAction, FileCreationTypeActionSimple, ProjectCreationType, UserCreationType } from './types/creationTypes';
 import { Settings } from './types/settings';
 import Classroom from './types/classroomTypes';
-
+import { PROJECT_CREATION_LABEL, FILE_CREATION_LABEL, FILE_CREATION_SIMPLE_LABEL, CLASSROOM_CREATION_LABEL, USER_CREATION_LABEL } from '../i18n/creationLabels';
 import UserUploader from './UserUploader';
 import { Ivygate } from './Ivygate';
 import Dict from './types/Dict';
+import { TourTarget } from './components/Tours/TourTarget';
+import { TourRegistry } from './tours/TourRegistry';
 
+interface TourTargetConfig {
+  registry: any;
+  targetKey: string;
+}
 export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
 
   ChallengeComponent?: React.ComponentType<any>;
@@ -53,6 +59,13 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   propUserData?: Project[];
   propSettings?: Settings;
   propClassrooms?: Classroom[];
+
+  tour?: {
+    registry: TourRegistry;
+    targets?: Record<string, string>;
+  };
+  activeTourStepId?: string;
+  onContinueTour?: () => void;
 
   classroomInvitationCode?: string;
 
@@ -138,6 +151,7 @@ interface IvygateFileExplorerState {
   toCopyObject?: { copyObjectUser: User, copyObjectProject?: Project, copyObjectFile?: string };
   hoveredClassroom: string
   hoveredUser: string;
+  addedClassroom?: Classroom;
 }
 
 type Props = IvygateFileExplorerProps & IvygateFileExplorerPrivateProps;
@@ -238,7 +252,18 @@ const ProjectTitle = styled('h2', (props: ThemeProps) => ({
   color: props.theme.color
   //paddingBottom: '0.5em',
 }));
-
+const InviteCode = styled('p', (props: ThemeProps) => ({
+  fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  flexShrink: 0,
+  textAlign: 'left',
+  paddingRight: '20px',
+  color: props.theme.color,
+  textDecoration: 'none'
+  //paddingBottom: '0.5em',
+}));
 const FileTypeTitle = styled('div', (props: ThemeProps) => ({
   width: '100%',
   fontSize: '1em',
@@ -472,47 +497,45 @@ const USER_OPTIONS: ComboBox.Option[] = (() => {
   return ret;
 })();
 
-const CLASSROOM_OPTIONS: ComboBox.Option[] = (() => {
-  const ret: ComboBox.Option[] = [];
-  for (const view of Object.values(ClassroomCreationType)) {
-    ret.push(ComboBox.option(view, view));
+export const getUserCreationOptions = (
+  locale: LocalizedString.Language
+): ComboBox.Option[] => {
+  return Object.values(UserCreationType).map((value) =>
+    ComboBox.option(
+      LocalizedString.lookup(USER_CREATION_LABEL[value], locale),
+      value
+    )
+  );
+};
+
+export const getClassroomCreationOptions = (locale: LocalizedString.Language): ComboBox.Option[] =>
+  Object.values(ClassroomCreationType).map((value) => ({
+    text: LocalizedString.lookup(CLASSROOM_CREATION_LABEL[value], locale), // label
+    data: value, // stable id
+  }));
+
+
+export const getProjectCreationOptions = (locale: LocalizedString.Language): ComboBox.Option[] =>
+  Object.values(ProjectCreationType).map((value) => ({
+    text: LocalizedString.lookup(PROJECT_CREATION_LABEL[value], locale), // label
+    data: value, // stable id
   }
-  return ret;
-})();
+  )
 
-const PROJECT_OPTIONS: ComboBox.Option[] = (() => {
-  const ret: ComboBox.Option[] = [];
-  for (const view of Object.values(ProjectCreationType)) {
-    ret.push(ComboBox.option(view, view));
-  }
-  return ret;
-})();
-const FILE_OPTIONS: ComboBox.Option[] = (() => {
-
-  const ret: ComboBox.Option[] = [];
-  for (const view of Object.values(FileCreationTypeAction)) {
-    ret.push(ComboBox.option(view, view));
-  }
-  return ret;
-})();
-
-const SIMPLE_FILE_OPTIONS: ComboBox.Option[] = (() => {
-
-  const ret: ComboBox.Option[] = [];
-  for (const view of Object.values(FileCreationTypeActionSimple)) {
-    ret.push(ComboBox.option(view, view));
-  }
-  return ret;
-})();
-
+  );
+export const getFileCreationOptions = (locale: LocalizedString.Language): ComboBox.Option[] =>
+  Object.values(FileCreationTypeAction).map((value) => ({
+    text: LocalizedString.lookup(FILE_CREATION_LABEL[value], locale), // label
+    data: value, // stable id
+  }));
 
 export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private selectedFileRefFE: React.MutableRefObject<string>;
   private previousSelectedFileFE: React.MutableRefObject<string>;
   private hostApp: string;
+  private addedClassroom: Classroom;
   constructor(props: Props) {
     super(props);
-
     this.state = {
       userName: '',
       users: [],
@@ -562,10 +585,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     this.selectedFileRefFE = React.createRef();
     this.previousSelectedFileFE = React.createRef();
     this.hostApp = this.getHostApp();
-    console.log("IvygateFileExplorer initialized with props:", this.props);
   }
-
-
 
   async componentDidMount(): Promise<void> {
 
@@ -621,8 +641,20 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           this.getProjects(this.state.selectedUser);
         });
       }
+
+
     }
 
+    if (prevProps.propClassrooms !== this.props.propClassrooms && this.props.propClassrooms.length !== 0) {
+      const addedClassroom = this.props.propClassrooms.filter(
+        c => !prevProps.propClassrooms.some(p => p.name === c.name)
+      );
+      if (addedClassroom) {
+        this.setState({
+          addedClassroom: addedClassroom[0]
+        })
+      }
+    }
     if (prevProps.reHighlightProject !== this.props.reHighlightProject && this.props.reHighlightProject.projectName !== '') {
       this.selectedFileRefFE.current = this.props.reHighlightProject.srcFolderFiles[0];
       if (this.props.reHighlightFile) {
@@ -906,7 +938,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.deleteClassroom(this.state.contextMenuClassroom);
             }}
           >
-            Delete Classroom
+            {LocalizedString.lookup(tr("Delete Classroom"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -917,7 +949,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.renameClassroom(this.state.contextMenuClassroom);
             }}
           >
-            Rename Classroom
+            {LocalizedString.lookup(tr("Rename Classroom"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -949,7 +981,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.deleteUser(this.state.contextMenuUser);
             }}
           >
-            Delete User
+            {LocalizedString.lookup(tr("Delete User"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -960,7 +992,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.downloadUser(this.state.contextMenuUser);
             }}
           >
-            Download User
+            {LocalizedString.lookup(tr("Download User"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -971,7 +1003,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.renameUser(this.state.contextMenuUser);
             }}
           >
-            Rename User
+            {LocalizedString.lookup(tr("Rename User"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -983,7 +1015,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.removeUserFromClassroom(this.state.contextMenuUser, this.state.selectedClassroom);
               }}
             >
-              Remove User from Classroom
+              {LocalizedString.lookup(tr("Remove User from Classroom"), this.props.locale)}
             </li>
           </ContextMenuItem>
 
@@ -997,7 +1029,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.moveUserToClassroom(this.state.contextMenuUser);
               }}
             >
-              Move User to Classroom
+              {LocalizedString.lookup(tr("Move User to Classroom"), this.props.locale)}
             </li>
           </ContextMenuItem>)}
 
@@ -1009,7 +1041,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.pasteObject(this.state.toCopyObject, this.state.contextMenuUser);
               }}
             >
-              Paste Project
+              {LocalizedString.lookup(tr("Paste Project"), this.props.locale)}
             </li>
           </ContextMenuItem>)}
       </ContextMenu>
@@ -1037,7 +1069,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.deleteProject(this.state.contextMenuProject as Project);
             }}
           >
-            Delete Project
+            {LocalizedString.lookup(tr("Delete Project"), this.props.locale)}
           </li>
         </ContextMenuItem>
         <ContextMenuItem theme={theme}>
@@ -1047,7 +1079,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.downloadProject(this.state.contextMenuProject as Project);
             }}
           >
-            Download Project
+            {LocalizedString.lookup(tr("Download Project"), this.props.locale)}
           </li>
         </ContextMenuItem>
         <ContextMenuItem theme={theme}>
@@ -1057,7 +1089,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.renameProject(this.state.contextMenuProject as Project);
             }}
           >
-            Rename Project
+            {LocalizedString.lookup(tr("Rename Project"), this.props.locale)}
           </li>
         </ContextMenuItem>
         {config?.component !== 'SimEditor' && (
@@ -1068,7 +1100,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.moveProject(this.state.contextMenuProject as Project);
               }}
             >
-              Move Project
+              {LocalizedString.lookup(tr("Move Project"), this.props.locale)}
             </li>
           </ContextMenuItem>
         )}
@@ -1079,7 +1111,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.copyObject(this.state.contextMenuProject as Project);
             }}
           >
-            Copy Project
+            {LocalizedString.lookup(tr("Copy Project"), this.props.locale)}
           </li>
         </ContextMenuItem>
         {this.state.toCopyObject && typeof this.state.toCopyObject.copyObjectFile && config?.component !== 'SimEditor' && (
@@ -1090,7 +1122,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.pasteObject(this.state.toCopyObject, this.state.contextMenuProject as Project);
               }}
             >
-              Paste File
+              {LocalizedString.lookup(tr("Paste File"), this.props.locale)}
             </li>
           </ContextMenuItem>)}
       </ContextMenu>
@@ -1120,7 +1152,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.deleteFile(this.state.contextMenuFile);
             }}
           >
-            Delete File
+            {LocalizedString.lookup(tr("Delete File"), this.props.locale)}
           </li>
         </ContextMenuItem>
         <ContextMenuItem theme={theme}>
@@ -1130,7 +1162,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.downloadFile(this.state.contextMenuFile);
             }}
           >
-            Download File
+            {LocalizedString.lookup(tr("Download File"), this.props.locale)}
           </li>
         </ContextMenuItem>
         {this.state.contextMenuFile !== `main.${ProgrammingLanguage.FILE_EXTENSION[this.state.activeLanguage]}` && (
@@ -1141,7 +1173,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                 this.renameFile(this.state.contextMenuFile);
               }}
             >
-              Rename File
+              {LocalizedString.lookup(tr("Rename File"), this.props.locale)}
             </li>
           </ContextMenuItem>
         )}
@@ -1152,7 +1184,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               this.copyObject(this.state.contextMenuFile);
             }}
           >
-            Copy File
+            {LocalizedString.lookup(tr("Copy File"), this.props.locale)}
           </li>
         </ContextMenuItem>
 
@@ -1351,6 +1383,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       selectedUser: BLANK_USER,
       selectedProject: BLANK_PROJECT,
       showClassroomUsers: true,
+    }, () => {
+      if (this.props.onContinueTour) {
+        this.props.onContinueTour();
+      }
     });
   };
   private addNewFile = async (fileType: string) => {
@@ -1370,16 +1406,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
   }
 
-  /**
-   * Add new project to previously selected user
-   */
-  private addNewProject = async () => {
-    const { selectedUser } = this.state;
-
-    if (this.props.onAddNewProject) {
-      this.props.onAddNewProject(selectedUser);
-    }
-  }
 
   private onClassroomCreationSelect = (index: number, option: ComboBox.Option) => {
     const { classroomCreationType, selectedClassroom } = this.state;
@@ -1536,7 +1562,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private handleProjectClick = async (project: Project | SimClassroomProject | SimEditorProject, user: User, language: ProgrammingLanguage) => {
     const { config, onSimProjectSelected } = this.props;
     let mainFile: string;
-    console.log("handleProjectClick state:", this.state);
     if (this.state.selectedUser.interfaceMode === InterfaceMode.SIMPLE && config?.component !== 'SimEditor') {
       if ('srcFolderFiles' in project && Array.isArray(project.srcFolderFiles)) {
         mainFile = project.srcFolderFiles.find(file =>
@@ -1579,8 +1604,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const { selectedUser, selectedProject, selectedClassroom, fileType } = this.state;
     const { onFileSelected, onSimFileSelected, config } = this.props;
 
-    console.log('handleFileClick called with fileName:', fileName, 'and projectDetails:', projectDetails);
-    console.log("handleFileClick state before setState:", this.state);
     if (this.previousSelectedFileFE.current === null) {
       this.previousSelectedFileFE.current = fileName;
     }
@@ -1593,66 +1616,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const [name, extension] = fileName.split('.');
     let selectedLanguage: string;
     let fileT: 'src' | 'include' | 'data' | 'none' = 'none';
-
-
-
-    // switch (extension) {
-    //   case 'c':
-    //     this.setState({
-    //       activeLanguage: "c"
-    //     }, () => {
-    //       (onFileSelected || onSimFileSelected) ? config?.component === "SimEditor" ? onSimFileSelected(selectedProject as SimEditorProject, fileName, 'src') : onFileSelected(selectedClassroom, selectedUser, selectedProject as (Project | SimEditorProject), fileName, 'c' as ProgrammingLanguage, this.state.fileType) : null;
-    //     });
-    //     break;
-    //   case 'cpp':
-    //     this.setState({
-    //       activeLanguage: "cpp"
-    //     }, () => {
-    //       if (this.props.onFileSelected) {
-
-    //         this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'cpp' as ProgrammingLanguage, this.state.fileType);
-    //       }
-    //     });
-    //     break;
-    //   case 'py':
-    //     this.setState({
-    //       activeLanguage: "python"
-    //     }, () => {
-    //       if (this.props.onFileSelected) {
-    //         this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'python' as ProgrammingLanguage, this.state.fileType);
-    //       }
-    //     });
-    //     break;
-    //   case 'h':
-    //     this.setState({
-    //       activeLanguage: projectDetails.projectLanguage
-    //     }, () => {
-    //       if (this.props.onFileSelected) {
-    //         this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'c' as ProgrammingLanguage, this.state.fileType);
-    //       }
-    //     });
-    //     break;
-    //   case 'txt':
-    //     this.setState({
-    //       activeLanguage: "plaintext"
-    //     }, () => {
-    //       if (this.props.onFileSelected) {
-    //         this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'plaintext' as ProgrammingLanguage, this.state.fileType);
-    //       }
-    //     });
-    //     break;
-
-    //   case 'graphical':
-    //     this.setState({
-    //       activeLanguage: "graphical"
-    //     }, () => {
-    //       if (this.props.onFileSelected) {
-    //         this.props.onFileSelected(selectedClassroom, selectedUser, selectedProject as Project, fileName, 'graphical' as ProgrammingLanguage, this.state.fileType);
-    //       }
-    //     })
-
-    // }
-
     switch (extension) {
       case 'c':
         selectedLanguage = 'c';
@@ -1680,14 +1643,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         break;
     }
 
-    console.log("handleFileClick selectedLanguage:", selectedLanguage, "and fileType:", fileT);
     this.setState({
       fileType: extension,
       selectedFile: fileName
     });
     (onFileSelected || onSimFileSelected) ? config?.component === "SimEditor" ?
       onSimFileSelected(selectedProject as SimEditorProject, fileName, fileT) :
-      onFileSelected(selectedClassroom, selectedUser, selectedProject as (Project | SimEditorProject), fileName, selectedLanguage as ProgrammingLanguage, this.state.fileType)
+      onFileSelected(selectedClassroom, selectedUser, selectedProject as (Project | SimEditorProject), fileName, selectedLanguage as ProgrammingLanguage, fileT)
       : null;
   }
 
@@ -1703,6 +1665,23 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       this.setState({ showUserUploader: false });
     }
   }
+
+  private wrapTourTarget = (node: React.ReactNode, targetName?: string, remountKey?: string) => {
+    const { style, tour } = this.props;
+    const targetKey = targetName ? tour?.targets?.[targetName] : undefined;
+    if (!tour?.registry || !targetKey) return node;
+
+    return (
+      <TourTarget
+        key={targetKey}
+        registry={tour.registry}
+        targetKey={targetKey}
+        style={style}
+      >
+        {node}
+      </TourTarget>
+    );
+  };
 
   /**
    * Right click handler for Projects
@@ -1758,64 +1737,75 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const completeUsersInClass = Object.values(this.props.propUsers).filter((user) => {
       return user.classroomName === classroom.name;
     });
+    const userSec = (<ProjectContainer theme={this.props.theme} key={classroom.name}>
+      <ProjectHeaderContainer theme={theme}>
+        <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Users"), locale)}</ProjectTitle>
+        {hostApp === 'Simulator' ?
+          <TourTarget key={`invite-code-${classroom.classroomInvitationCode}`} registry={this.props.tour?.registry} targetKey={this.props.tour?.targets?.inviteCode} style={this.props.style}>
+
+
+            <InvitationCodeContainer theme={theme}>
+              <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Classroom Invitation Code:"), locale)}</ProjectTitle>
+
+              <InviteCode theme={theme}>{classroom.classroomInvitationCode}</InviteCode>
+
+            </InvitationCodeContainer>
+          </TourTarget>
+          : <StyledResizeableComboBox
+            options={USER_OPTIONS}
+            index={USER_OPTIONS.findIndex(opt => opt.data === userCreationType)}
+            onSelect={this.onUserCreationSelect}
+            theme={theme}
+            mainWidth={'4em'}
+            mainHeight={'1.5em'}
+            mainFontSize={'0.9em'}
+
+          />}
+      </ProjectHeaderContainer>
+
+      {classroomUsers.map((user) => (
+        <React.Fragment key={`user-${user.userName}`}>
+          <UserTitleContainer
+
+            theme={theme}
+            selected={selectedUser?.userName === user.userName}
+
+            onMouseEnter={() => this.setState({ hoveredUser: user.displayName ? user.displayName : user.userName })}
+            onMouseLeave={() => this.setState({ hoveredUser: null })}
+          >
+            <ItemIcon icon={faUser} />
+
+            <SectionName
+              theme={theme}
+              onContextMenu={(e) => this.handleUserRightClick(e, user)}
+              onClick={() => this.setSelectedUser(user, classroom)}
+            >
+              {user.displayName ? LocalizedString.lookup(tr(`${user.displayName}`), locale) : LocalizedString.lookup(tr(`${user.userName}`), locale)}
+            </SectionName>
+            {user.displayName ? this.state.hoveredUser === user.displayName && (<ItemIcon icon={faUserTimes} onClick={() => this.deleteUser(user)} />)
+              : this.state.hoveredUser === user.userName && (
+                <ItemIcon icon={faUserTimes} onClick={() => this.deleteUser(user)} />
+              )
+            }
+          </UserTitleContainer>
+
+          {user.displayName ? (LocalizedString.lookup(tr(this.state.selectedUser.displayName), locale)) === `${user.displayName}` && this.state.showProjects && (
+            this.renderProjects()) : (LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
+              this.renderProjects()
+            )}
+
+        </React.Fragment>
+
+      ))}
+
+    </ProjectContainer>);
+
 
     // MAKE LIST OF ALL STATE.USERS IN GIVEN CLASSROOM
     return (
-      <ProjectContainer theme={this.props.theme} key={classroom.name}>
-        <ProjectHeaderContainer theme={theme}>
-          <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Users"), locale)}</ProjectTitle>
-          {hostApp === 'Simulator' ?
-            <InvitationCodeContainer theme={theme}>
-              <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Classroom Invitation Code:"), locale)}</ProjectTitle>{classroom.classroomInvitationCode}
-            </InvitationCodeContainer>
-            : <StyledResizeableComboBox
-              options={USER_OPTIONS}
-              index={USER_OPTIONS.findIndex(opt => opt.data === userCreationType)}
-              onSelect={this.onUserCreationSelect}
-              theme={theme}
-              mainWidth={'4em'}
-              mainHeight={'1.5em'}
-              mainFontSize={'0.9em'}
-
-            />}
-        </ProjectHeaderContainer>
-
-        {classroomUsers.map((user) => (
-          <React.Fragment key={`user-${user.userName}`}>
-            <UserTitleContainer
-
-              theme={theme}
-              selected={selectedUser?.userName === user.userName}
-
-              onMouseEnter={() => this.setState({ hoveredUser: user.displayName ? user.displayName : user.userName })}
-              onMouseLeave={() => this.setState({ hoveredUser: null })}
-            >
-              <ItemIcon icon={faUser} />
-
-              <SectionName
-                theme={theme}
-                onContextMenu={(e) => this.handleUserRightClick(e, user)}
-                onClick={() => this.setSelectedUser(user, classroom)}
-              >
-                {user.displayName ? LocalizedString.lookup(tr(`${user.displayName}`), locale) : LocalizedString.lookup(tr(`${user.userName}`), locale)}
-              </SectionName>
-              {user.displayName ? this.state.hoveredUser === user.displayName && (<ItemIcon icon={faUserTimes} onClick={() => this.deleteUser(user)} />)
-                : this.state.hoveredUser === user.userName && (
-                  <ItemIcon icon={faUserTimes} onClick={() => this.deleteUser(user)} />
-                )
-              }
-            </UserTitleContainer>
-
-            {user.displayName ? (LocalizedString.lookup(tr(this.state.selectedUser.displayName), locale)) === `${user.displayName}` && this.state.showProjects && (
-              this.renderProjects()) : (LocalizedString.lookup(tr(this.state.selectedUser.userName), locale)) === `${user.userName}` && this.state.showProjects && (
-                this.renderProjects()
-              )}
-
-          </React.Fragment>
-
-        ))}
-
-      </ProjectContainer>
+      <TourTarget key={classroom.name} registry={this.props.tour?.registry} targetKey={this.props.tour?.targets?.classroomUsers} style={this.props.style}>
+        {userSec}
+      </TourTarget>
     );
   };
 
@@ -1838,7 +1828,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   renderProjects = () => {
-    const { theme, style, config, propUsers, propClassrooms, simEditorProjects } = this.props;
+    const { theme, locale, style, config, propUsers, propClassrooms, simEditorProjects } = this.props;
     const { projectCreationType, selectedUser, showProjectFiles } = this.state;
     const userProjects =
       propUsers
@@ -1850,22 +1840,20 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const SimClassroomsProjects = propClassrooms ?
       Object.values(propClassrooms).find((classroom) => classroom.name === selectedUser.classroomName)?.users?.find((user) => user.userName === selectedUser.userName)?.projects || [] : null;
 
-    //console.log("simEditorProjects", simEditorProjects);
-
     const SimEditorProjects = simEditorProjects ? Object.values(simEditorProjects) : [];
 
 
     // Determine projects visual display based on host app (Simulator vs IDE (Voldigate))
     const renderedProjects = (this.hostApp === 'Simulator') && (config?.component === 'SimClassrooms')
       ? SimClassroomsProjects : config?.component === 'SimEditor' ? SimEditorProjects : userProjects;
-    //console.log("renderProjects state:", this.state);
+    const projectOptions = getProjectCreationOptions(locale)
     return (
       <ProjectContainer theme={theme} >
         <ProjectHeaderContainer theme={theme}>
-          <ProjectTitle theme={theme}>Projects</ProjectTitle>
-          {config?.component === 'SimulatorClassrooms' ? null : <StyledResizeableComboBox
-            options={PROJECT_OPTIONS}
-            index={PROJECT_OPTIONS.findIndex(opt => opt.data === projectCreationType)}
+          <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Projects"), this.props.locale)}</ProjectTitle>
+          {config?.component === 'SimClassrooms' ? null : <StyledResizeableComboBox
+            options={projectOptions}
+            index={projectOptions.findIndex(opt => opt.data === projectCreationType)}
             onSelect={this.onProjectCreationSelect}
             theme={theme}
             mainWidth={'4em'}
@@ -1913,15 +1901,15 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
                   this.renderSimClassroomsProject(project as SimClassroomProject)
                 )
                   : (config?.component === 'SimEditor' ?
-                     ( (
-                    project.projectLanguage === "graphical" ? (
-                      this.graphicalView(project as SimEditorProject)
-                    ) : (project.interfaceMode === InterfaceMode.SIMPLE ? (
-                      this.simpleView(project as SimEditorProject)
-                    ) : (project.interfaceMode === InterfaceMode.ADVANCED ? (
-                      this.advancedView(project as SimEditorProject)
-                    ) : null))
-                  ))
+                    ((
+                      project.projectLanguage === "graphical" ? (
+                        this.graphicalView(project as SimEditorProject)
+                      ) : (project.interfaceMode === InterfaceMode.SIMPLE ? (
+                        this.simpleView(project as SimEditorProject)
+                      ) : (project.interfaceMode === InterfaceMode.ADVANCED ? (
+                        this.advancedView(project as SimEditorProject)
+                      ) : null))
+                    ))
                     : (
                       project.projectLanguage === "graphical" ? (
                         this.graphicalView(project as Project | SimEditorProject)
@@ -1948,7 +1936,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       : (project as Project).srcFolderFiles.map(fileName => ({ fileId: fileName, fileName }));
     return (<FileTypeContainer theme={theme} selected={false}>
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
-        <FileTypeTitle theme={theme}>Source Files</FileTypeTitle>
+        <FileTypeTitle theme={theme}>{LocalizedString.lookup(tr("Source Files"), this.props.locale)}</FileTypeTitle>
         <FileContainer theme={theme}>
           {srcFolderFiles.map((file, i) => (
 
@@ -1981,21 +1969,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const srcFolderFiles = config?.component === 'SimEditor'
       ? Object.entries((project as SimEditorProject).srcFiles).map(([fileId, fileData]) => ({ fileId, fileName: fileData.fileName }))
       : (project as Project).srcFolderFiles.map(fileName => ({ fileId: fileName, fileName }));
-
     return <FileTypeContainer theme={theme} selected={false}>
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
-          <FileTypeTitle theme={theme}>Source Files</FileTypeTitle>
-          <StyledResizeableComboBox
-            options={SIMPLE_FILE_OPTIONS}
-            index={SIMPLE_FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
-            onSelect={this.onFileCreationSelect}
-            theme={theme}
-            mainWidth={'4em'}
-            mainHeight={'1.5em'}
-            mainFontSize={'0.9em'}
-
-          />
+          <FileTypeTitle theme={theme}>{LocalizedString.lookup(tr("Source Files"), this.props.locale)}</FileTypeTitle>
         </FileTypeTitleContainer>
         <FileContainer theme={theme}>
           {srcFolderFiles.map((file, i) => (
@@ -2020,7 +1997,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   };
 
   advancedView = (project: Project | SimEditorProject) => {
-    const { theme,config } = this.props;
+    const { theme, config, locale } = this.props;
     const { fileCreationTypeAction } = this.state;
     const includeFolderFiles = config?.component === 'SimEditor'
       ? Object.entries((project as SimEditorProject).includeFiles || {}).map(([fileId, fileData]) => ({ fileId, fileName: fileData.fileName }))
@@ -2032,15 +2009,15 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       ? Object.entries((project as SimEditorProject).userDataFiles || {}).map(([fileId, fileData]) => ({ fileId, fileName: fileData.fileName }))
       : (project as Project).dataFolderFiles.map(fileName => ({ fileId: fileName, fileName }));
 
-
+    const fileOptions = getFileCreationOptions(locale);
     return (<FileTypeContainer theme={theme} selected={false}>
       {project.projectLanguage != "python" && (
         <FileTypeItem theme={theme} key={`IncludeFileHeader-${project.projectName}`}>
           <FileTypeTitleContainer theme={theme} >
-            <FileTypeTitle theme={theme}>Include Files</FileTypeTitle>
+            <FileTypeTitle theme={theme}>{LocalizedString.lookup(tr("Include Files"), this.props.locale)}</FileTypeTitle>
             <StyledResizeableComboBox
-              options={FILE_OPTIONS}
-              index={FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+              options={fileOptions}
+              index={fileOptions.findIndex(opt => opt.data === fileCreationTypeAction)}
               onSelect={this.onFileCreationSelectWithContext('h')}
               theme={theme}
               mainWidth={'4em'}
@@ -2071,10 +2048,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
       <FileTypeItem theme={theme} key={`SourceFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
-          <FileTypeTitle theme={theme}>Source Files</FileTypeTitle>
+          <FileTypeTitle theme={theme}>{LocalizedString.lookup(tr("Source Files"), this.props.locale)}</FileTypeTitle>
           <StyledResizeableComboBox
-            options={FILE_OPTIONS}
-            index={FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+            options={fileOptions}
+            index={fileOptions.findIndex(opt => opt.data === fileCreationTypeAction)}
             onSelect={this.onFileCreationSelectWithContext('src', project.projectLanguage)}
             theme={theme}
             mainWidth={'4em'}
@@ -2104,10 +2081,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
       <FileTypeItem theme={theme} key={`UserDataFileHeader-${project.projectName}`}>
         <FileTypeTitleContainer theme={theme}>
-          <FileTypeTitle theme={theme}>User Data Files</FileTypeTitle>
+          <FileTypeTitle theme={theme}>{LocalizedString.lookup(tr("User Data Files"), this.props.locale)}</FileTypeTitle>
           <StyledResizeableComboBox
-            options={FILE_OPTIONS}
-            index={FILE_OPTIONS.findIndex(opt => opt.data === fileCreationTypeAction)}
+            options={fileOptions}
+            index={fileOptions.findIndex(opt => opt.data === fileCreationTypeAction)}
             onSelect={this.onFileCreationSelectWithContext('txt')}
             theme={theme}
             mainWidth={'4em'}
@@ -2143,7 +2120,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     }
 
     const { props, state } = this;
-    const { theme, propUsers, locale, propSettings, propClassrooms, config } = props;
+    const { theme, propUsers, locale, propSettings, propClassrooms, config, tour } = props;
     const {
       selectedUser,
       selectedClassroom,
@@ -2158,10 +2135,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       userCreationType,
       classroomCreationType
     } = state;
+
     const hostApp = config?.appName || 'Default';
     const component = config?.component;
     const usersArray = Object.values(propUsers || {});
-
     const userSections = usersArray.map((user: User) => {
       const projects = user.projects || [];
 
@@ -2190,34 +2167,47 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     });
 
     const classroomSections = (propClassrooms || []).map((classroom: Classroom) => {
-      return (
-        <SectionsColumn theme={theme} key={classroom.name}>
-          <UserTitleContainer
+      const classSec = (<SectionsColumn theme={theme}>
+        <UserTitleContainer
+          theme={theme}
+          selected={selectedClassroom?.name === classroom.name}
+
+          onMouseEnter={() => this.setState({ hoveredClassroom: classroom.name })}
+          onMouseLeave={() => this.setState({ hoveredClassroom: null })}
+        >
+          <ItemIcon icon={faUsersRectangle} />
+          <SectionName
             theme={theme}
-            selected={selectedClassroom?.name === classroom.name}
+            onClick={() => this.setSelectedClassroom(classroom)}
+            onContextMenu={(e) => this.handleClassroomRightClick(e, classroom)}
+          >{
+              LocalizedString.lookup(tr(classroom.name), locale)}
 
-            onMouseEnter={() => this.setState({ hoveredClassroom: classroom.name })}
-            onMouseLeave={() => this.setState({ hoveredClassroom: null })}
-          >
-            <ItemIcon icon={faUsersRectangle} />
-            <SectionName
-              theme={theme}
-              onClick={() => this.setSelectedClassroom(classroom)}
-              onContextMenu={(e) => this.handleClassroomRightClick(e, classroom)}
-            >{
-                LocalizedString.lookup(tr(classroom.name), locale)}
-
-            </SectionName>
-            {this.state.hoveredClassroom === classroom.name && (
-              <ItemIcon icon={faTrash} onClick={() => this.deleteClassroom(classroom)} />
-            )}
-          </UserTitleContainer>
-          {selectedClassroom?.name === classroom.name && this.state.showClassroomUsers && this.renderClassroomUsers(classroom)}
+          </SectionName>
+          {this.state.hoveredClassroom === classroom.name && (
+            <ItemIcon icon={faTrash} onClick={() => this.deleteClassroom(classroom)} />
+          )}
+        </UserTitleContainer>
+        {selectedClassroom?.name === classroom.name && this.state.showClassroomUsers && this.renderClassroomUsers(classroom)}
 
 
-        </SectionsColumn>
+      </SectionsColumn>);
+      return classroom?.name === this.state.addedClassroom?.name ? (
+        <TourTarget
+          key={classroom.name}
+          registry={tour.registry}
+          targetKey={tour?.targets?.seeCreatedClassroom}
+          style={this.props.style}
+        >
+          {classSec}
+        </TourTarget>
+      ) : (
+        <React.Fragment key={classroom.name}>
+          {classSec}
+        </React.Fragment>
       );
     });
+
 
     const usersWithoutClassroomsSection = usersArray.filter(user => !user.classroomName).map((user: User) => {
       return (
@@ -2243,8 +2233,43 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       )
 
     });
+    const classroomOptions = getClassroomCreationOptions(locale);
+    const userOptions = getUserCreationOptions(locale);
 
-    //console.log("FileExplorer props:", this.props);
+    const classroomDropdown = (
+      <StyledResizeableComboBox
+        tourregistry={tour?.registry}
+        tourId="create-classroom-dropdown"
+        tourMenuId="create-classroom-dropdown-menu"
+        options={classroomOptions}
+        index={classroomOptions.findIndex(
+          opt => opt.data === classroomCreationType
+        )}
+        onSelect={this.onClassroomCreationSelect}
+        theme={theme}
+        mainWidth="5.5em"
+        mainHeight="1.2em"
+        mainFontSize="0.9em"
+        tourstepid={this.props.activeTourStepId}
+      />
+    );
+
+    const userDropdown = (
+      <StyledResizeableComboBox
+
+        options={userOptions}
+        index={userOptions.findIndex(
+          opt => opt.data === userCreationType
+        )}
+        onSelect={this.onUserCreationSelect}
+        theme={theme}
+        mainWidth="4em"
+        mainHeight="1.2em"
+        mainFontSize="0.9em"
+      />
+    );
+
+
     return (
       <div onClick={this.closeContextMenu}>
 
@@ -2257,62 +2282,53 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
 
           <ExplorerContainer theme={theme}>
-            {
-              component === 'SimEditor' ? (
-                this.renderProjects()
-              ) : (
-                <>
-                  <h2
-                    style={{ marginLeft: '6px', fontSize: '1.728em', color: theme.color }}
-                  >
-                    {LocalizedString.lookup(
-                      tr(
-                        `Explorer - ${propSettings.classroomView === true ? 'Classrooms' : 'Users'
-                        }`
-                      ),
-                      locale
-                    )}
-                  </h2>
+            {component === 'SimEditor' ? (
+              this.renderProjects()
+            ) : (
+              <>
+                <h2
+                  style={{ marginLeft: '6px', fontSize: '1.728em', color: theme.color }}
+                >
+                  {propSettings.classroomView === true
+                    ? LocalizedString.lookup(tr("Explorer - Classrooms"), locale)
+                    : LocalizedString.lookup(tr("Explorer - Users"), locale)}
+                </h2>
 
-                  {propSettings.classroomView === true ? (
-                    <StyledResizeableComboBox
-                      options={CLASSROOM_OPTIONS}
-                      index={CLASSROOM_OPTIONS.findIndex(
-                        opt => opt.data === classroomCreationType
-                      )}
-                      onSelect={this.onClassroomCreationSelect}
-                      theme={theme}
-                      mainWidth="5.5em"
-                      mainHeight="1.5em"
-                      mainFontSize="0.9em"
-                    />
-                  ) : (
-                    <StyledResizeableComboBox
-                      options={USER_OPTIONS}
-                      index={USER_OPTIONS.findIndex(
-                        opt => opt.data === userCreationType
-                      )}
-                      onSelect={this.onUserCreationSelect}
-                      theme={theme}
-                      mainWidth="4em"
-                      mainHeight="1.5em"
-                      mainFontSize="0.9em"
-                    />
+                {propSettings.classroomView === true
+                  ? this.wrapTourTarget(
+                    classroomDropdown,
+                    'createClassroomDropdown',
+                    this.props.activeTourStepId
+                  )
+                  : this.wrapTourTarget(
+                    userDropdown,
+                    'userTypeDropdown',
+
                   )}
-                </>
-              )
-            }
-
+              </>
+            )}
           </ExplorerContainer>
+
+
           <StyledScrollArea theme={theme}>
 
             {/*Used for the IDE (Voldigate)*/}
+            {/* {this.wrapTourTarget(<UsersContainer theme={theme} style={{}}>
+              {propSettings.classroomView === true ? classroomSections : userSections}
+
+              {propSettings.classroomView === true ?
+                propUsers.length > 0 ? <UsersContainer theme={theme} style={{}}>
+                  <h3 style={{ marginLeft: '6px', fontSize: '1.3em' }}>{LocalizedString.lookup(tr('Users without Classrooms'), locale)}</h3>
+                  {usersWithoutClassroomsSection}
+                </UsersContainer> : null
+                : null}
+            </UsersContainer>, "seeCreatedClassroom", this.props.activeTourStepId)} */}
             <UsersContainer theme={theme} style={{}}>
               {propSettings.classroomView === true ? classroomSections : userSections}
 
               {propSettings.classroomView === true ?
                 propUsers.length > 0 ? <UsersContainer theme={theme} style={{}}>
-                  <h3 style={{ marginLeft: '6px', fontSize: '1.3em' }}>{LocalizedString.lookup(tr(`Users without Classrooms`), locale)}</h3>
+                  <h3 style={{ marginLeft: '6px', fontSize: '1.3em' }}>{LocalizedString.lookup(tr('Users without Classrooms'), locale)}</h3>
                   {usersWithoutClassroomsSection}
                 </UsersContainer> : null
                 : null}

@@ -9,7 +9,8 @@ import { Fa } from "./Fa";
 import { Text } from "./interface/Text";
 import { ThemeProps } from "./constants/theme";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
-
+import { TourRegistry } from "../tours/TourRegistry";
+import { TourTarget } from "./Tours/TourTarget";
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; $width?: string; $height?: string }) => ({
   // width: props.$width ?? '100%',
   height: props.$height ?? '100%',
@@ -31,6 +32,8 @@ const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minima
     backgroundColor: `rgba(0, 0, 0, 0.2)`,
   },
   cursor: 'pointer',
+  alignContent: 'center',
+
 
 }));
 
@@ -54,21 +57,22 @@ const DropIcon = styled(Fa, {
   right: '5px',
   top: '50%',
   transform: 'translateY(-50%)',
- });
+});
 
 const CurrentOptionContainer = styled('div', (props: ThemeProps & { $focus?: boolean; }) => ({
   userSelect: 'none',
   display: 'flex',
-  alignItems: 'center'
+  alignItems: 'center',
+
 }));
 
-const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean; $height?: string}) => ({
+const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean; $height?: string }) => ({
   padding: `${props.theme.itemPadding * 2}px`,
   userSelect: 'none',
   display: 'flex',
   alignItems: 'center',
   height: 'auto',
-    backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : undefined,
+  backgroundColor: props.$selected ? `rgba(255, 255, 255, 0.1)` : undefined,
   ':hover': {
     backgroundColor: props.theme.hoverOptionBackground
   },
@@ -88,7 +92,16 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
       focus: false
     };
   }
-
+  componentDidUpdate(prevProps: Readonly<ResizeableComboBox.Props>, prevState: Readonly<ResizeableComboBox.State>, snapshot?: any): void {
+    if (prevProps.tourstepid !== this.props.tourstepid && this.props.tourstepid) {
+      if (this.props.tourstepid === "create-classroom-dropdown-menu") {
+        this.setState({ focus: true });
+      }
+      else {
+        this.setState({ focus: false });
+      }
+    }
+  }
   private onFocusChange_: (focus: boolean) => void;
   public set onFocusChange(f: (focus: boolean) => void) {
     this.onFocusChange_ = f;
@@ -146,7 +159,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
   render() {
     const { props, state } = this;
 
-    const { options, index, style, className, theme, minimal, widthTweak, mainFontSize,mainWidth, mainHeight} = props;
+    const { options, index, style, className, theme, minimal, widthTweak, mainFontSize, mainWidth, mainHeight, tourId, tourMenuId, tourstepid, ...rest } = props;
     const { focus } = state;
 
     let dropDownStyle: React.CSSProperties;
@@ -169,25 +182,73 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
     }
 
     return (
-      <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal} $width={mainWidth} $height={mainHeight}>
-        <CurrentOptionContainer theme={theme}><Text style={{ fontSize: props.mainFontSize,}} text={options[index].text} /></CurrentOptionContainer>
+      <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal} $width={mainWidth} $height={mainHeight} data-tour={tourId}>
+        <CurrentOptionContainer theme={theme}><Text style={{ fontSize: props.mainFontSize, }} text={options[index].text} /></CurrentOptionContainer>
         <DropIcon icon={focus ? faCaretUp : faCaretDown} />
         {ReactDom.createPortal((focus && this.ref_)
-          ? <DropDown theme={theme} style={dropDownStyle}>
-            {options.map((option, i) => (
-              <OptionContainer
-                $selected={i === index}
-                theme={theme}
-                key={i}
-                onClick={this.onOptionClick_(i)}
-                $height={props.mainHeight}
-              >
-                <Text style={{  fontSize: props.mainFontSize , lineHeight: '1' }} text={option.text} />
-              </OptionContainer>
-            ))}
-          </DropDown>
+          ? (
+            props.tourregistry && tourMenuId ? (
+              <TourTarget registry={props.tourregistry} targetKey={tourMenuId} >
+                <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
+                  {options.map((option, i) => (
+                    <OptionContainer
+                      $selected={i === index}
+                      theme={theme}
+                      key={i}
+                      onClick={this.onOptionClick_(i)}
+                      $height={props.mainHeight}
+                    >
+                      <Text
+                        style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
+                        text={option.text}
+                      />
+                    </OptionContainer>
+                  ))}
+                </DropDown>
+              </TourTarget>
+
+            ) : (
+              <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
+                {options.map((option, i) => (
+                  <OptionContainer
+                    $selected={i === index}
+                    theme={theme}
+                    key={i}
+                    onClick={this.onOptionClick_(i)}
+                    $height={props.mainHeight}
+                  >
+                    <Text
+                      style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
+                      text={option.text}
+                    />
+                  </OptionContainer>
+                ))}
+              </DropDown>
+            )
+          )
           : null
           , COMBO_BOX_ROOT)}
+        {/* {ReactDom.createPortal((focus && this.ref_)
+          ? (
+            <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
+              {options.map((option, i) => (
+                <OptionContainer
+                  $selected={i === index}
+                  theme={theme}
+                  key={i}
+                  onClick={this.onOptionClick_(i)}
+                  $height={props.mainHeight}
+                >
+                  <Text
+                    style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
+                    text={option.text}
+                  />
+                </OptionContainer>
+              ))}
+            </DropDown>
+          )
+          : null
+          , COMBO_BOX_ROOT)} */}
       </Container>
     );
   }
@@ -210,6 +271,7 @@ namespace ResizeableComboBox {
 
     innerRef?: (ref: ResizeableComboBox) => void;
 
+
     widthTweak?: number;
 
     index: number;
@@ -217,6 +279,10 @@ namespace ResizeableComboBox {
     mainWidth?: string;
     mainHeight?: string;
     mainFontSize?: string;
+    tourId?: string;
+    tourMenuId?: string;
+    tourregistry?: TourRegistry;
+    tourstepid?: string;
   }
 
   export interface State {

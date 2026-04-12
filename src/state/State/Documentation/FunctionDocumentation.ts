@@ -5,7 +5,9 @@ interface FunctionDocumentation {
   return_type: string;
   return_description?: string;
   brief_description?: string;
+  brief_description_key?: string;
   detailed_description?: string;
+  detailed_description_key?: string;
 }
 
 namespace FunctionDocumentation {
@@ -16,6 +18,7 @@ namespace FunctionDocumentation {
     name: string;
     type: string;
     description: string;
+    description_key?: string;
   }
 }
 

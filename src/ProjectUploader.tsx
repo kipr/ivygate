@@ -344,7 +344,7 @@ class ProjectUploader extends React.Component<Props, State> {
       if (this.props.currentUserProjects.some(project => project.projectName === folderName)) {
         console.log("Project with this name already exists.");
         this.setState({
-          errorMessage: `Project with name "${folderName}" already exists. Please choose a different name.`,
+          errorMessage: LocalizedString.lookup(tr('Project with name already exists. Please choose a different name.'), this.props.locale),
           selectedFiles: null,
           projectErrorMessage: ''
         })
@@ -373,7 +373,7 @@ class ProjectUploader extends React.Component<Props, State> {
                 if (parsedConfig.projectLanguage) {
                   language = parsedConfig.projectLanguage;
                   if (language !== projectLanguage) {
-                    errorMessage = `File ${file.name} detected as ${parsedConfig.projectLanguage}, not matching selected project language ${projectLanguage}.`
+                    errorMessage = LocalizedString.lookup(tr('File uploaded does not match selected project language.'), this.props.locale);
                     this.setState({
                       //projectErrorMessage: `Project language in config file (${parsedConfig.projectLanguage}) does not match selected project language (${projectLanguage}).`
                     })
@@ -382,7 +382,7 @@ class ProjectUploader extends React.Component<Props, State> {
 
                 //Error handling for folder name not matching projectName in config file
                 if (parsedConfig.projectName && parsedConfig.projectName !== folderName) {
-                  errorMessage = `Folder name "${folderName}" does not match project name "${parsedConfig.projectName}" in config file.`;
+                  errorMessage = LocalizedString.lookup(tr('Folder name does not match project name in config file.'), this.props.locale);
                   this.setState({
                     //projectErrorMessage: `Folder name "${folderName}" does not match project name "${parsedConfig.projectName}" in config file.`
                   })
@@ -408,8 +408,7 @@ class ProjectUploader extends React.Component<Props, State> {
                     }
                     else {
                       uploadType = 'src';
-                      errorMessage = `File ${file.name} detected as ${detectedLanguage}, not matching project language ${projectLanguage}.
-                    Please ensure all source files match the selected project language.`;
+                      errorMessage = LocalizedString.lookup(tr('File detected as different language than project language. Please ensure all source files match the selected project language.'), this.props.locale);
 
                     }
                   }
@@ -425,13 +424,13 @@ class ProjectUploader extends React.Component<Props, State> {
                 console.warn(`Unknown file type for ${file.name}, defaulting to plaintext.`);
             }
             if (hasSpaces) {
-              errorMessage = `Please remove all spaces in the name "${file.name}".`;
+              errorMessage = LocalizedString.lookup(tr('Please remove all spaces in the name.'), this.props.locale);
             }
             if(hasSpecialCharacters){
-              errorMessage = `Please remove all special characters in the name "${file.name}".`;
+              errorMessage = LocalizedString.lookup(tr('Please remove all special characters in the name.'), this.props.locale);
             }
             if(file.name.length > 50){
-              errorMessage = `File name "${file.name}" exceeds maximum length of 50 characters.`;
+              errorMessage = LocalizedString.lookup(tr('File name exceeds maximum length of 50 characters.'), this.props.locale);
             }
             console.log("ErrorMessage: ", errorMessage);
             console.log("ProjectErrorMessage: ", projectErrorMessage);
@@ -609,11 +608,11 @@ class ProjectUploader extends React.Component<Props, State> {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <FilePreviewItem theme={theme} >
                     <SubItemIcon icon={faFileCode} />
-                    {LocalizedString.lookup(tr(`includeFile1.h (optional)`), locale)}
+                    {LocalizedString.lookup(tr('includeFile1.h (optional)'), locale)}
                   </FilePreviewItem>
                   <FilePreviewItem theme={theme} >
                     <SubItemIcon icon={faFileCode} />
-                    {LocalizedString.lookup(tr(`includeFile2.h (optional)`), locale)}
+                    {LocalizedString.lookup(tr('includeFile2.h (optional)'), locale)}
                   </FilePreviewItem>
                 </div>
               </FilePreviewContainer>
@@ -621,7 +620,7 @@ class ProjectUploader extends React.Component<Props, State> {
                 <SubItemIcon icon={faFolderOpen} />
                 {LocalizedString.lookup(tr('src'), locale)}
                 <span style={{ fontWeight: 'bold', color: '#d9534f', marginLeft: '10px' }}>
-                  {LocalizedString.lookup(tr(`NOTE: file extension must match project language`), locale)}
+                  {LocalizedString.lookup(tr('NOTE: file extension must match project language'), locale)}
                 </span>
               </SubFolderListTitle>
               <FilePreviewContainer theme={theme} style={{ display: 'flex' }}>
@@ -629,12 +628,12 @@ class ProjectUploader extends React.Component<Props, State> {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <FilePreviewItem theme={theme} >
                     <SubItemIcon icon={faFileCode} />
-                    {LocalizedString.lookup(tr(`srcFile1.*`), locale)}
+                    {LocalizedString.lookup(tr('srcFile1.*'), locale)}
 
                   </FilePreviewItem>
                   <FilePreviewItem theme={theme} >
                     <SubItemIcon icon={faFileCode} />
-                    {LocalizedString.lookup(tr(`srcFile2.*`), locale)}
+                    {LocalizedString.lookup(tr('srcFile2.*'), locale)}
                   </FilePreviewItem>
                 </div>
               </FilePreviewContainer>
@@ -647,11 +646,11 @@ class ProjectUploader extends React.Component<Props, State> {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <FilePreviewItem theme={theme} >
                     <SubItemIcon icon={faFileCode} />
-                    {LocalizedString.lookup(tr(`dataFile1.txt (optional)`), locale)}
+                    {LocalizedString.lookup(tr('dataFile1.txt (optional)'), locale)}
                   </FilePreviewItem>
                   <FilePreviewItem theme={theme} >
                     <SubItemIcon icon={faFileCode} />
-                    {LocalizedString.lookup(tr(`dataFile2.txt (optional)`), locale)}
+                    {LocalizedString.lookup(tr('dataFile2.txt (optional)'), locale)}
                   </FilePreviewItem>
                 </div>
               </FilePreviewContainer>
@@ -672,7 +671,7 @@ class ProjectUploader extends React.Component<Props, State> {
       </StyledScrollArea>
 
       <UploadFolderPreviewButtonContainer style={{ padding: '0.5em 0', alignItems: "center" }} theme={theme}>
-        <ComboBoxLabel theme={theme}>Select Project Language:</ComboBoxLabel>
+        <ComboBoxLabel theme={theme}>{LocalizedString.lookup(tr('Select Project Language:'), locale)}</ComboBoxLabel>
         <StyledResizeableComboBox
           options={LANGUAGE_OPTIONS}
           index={languageIndex}
@@ -968,11 +967,11 @@ class ProjectUploader extends React.Component<Props, State> {
         <TitleContainer theme={theme}>
           <Title theme={theme}>
             <strong>
-              {LocalizedString.lookup(tr(`The selected project ${folderName} already exists for this user.`), locale)}
+              {LocalizedString.lookup(tr('The selected project already exists for this user.'), locale)}
             </strong>
             <br />
             <strong>
-              {LocalizedString.lookup(tr(`Please choose a different project.`), locale)}
+              {LocalizedString.lookup(tr('Please choose a different project.'), locale)}
             </strong>
           </Title>
         </TitleContainer>
