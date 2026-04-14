@@ -1242,7 +1242,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     return (
       <ChallengeProgressContainer theme={theme}>
         <ChallengeProgressTitle theme={theme}>
-          Challenge Progress
+          {LocalizedString.lookup(tr("Challenge Progress"), this.props.locale)}
         </ChallengeProgressTitle>
         {ChallengeComponent ? (
           <ChallengeComponent theme={theme} challenge={project.challenge} challengeCompletion={project.challengeCompletion} />

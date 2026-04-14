@@ -2,97 +2,90 @@ msgid ""
 msgstr ""
 
 msgid "The selected file is already included in the project."
-msgstr "O ficheiro selecionado já está incluído no projeto."
+msgstr "所选文件已包含在项目中。"
 
 msgid "The selected file does not match the expected language ${currentLanguage}."
-msgstr "O ficheiro selecionado não corresponde ao idioma esperado ${currentLanguage}."
-"O ficheiro selecionado não corresponde ao idioma esperado "
-"${currentLanguage}."
+msgstr "所选文件与预期语言 ${currentLanguage} 不匹配。"
 
 msgid "The selected file must have a .h extension."
-msgstr "O ficheiro selecionado tem de ter uma extensão .h."
+msgstr "所选文件的扩展名必须是 .h。"
 
 msgid "The selected file does not match the expected language."
-msgstr "O ficheiro selecionado não corresponde ao idioma esperado."
+msgstr "所选文件与预期语言不符。"
 
 msgid "The selected file must have a .txt extension."
-msgstr "O ficheiro selecionado tem de ter uma extensão .txt."
+msgstr "所选文件的扩展名必须是 .txt。"
 
 msgid "Some files have errors"
-msgstr "Alguns ficheiros têm erros"
+msgstr "某些文件有错误"
 
 msgid "Upload File"
-msgstr "Carregar ficheiro"
+msgstr "上传文件"
 
 msgid "Selected File Upload Language: "
-msgstr "Selecionado Idioma de carregamento de ficheiros:"
+msgstr "所选文件上传语言："
 
 msgid "Select a file from your computer to upload"
-msgstr "Seleciona um ficheiro do teu computador para carregar"
+msgstr "从电脑中选择要上传的文件"
 
 msgid "Upload Include File"
-msgstr "Carregar ficheiro de inclusão"
+msgstr "上传包含文件"
 
 msgid "Upload Source File"
-msgstr "Carregar ficheiro de origem"
+msgstr "上传源文件"
 
 msgid "Upload User Data File"
-msgstr "Carregar ficheiro de dados do utilizador"
+msgstr "上传用户数据文件"
 
 msgid "No file selected"
-msgstr "Nenhum ficheiro selecionado"
+msgstr "未选择文件"
 
 msgid "Project with name already exists. Please choose a different name."
-msgstr "O projeto com este nome já existe. Por favor, escolhe um nome diferente."
+msgstr "项目名称已存在。请选择其他名称。"
 
 msgid "File uploaded does not match selected project language."
-msgstr "O ficheiro carregado não corresponde ao idioma do projeto selecionado."
+msgstr "上传的文件与所选项目语言不匹配。"
 
 msgid "Folder name does not match project name in config file."
-msgstr "O nome da pasta não corresponde ao nome do projeto no ficheiro de configuração."
-"O nome da pasta não corresponde ao nome do projeto no ficheiro de "
-"configuração."
+msgstr "文件夹名称与配置文件中的项目名称不匹配。"
 
 msgid ""
 "File detected as different language than project language. Please ensure "
 "all source files match the selected project language."
-msgstr "O ficheiro foi detectado num idioma diferente do idioma do projeto. Certifica-te de que todos os ficheiros de origem correspondem ao idioma do projeto selecionado."
-"O ficheiro foi detectado num idioma diferente do idioma do projeto. "
-"Certifica-te de que todos os ficheiros de origem correspondem ao idioma do "
-"projeto selecionado."
+msgstr "检测到文件语言与项目语言不同。请确保所有源文件与所选项目语言一致。"
 
 msgid "Please remove all spaces in the name."
-msgstr "Retira todos os espaços do nome."
+msgstr "请删除姓名中的所有空格。"
 
 msgid "Please remove all special characters in the name."
-msgstr "Retira todos os caracteres especiais do nome."
+msgstr "请删除姓名中的所有特殊字符。"
 
 msgid "File name exceeds maximum length of 50 characters."
-msgstr "O nome do ficheiro excede o comprimento máximo de 50 caracteres."
+msgstr "文件名超过 50 个字符的最大长度。"
 
 msgid "Select a Project from your computer to upload\n"
-msgstr "Seleciona um projeto do teu computador para carregar"
+msgstr "从电脑中选择一个项目上传"
 
 msgid "Be sure the heirarchy format follows:\n"
-msgstr "Certifica-te de que o formato da hierarquia é o seguinte:\\\\n"
+msgstr "请务必按照以下格式编写： \\\\n"
 
 msgid "Project Name"
-msgstr "Nome do projeto"
+msgstr "项目名称"
 
 msgid "include"
-msgstr "inclui"
+msgstr "包括"
 
 msgid "includeFile1.h (optional)"
-msgstr "incluiFile1.h (opcional)"
+msgstr "includeFile1.h （可选）"
 
 msgid "includeFile2.h (optional)"
-msgstr "incluiFile2.h (opcional)"
+msgstr "includeFile2.h （可选）"
 
 msgid "src"
-msgstr "src"
+msgstr "来源"
 
 msgid "NOTE: file extension must match project language"
-msgstr "NOTA: a extensão do ficheiro deve corresponder à língua do projeto"
+msgstr "注意：文件扩展名必须与项目语言匹配"
 
 msgid "srcFile1.*"
 msgstr "srcFile1.*"
@@ -101,290 +94,281 @@ msgid "srcFile2.*"
 msgstr "srcFile2.*"
 
 msgid "data"
-msgstr "dados"
+msgstr "数据"
 
 msgid "dataFile1.txt (optional)"
-msgstr "dataFile1.txt (opcional)"
+msgstr "dataFile1.txt（可选）"
 
 msgid "dataFile2.txt (optional)"
-msgstr "dataFile2.txt (opcional)"
+msgstr "dataFile2.txt（可选）"
 
 msgid "bin"
-msgstr "contentor"
+msgstr "箱柜"
 
 msgid "Select Project Language:"
-msgstr "Seleciona o idioma do projeto:"
+msgstr "选择项目语言："
 
 msgid "Choose Folder"
-msgstr "Escolhe a pasta"
+msgstr "选择文件夹"
 
 msgid "Config File"
-msgstr "Ficheiro de configuração"
+msgstr "配置文件"
 
 msgid "No files selected."
-msgstr "Não há ficheiros selecionados."
+msgstr "未选择文件。"
 
 msgid "Include Files"
-msgstr "Incluir ficheiros"
+msgstr "包含文件"
 
 msgid "Source Files"
-msgstr "Ficheiros de origem"
+msgstr "源文件"
 
 msgid "User Data Files"
-msgstr "Ficheiros de dados do utilizador"
+msgstr "用户数据文件"
 
 msgid "Selected Project Folder: "
-msgstr "Pasta de projectos selecionados:"
+msgstr "选定项目文件夹："
 
 msgid "Selected Project Language: "
-msgstr "Língua do projeto selecionado:"
+msgstr "选定的项目语言："
 
 msgid "Choose a different project"
-msgstr "Escolhe um projeto diferente"
+msgstr "选择不同的项目"
 
 msgid "Upload Project"
-msgstr "Carregar projeto"
+msgstr "上传项目"
 
 msgid "The selected project already exists for this user."
-msgstr "O projeto selecionado já existe para este utilizador."
+msgstr "该用户已存在所选项目。"
 
 msgid "Please choose a different project."
-msgstr "Por favor, escolhe um projeto diferente."
+msgstr "请选择其他项目。"
 
 msgid "+"
 msgstr "+"
 
 msgid "Create Project"
-msgstr "Criar projeto"
+msgstr "创建项目"
 
 msgid "Create File"
-msgstr "Criar ficheiro"
+msgstr "创建文件"
 
 msgid "Create Classroom"
-msgstr "Cria uma sala de aula"
+msgstr "创建教室"
 
 msgid "Create User"
-msgstr "Criar utilizador"
+msgstr "创建用户"
 
 msgid "Upload User"
-msgstr "Carregar utilizador"
+msgstr "上传用户"
 
 msgid ""
 "A user with that name already exists in this classroom. Please rename your "
 "folder and try again."
-msgstr "Já existe um utilizador com esse nome nesta sala de aula. Altera o nome da tua pasta e tenta novamente."
-"Já existe um utilizador com esse nome nesta sala de aula. Altera o nome da "
-"tua pasta e tenta novamente."
+msgstr "该教室中已经存在使用该名称的用户。请重命名您的文件夹并重试。"
 
 msgid "Folder name does not match user name in config file."
-msgstr "O nome da pasta não corresponde ao nome de utilizador no ficheiro de configuração."
-"O nome da pasta não corresponde ao nome do utilizador no ficheiro de "
-"configuração."
+msgstr "文件夹名称与配置文件中的用户名不匹配。"
 
 msgid "File detected with interface mode does not match project interface mode."
-msgstr "O ficheiro detectado com o modo de interface não corresponde ao modo de interface do projeto."
-"O ficheiro detectado com o modo de interface não corresponde ao modo de "
-"interface do projeto."
+msgstr "检测到的文件界面模式与项目界面模式不匹配。"
 
 msgid ""
 "File detected as different language than project language. Please ensure "
 "all source files match the project language."
-msgstr "O ficheiro foi detectado num idioma diferente do idioma do projeto. Certifica-te de que todos os ficheiros de origem correspondem ao idioma do projeto."
-"O ficheiro foi detectado num idioma diferente do idioma do projeto. "
-"Certifica-te de que todos os ficheiros de origem correspondem ao idioma do "
-"projeto."
+msgstr "检测到文件语言与项目语言不同。请确保所有源文件与项目语言一致。"
 
 msgid "Unknown file type, defaulting to plaintext."
-msgstr "Tipo de ficheiro desconhecido, por defeito é texto simples."
+msgstr "未知文件类型，默认为纯文本。"
 
 msgid "Project must contain a main file"
-msgstr "O projeto deve conter um ficheiro principal"
+msgstr "项目必须包含一个主文件"
 
 msgid "Select a User from your computer to upload\n"
-msgstr "Seleciona um utilizador do teu computador para fazer o upload"
+msgstr "从电脑中选择一个用户上传"
 
 msgid "User Name"
-msgstr "Nome do utilizador"
+msgstr "用户名"
 
 msgid "(At least 1 project must be in the User folder)"
-msgstr "(Pelo menos 1 projeto deve estar na pasta Utilizador)"
+msgstr "(用户文件夹中必须至少有一个项目）"
 
 msgid "Project Name 1"
-msgstr "Nome do projeto 1"
+msgstr "项目名称 1"
 
 msgid "Project Name 2"
-msgstr "Nome do projeto 2"
+msgstr "项目名称 2"
 
 msgid "Select User Interface Mode:"
-msgstr "Seleciona o modo de interface do utilizador:"
+msgstr "选择用户界面模式："
 
 msgid "Selected User Folder: "
-msgstr "Pasta de utilizador selecionada:"
+msgstr "选定的用户文件夹："
 
 msgid "Selected User Interface Mode: "
-msgstr "Modo de interface do utilizador selecionado:"
+msgstr "选定的用户界面模式："
 
 msgid "Choose a different User"
-msgstr "Escolhe um utilizador diferente"
+msgstr "选择不同的用户"
 
 msgid "The selected user already exists in this classroom."
-msgstr "O utilizador selecionado já existe nesta sala de aula."
+msgstr "所选用户已存在于该教室中。"
 
 msgid "Please choose a different user."
-msgstr "Escolhe um utilizador diferente."
+msgstr "请选择其他用户。"
 
 msgid "Choose a different user"
-msgstr "Escolhe um utilizador diferente"
+msgstr "选择不同的用户"
 
 msgid "Delete Classroom"
-msgstr "Elimina a sala de aula"
+msgstr "删除教室"
 
 msgid "Rename Classroom"
-msgstr "Mudar o nome da sala de aula"
+msgstr "重新命名教室"
 
 msgid "Delete User"
-msgstr "Eliminar utilizador"
+msgstr "删除用户"
 
 msgid "Download User"
-msgstr "Descarregar utilizador"
+msgstr "下载用户"
 
 msgid "Rename User"
-msgstr "Mudar o nome do utilizador"
+msgstr "重命名用户"
 
 msgid "Remove User from Classroom"
-msgstr "Remover utilizador da sala de aula"
+msgstr "从教室删除用户"
 
 msgid "Move User to Classroom"
-msgstr "Move o utilizador para a sala de aula"
+msgstr "将用户移至教室"
 
 msgid "Paste Project"
-msgstr "Colar projeto"
+msgstr "粘贴项目"
 
 msgid "Delete Project"
-msgstr "Eliminar projeto"
+msgstr "删除项目"
 
 msgid "Download Project"
-msgstr "Descarregar o projeto"
+msgstr "下载项目"
 
 msgid "Rename Project"
-msgstr "Mudar o nome do projeto"
+msgstr "重新命名项目"
 
 msgid "Move Project"
-msgstr "Projeto Move"
+msgstr "移动项目"
 
 msgid "Copy Project"
-msgstr "Copiar projeto"
+msgstr "复制项目"
 
 msgid "Paste File"
-msgstr "Colar ficheiro"
+msgstr "粘贴文件"
 
 msgid "Delete File"
-msgstr "Eliminar ficheiro"
+msgstr "删除文件"
 
 msgid "Download File"
-msgstr "Descarregar ficheiro"
+msgstr "下载文件"
 
 msgid "Rename File"
-msgstr "Mudar o nome do ficheiro"
+msgstr "重命名文件"
 
 msgid "Copy File"
-msgstr "Copiar ficheiro"
+msgstr "复制文件"
 
 msgid "Users"
-msgstr "Utilizadores"
+msgstr "用户"
 
 msgid "Classroom Invitation Code:"
-msgstr "Código de convite para a sala de aula:"
+msgstr "教室邀请码："
 
 msgid "Projects"
-msgstr "Projectos"
+msgstr "项目"
 
 msgid "Explorer - Classrooms"
-msgstr "Explorer - Salas de aula"
+msgstr "探索者 - 教室"
 
 msgid "Explorer - Users"
-msgstr "Explorador - Utilizadores"
+msgstr "资源管理器 - 用户"
 
 msgid "Users without Classrooms"
-msgstr "Utilizadores sem salas de aula"
+msgstr "无教室用户"
 
 msgid "Motor 0"
-msgstr "Motor 0"
+msgstr "电机 0"
 
 msgid "Motor 1"
-msgstr "Motor 1"
+msgstr "电机 1"
 
 msgid "Motor 2"
-msgstr "Motor 2"
+msgstr "电机 2"
 
 msgid "Motor 3"
-msgstr "Motor 3"
+msgstr "电机 3"
 
 msgid "Velocity"
-msgstr "Velocidade"
+msgstr "速度"
 
 msgid "Power"
-msgstr "Potência"
+msgstr "电源"
 
 msgid "Servo 0"
-msgstr "Servo 0"
+msgstr "伺服 0"
 
 msgid "Servo 1"
-msgstr "Servo 1"
+msgstr "伺服 1"
 
 msgid "Servo 2"
-msgstr "Servo 2"
+msgstr "伺服器 2"
 
 msgid "Servo 3"
-msgstr "Servo 3"
+msgstr "伺服 3"
 
 msgid "analog(0)"
-msgstr "analógico(0)"
+msgstr "模拟(0)"
 
 msgid "analog(1)"
-msgstr "analógico(1)"
+msgstr "模拟(1)"
 
 msgid "analog(2)"
-msgstr "analógico(2)"
+msgstr "模拟(2)"
 
 msgid "analog(3)"
-msgstr "analógico(3)"
+msgstr "模拟(3)"
 
 msgid "analog(4)"
-msgstr "analógico(4)"
+msgstr "模拟(4)"
 
 msgid "analog(5)"
-msgstr "analógico(5)"
+msgstr "模拟(5)"
 
 msgid "digital(0)"
-msgstr "digital(0)"
+msgstr "数字(0)"
 
 msgid "digital(1)"
-msgstr "digital(1)"
+msgstr "数字(1)"
 
 msgid "digital(2)"
-msgstr "digital(2)"
+msgstr "数字(2)"
 
 msgid "digital(3)"
-msgstr "digital(3)"
+msgstr "数字(3)"
 
 msgid "digital(4)"
-msgstr "digital(4)"
+msgstr "数字(4)"
 
 msgid "digital(5)"
-msgstr "digital(5)"
+msgstr "数字(5)"
 
 msgid "digital(6)"
-msgstr "digital(6)"
+msgstr "数字(6)"
 
 msgid "digital(7)"
-msgstr "digital(7)"
+msgstr "数字(7)"
 
 msgid "digital(8)"
-msgstr "digital(8)"
+msgstr "数字(8)"
 
 msgid "digital(9)"
-msgstr "digital(9)"
+msgstr "数字(9)"
 
 msgid "accel_x()"
 msgstr "accel_x()"
@@ -414,1068 +398,1032 @@ msgid "magneto_z()"
 msgstr "magneto_z()"
 
 msgid "right_button()"
-msgstr "botão_direito()"
+msgstr "right_button()"
 
 msgid "Reverse"
-msgstr "Inverte"
+msgstr "反向"
 
 msgid "Forward"
-msgstr "Avança"
+msgstr "转发"
 
 msgid "Warning! Could damage servo in this range"
-msgstr "Avisa! Podes danificar o servo nesta gama"
+msgstr "警告！在此范围内可能会损坏伺服器"
 
 msgid "Motor Velocity Plot"
-msgstr "Gráfico de velocidade do motor"
+msgstr "电机速度曲线图"
 
 msgid "Motor Position Plot"
-msgstr "Gráfico de posição do motor"
+msgstr "电机位置图"
 
 msgid "Servo Position Plot"
-msgstr "Traçado da posição do servo"
+msgstr "伺服位置图"
 
 msgid "View:"
-msgstr "Vê:"
+msgstr "查看："
 
 msgid "Motor Port:"
-msgstr "Porta do motor:"
+msgstr "电机端口："
 
 msgid "Clear Motor Position"
-msgstr "Limpa a posição do motor"
+msgstr "清除电机位置"
 
 msgid "Stop All Motors"
-msgstr "Pára todos os motores"
+msgstr "停止所有电机"
 
 msgid "Stop Current Motor"
-msgstr "Motor de corrente de paragem"
+msgstr "停止电流 电机"
 
 msgid "Motor Velocities"
-msgstr "Velocidades do motor"
+msgstr "电机速度"
 
 msgid "Motor Positions"
-msgstr "Posições do motor"
+msgstr "电机位置"
 
 msgid "Servo Port:"
-msgstr "Porta Servo:"
+msgstr "伺服端口："
 
 msgid "Enable All Servos"
-msgstr "Ativar todos os servos"
+msgstr "启用所有伺服器"
 
 msgid "Disable All Servos"
-msgstr "Desativar todos os servos"
+msgstr "禁用所有伺服系统"
 
 msgid "Disable Servo"
-msgstr "Desativar o servo"
+msgstr "禁用伺服"
 
 msgid "Enable Servo"
-msgstr "Ativar Servo"
+msgstr "启用伺服功能"
 
 msgid "Servo Positions"
-msgstr "Posições do servo"
+msgstr "伺服位置"
 
 msgid "Analog Sensors"
-msgstr "Sensores analógicos"
+msgstr "模拟传感器"
 
 msgid "Digital Sensors"
-msgstr "Sensores digitais"
+msgstr "数字传感器"
 
 msgid "Accelerometers"
-msgstr "Acelerómetros"
+msgstr "加速度计"
 
 msgid "Gyroscopes"
-msgstr "Giroscópios"
+msgstr "陀螺仪"
 
 msgid "Magnetometers"
-msgstr "Magnetómetros"
+msgstr "磁力计"
 
 msgid "Buttons"
-msgstr "Botões"
+msgstr "按钮"
 
 msgid "Motors, Servos, and Sensors"
-msgstr "Motores, servos e sensores"
+msgstr "电机、伺服和传感器"
 
 msgid "Motor"
-msgstr "Motor"
+msgstr "电机"
 
 msgid "Servo"
-msgstr "Servo"
+msgstr "伺服"
 
 msgid "Sensor"
-msgstr "Sensor"
+msgstr "传感器"
 
 msgid "Modules"
-msgstr "Módulos"
+msgstr "模块"
 
 msgid "Functions"
-msgstr "Funções"
+msgstr "功能"
 
 msgid "Structures"
-msgstr "Estruturas"
+msgstr "结构"
 
 msgid "Enumerations"
-msgstr "Enumerações"
+msgstr "枚举"
 
 msgid "Files"
-msgstr "Ficheiros"
+msgstr "文件"
 
 msgid "Search..."
-msgstr "Procura..."
+msgstr "搜索..."
 
 msgid "Detailed Description"
-msgstr "Descrição pormenorizada"
+msgstr "详细说明"
 
 msgid "Parameters"
-msgstr "Parâmetros"
+msgstr "参数"
 
 msgid "Return Value"
-msgstr "Valor de retorno"
+msgstr "返回值"
 
 msgid "Fields"
-msgstr "Campos"
+msgstr "字段"
 
 msgid "Common Functions"
-msgstr "Funções comuns"
+msgstr "常用功能"
 
 msgid "Full Documentation"
-msgstr "Documentação completa"
+msgstr "完整文档"
 
 msgid "Challenge Progress"
-msgstr "Desafio Progresso"
+msgstr "挑战进展"
 
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão A (premido ou não premido)"
+msgstr "获取 A 按钮的状态（按下或未按下）。"
 
 msgctxt "func:a_button_clicked:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão A (premido ou não premido)"
+msgstr "获取 A 按钮的状态（按下或未按下）。"
 
 msgctxt "func:alloff:brief"
 msgid "Turns all motors off."
-msgstr "Desliga todos os motores."
+msgstr "关闭所有电机。"
 
 msgctxt "func:analog10:detailed"
 msgid "Gets the 10-bit analog value of a port."
-msgstr "Obtém o valor analógico de 10 bits de uma porta."
+msgstr "获取端口的 10 位模拟值。"
 
 msgctxt "func:analog10:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
-msgstr "Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a leitura."
-"Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a "
-"leitura."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
 
 msgctxt "func:analog12:detailed"
 msgid "Gets the 12-bit analog value of a port."
-msgstr "Obtém o valor analógico de 12 bits de uma porta."
+msgstr "获取端口的 12 位模拟值。"
 
 msgctxt "func:analog12:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
-msgstr "Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a leitura."
-"Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a "
-"leitura."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
 
 msgctxt "func:analog8:detailed"
 msgid "Gets the 8-bit analog value of a port."
-msgstr "Obtém o valor analógico de 8 bits de uma porta."
+msgstr "获取端口的 8 位模拟值。"
 
 msgctxt "func:analog8:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
-msgstr "Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a leitura."
-"Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a "
-"leitura."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
 
 msgctxt "func:analog:detailed"
 msgid "Gets the 12-bit analog value of a port."
-msgstr "Obtém o valor analógico de 12 bits de uma porta."
+msgstr "获取端口的 12 位模拟值。"
 
 msgctxt "func:analog:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
-msgstr "Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a leitura."
-"Um valor entre 0 e 5 que especifica o sensor a partir do qual se efectua a "
-"leitura."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
 
 msgctxt "func:analog_et:detailed"
 msgid ""
 "Gets the 10-bit analog value of an ET sensor on the given port. "
 "Deprecateddefaulting to analog() on the Wallaby"
-msgstr "Obtém o valor analógico de 10 bits de um sensor ET na porta indicada. Depreciado, por defeito para analog() no Wallaby"
-"Obtém o valor analógico de 10 bits de um sensor ET na porta indicada. "
-"Depreciado, por defeito para analog() no Wallaby"
+msgstr "获取给定端口上 ET 传感器的 10 位模拟值。已弃用，在 Wallaby 上默认为 analog()"
 
 msgctxt "func:analog_et:param:port:description"
 msgid "A value between 0 and 7 specifying the ET sensor to read from."
-msgstr "Um valor entre 0 e 7 que especifica o sensor ET a ler."
+msgstr "一个介于 0 和 7 之间的值，指定要读取的蒸散发传感器。"
 
 msgctxt "func:any_button:detailed"
 msgid "Determines whether or not any of the buttons are pressed."
-msgstr "Determina se algum dos botões é ou não premido."
+msgstr "确定是否按下任何按钮。"
 
 msgctxt "func:ao:brief"
 msgid "Turns all motors off."
-msgstr "Desliga todos os motores."
+msgstr "关闭所有电机。"
 
 msgctxt "func:b_button:detailed"
 msgid "Gets the B button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão B (premido ou não premido)"
+msgstr "获取 B 按钮的状态（按下或未按下）。"
 
 msgctxt "func:b_button_clicked:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão A (premido ou não premido)"
+msgstr "获取 A 按钮的状态（按下或未按下）。"
 
 msgctxt "func:baasbennaguui:brief"
 msgid "Moves a motor at a percent velocity."
-msgstr "Move um motor a uma velocidade percentual."
+msgstr "以一定的速度移动电机。"
 
 msgctxt "func:baasbennaguui:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:baasbennaguui:param:percent:description"
 msgid "The percent of the motors velocity, between -100 and 100."
-msgstr "A percentagem da velocidade dos motores, entre -100 e 100."
+msgstr "电机速度的百分比，介于 -100 和 100 之间。"
 
 msgctxt "func:bk:brief"
 msgid "Moves the given motor backward at full power."
-msgstr "Move o motor dado para trás com a potência máxima."
+msgstr "以全速向后移动给定的电机。"
 
 msgctxt "func:bk:param:motor:description"
 msgid "the motor's port."
-msgstr "a porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:black_button:detailed"
 msgid ""
 "Gets the black button's state (pressed or not pressed.) DeprecatedNot "
 "present on the Wallaby"
-msgstr "Obtém o estado do botão preto (pressionado ou não pressionado). DepreciadoNão está presente no Wallaby"
-"Obtém o estado do botão preto (pressionado ou não pressionado). "
-"DepreciadoNão está presente no Wallaby"
+msgstr "获取黑色按钮的状态（按下或未按下）。"
 
 msgctxt "func:block_motor_done:brief"
 msgid "Wait until the motor is at it's goal."
-msgstr "Espera até o motor atingir o seu objetivo."
+msgstr "等待电机达到目标。"
 
 msgctxt "func:block_motor_done:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:bmd:brief"
 msgid "Wait until the motor is at it's goal."
-msgstr "Espera até o motor atingir o seu objetivo."
+msgstr "等待电机达到目标。"
 
 msgctxt "func:bmd:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:c_button:detailed"
 msgid "Gets the C button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão C (pressionado ou não pressionado)"
+msgstr "获取 C 按钮的状态（按下或未按下）。"
 
 msgctxt "func:c_button_clicked:detailed"
 msgid "Gets the B button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão B (premido ou não premido)"
+msgstr "获取 B 按钮的状态（按下或未按下）。"
 
 msgctxt "func:clear_motor_position_counter:brief"
 msgid "Clears the motor position counter."
-msgstr "Limpa o contador de posição do motor."
+msgstr "清除电机位置计数器。"
 
 msgctxt "func:clear_motor_position_counter:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:cmpc:brief"
 msgid "Clears the motor position counter."
-msgstr "Limpa o contador de posição do motor."
+msgstr "清除电机位置计数器。"
 
 msgctxt "func:cmpc:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:console_clear:detailed"
 msgid "Clears the UI's console."
-msgstr "Limpa a consola da IU."
+msgstr "清除用户界面的控制台。"
 
 msgctxt "func:create_point2:brief"
 msgid "Create a point2 object."
-msgstr "Cria um objeto point2."
+msgstr "创建 point2 对象。"
 
 msgctxt "func:create_point2:param:x:description"
 msgid "- the x value of the point"
-msgstr "- o valor x do ponto"
+msgstr "- 点的 x 值"
 
 msgctxt "func:create_point2:param:y:description"
 msgid "- the y value of the point"
-msgstr "- o valor y do ponto"
+msgstr "- 点的 y 值"
 
 msgctxt "func:create_point3:brief"
 msgid "Create a point3 object."
-msgstr "Cria um objeto point3."
+msgstr "创建 point3 对象。"
 
 msgctxt "func:create_point3:param:x:description"
 msgid "- the x value of the point"
-msgstr "- o valor x do ponto"
+msgstr "- 点的 x 值"
 
 msgctxt "func:create_point3:param:y:description"
 msgid "- the y value of the point"
-msgstr "- o valor y do ponto"
+msgstr "- 点的 y 值"
 
 msgctxt "func:create_point3:param:z:description"
 msgid "- the z value of the point"
-msgstr "- o valor z do ponto"
+msgstr "- 点的 Z 值"
 
 msgctxt "func:create_rectangle:brief"
 msgid "Create a rectangle object."
-msgstr "Cria um objeto retângulo."
+msgstr "创建一个矩形对象。"
 
 msgctxt "func:create_rectangle:param:height:description"
 msgid "- the height of the rectangle"
-msgstr "- a altura do retângulo"
+msgstr "- 矩形的高度"
 
 msgctxt "func:create_rectangle:param:ulx:description"
 msgid "- the x value of the rectangle's upper left"
-msgstr "- o valor x do canto superior esquerdo do retângulo"
+msgstr "- 矩形左上角的 x 值"
 
 msgctxt "func:create_rectangle:param:uly:description"
 msgid "- the y value of the rectangle's upper left"
-msgstr "- o valor y do canto superior esquerdo do retângulo"
+msgstr "- 矩形左上角的 y 值"
 
 msgctxt "func:create_rectangle:param:width:description"
 msgid "- the width of the rectangle"
-msgstr "- a largura do retângulo"
+msgstr "- 矩形的宽度"
 
 msgctxt "func:disable_servo:brief"
 msgid "Disable a specific servo."
-msgstr "Desactiva um servo específico."
+msgstr "禁用特定伺服。"
 
 msgctxt "func:disable_servo:param:port:description"
 msgid "The port, between 0 and 3, to disable"
-msgstr "A porta, entre 0 e 3, a desativar"
+msgstr "要禁用的端口，介于 0 和 3 之间"
 
 msgctxt "func:disable_servos:brief"
 msgid "Disable all four servo channels."
-msgstr "Desactiva os quatro canais servo."
+msgstr "禁用所有四个伺服通道。"
 
 msgctxt "func:enable_servo:brief"
 msgid "Enable a specific servo."
-msgstr "Ativa um servo específico."
+msgstr "启用特定伺服。"
 
 msgctxt "func:enable_servo:param:port:description"
 msgid "The port, between 0 and 3, to enable"
-msgstr "A porta, entre 0 e 3, a ativar"
+msgstr "要启用的端口，介于 0 和 3 之间"
 
 msgctxt "func:enable_servos:brief"
 msgid "Enable all four servo channels."
-msgstr "Ativa os quatro canais servo."
+msgstr "启用所有四个伺服通道。"
 
 msgctxt "func:extra_buttons_hide:detailed"
 msgid "Hides the X, Y, and Z buttons. This is the default."
-msgstr "Oculta os botões X, Y e Z. Esta é a predefinição."
+msgstr "隐藏 X、Y 和 Z 按钮。这是默认设置。"
 
 msgctxt "func:extra_buttons_show:detailed"
 msgid "Shows the X, Y, and Z buttons."
-msgstr "Mostra os botões X, Y e Z."
+msgstr "显示 X、Y 和 Z 按钮。"
 
 msgctxt "func:fd:brief"
 msgid "Moves the given motor forward at full power."
-msgstr "Move o motor dado para a frente com a potência máxima."
+msgstr "全功率驱动给定电机前进。"
 
 msgctxt "func:fd:param:motor:description"
 msgid "the motor's port."
-msgstr "a porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:freeze:brief"
 msgid "Active braking to stop a motor."
-msgstr "Travagem ativa para parar um motor."
+msgstr "主动制动以停止电机。"
 
 msgctxt "func:freeze:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:get_analog_pullup:detailed"
 msgid ""
 "Gets the analog pullup status for one portt. Deprecatedno effect on the "
 "Wallaby"
-msgstr "Obtém o status do pullup analógico para uma porta. Depreciado não tem efeito sobre o Wallaby"
-"Obtém o status do pullup analógico para uma porta. Depreciado não tem "
-"efeito sobre o Wallaby"
+msgstr "获取一个端口的模拟上拉状态。已废弃，对 Wallaby 没有影响"
 
 msgctxt "func:get_analog_pullup:param:port:description"
 msgid "A value between 0 and 7 specifying the analog sensor to read from."
-msgstr "Um valor entre 0 e 7 que especifica o sensor analógico a partir do qual se efectua a leitura."
-"Um valor entre 0 e 7 que especifica o sensor analógico a partir do qual se "
-"efectua a leitura."
+msgstr "一个介于 0 和 7 之间的值，指定要读取的模拟传感器。"
 
 msgctxt "func:get_digital_output:detailed"
 msgid "Gets the current digital mode"
-msgstr "Obtém o modo digital atual"
+msgstr "获取当前数字模式"
 
 msgctxt "func:get_digital_pullup:detailed"
 msgid ""
 "Gets the current digital pullup state Deprecatednot applicable on the "
 "Wallaby"
-msgstr "Obtém o estado atual do pullup digital Depreciadonão aplicável no Wallaby"
+msgstr "获取当前数字上拉状态 过时不适用于 Wallaby"
 
 msgctxt "func:get_digital_value:detailed"
 msgid "Gets the current value of the digital port."
-msgstr "Obtém o valor atual da porta digital."
+msgstr "获取数字端口的当前值。"
 
 msgctxt "func:get_extra_buttons_visible:detailed"
 msgid "Determines whether or not the X, Y, and Z buttons are visible."
-msgstr "Determina se os botões X, Y e Z estão ou não visíveis."
+msgstr "确定 X、Y 和 Z 按钮是否可见。"
 
 msgctxt "func:get_motor_done:brief"
 msgid "Check if the motor has reached it's goal."
-msgstr "Verifica se o motor atingiu o seu objetivo."
+msgstr "检查电机是否达到目标。"
 
 msgctxt "func:get_motor_done:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:get_motor_position_counter:brief"
 msgid "Gets the current motor position."
-msgstr "Obtém a posição atual do motor."
+msgstr "获取当前电机位置。"
 
 msgctxt "func:get_motor_position_counter:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:get_pid_gains:brief"
 msgid "Set the motor PID gains, represented as fractions."
-msgstr "Define os ganhos PID do motor, representados como fracções."
+msgstr "设置电机 PID 增益，以分数表示。"
 
 msgctxt "func:get_pid_gains:param:d:description"
 msgid "The D (derivative) gain numerator"
-msgstr "O numerador do ganho D (derivado)"
+msgstr "D（导数）增益分子"
 
 msgctxt "func:get_pid_gains:param:dd:description"
 msgid "The D (derivative) gain denominator"
-msgstr "O denominador do ganho D (derivada)"
+msgstr "D（导数）增益分母"
 
 msgctxt "func:get_pid_gains:param:i:description"
 msgid "The I (integral) gain numerator"
-msgstr "O numerador do ganho I (integral)"
+msgstr "I（积分）增益分子"
 
 msgctxt "func:get_pid_gains:param:id:description"
 msgid "The I (integral) gain denominator"
-msgstr "O denominador do ganho I (integral)"
+msgstr "I（积分）增益分母"
 
 msgctxt "func:get_pid_gains:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:get_pid_gains:param:p:description"
 msgid "The P (proportional) gain numerator"
-msgstr "O numerador do ganho P (proporcional)"
+msgstr "P（比例）增益分子"
 
 msgctxt "func:get_pid_gains:param:pd:description"
 msgid "The P (proportional) gain denominator"
-msgstr "O denominador do ganho P (proporcional)"
+msgstr "P（比例）增益分母"
 
 msgctxt "func:get_servo_enabled:brief"
 msgid "Check if a servo is enabled."
-msgstr "Verifica se um servo está ativado."
+msgstr "检查伺服是否启用。"
 
 msgctxt "func:get_servo_enabled:param:port:description"
 msgid "The port, between 0 and 3"
-msgstr "A porta, entre 0 e 3"
+msgstr "端口，介于 0 和 3 之间"
 
 msgctxt "func:get_servo_position:brief"
 msgid "Get the most recent commanded servo position."
-msgstr "Obtém a posição do servo comandada mais recente."
+msgstr "获取最新的伺服位置指令。"
 
 msgctxt "func:get_servo_position:param:port:description"
 msgid "The port of the servo"
-msgstr "A porta do servo"
+msgstr "伺服端口"
 
 msgctxt "func:getpwm:brief"
 msgid "Get the current motor pwm command."
-msgstr "Obtém o comando pwm atual do motor."
+msgstr "获取当前电机 pwm 命令。"
 
 msgctxt "func:getpwm:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:gmpc:brief"
 msgid "Gets the current motor position."
-msgstr "Obtém a posição atual do motor."
+msgstr "获取当前电机位置。"
 
 msgctxt "func:gmpc:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:left_button:detailed"
 msgid "Gets the left button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão esquerdo (pressionado ou não pressionado)"
+msgstr "获取左侧按钮的状态（按下或未按下）。"
 
 msgctxt "func:mav:brief"
 msgid "Set a goal velocity in ticks per second."
-msgstr "Define um objetivo de velocidade em ticks por segundo."
+msgstr "设置目标速度，单位为滴答/秒。"
 
 msgctxt "func:mav:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:mav:param:velocity:description"
 msgid "The goal velocity in -1500 to 1500 ticks / second"
-msgstr "A velocidade do objetivo em -1500 a 1500 ticks / segundo"
+msgstr "目标速度为 -1500 至 1500 点/秒"
 
 msgctxt "func:motor:brief"
 msgid "Moves a motor at a percent velocity."
-msgstr "Move um motor a uma velocidade percentual."
+msgstr "以百分比速度移动电机。"
 
 msgctxt "func:motor:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:motor:param:percent:description"
 msgid "The percent of the motors velocity, between -100 and 100."
-msgstr "A percentagem da velocidade dos motores, entre -100 e 100."
+msgstr "电机速度的百分比，介于 -100 和 100 之间。"
 
 msgctxt "func:motor_power:brief"
 msgid "Moves a motor at a percent power."
-msgstr "Movimenta um motor com uma percentagem de potência."
+msgstr "以百分比功率驱动电机。"
 
 msgctxt "func:motor_power:param:motor:description"
 msgid "the motor port."
-msgstr "a porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:motor_power:param:percent:description"
 msgid "The power of the motor, between -100 and 100."
-msgstr "A potência do motor, entre -100 e 100."
+msgstr "电机功率，在 -100 和 100 之间。"
 
 msgctxt "func:move_at_velocity:brief"
 msgid "Set a goal velocity in ticks per second."
-msgstr "Define um objetivo de velocidade em ticks por segundo."
+msgstr "设置目标速度，单位为滴答/秒。"
 
 msgctxt "func:move_at_velocity:detailed"
 msgid ""
 "The range is -1500 to 1500, though motor position accuracy may be decreased "
 "outside of -1000 to 1000"
-msgstr "O intervalo é de -1500 a 1500, embora a precisão da posição do motor possa ser reduzida fora de -1000 a 1000"
-"O intervalo é de -1500 a 1500, embora a precisão da posição do motor possa "
-"ser reduzida fora de -1000 a 1000"
+msgstr "范围为 -1500 至 1500，但在 -1000 至 1000 范围之外，电机位置精度可能会降低。"
 
 msgctxt "func:move_at_velocity:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:move_at_velocity:param:velocity:description"
 msgid "The goal velocity in -1500 to 1500 ticks / second"
-msgstr "A velocidade do objetivo em -1500 a 1500 ticks / segundo"
+msgstr "目标速度为 -1500 至 1500 点/秒"
 
 msgctxt "func:move_relative_position:brief"
 msgid ""
 "Set a goal position (in ticks) for the motor to move to, relative to the "
 "current position."
-msgstr "Define uma posição de objetivo (em ticks) para o motor se mover, relativamente à posição atual."
-"Define uma posição de objetivo (em ticks) para o motor se mover, "
-"relativamente à posição atual."
+msgstr "设置电机相对于当前位置要移动到的目标位置（以 ticks 为单位）。"
 
 msgctxt "func:move_relative_position:param:delta_pos:description"
 msgid "The position to move to (in ticks) given the current position"
-msgstr "A posição para a qual te deves deslocar (em ticks) dada a posição atual"
+msgstr "根据当前位置移动到的位置（以刻度为单位"
 
 msgctxt "func:move_relative_position:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:move_relative_position:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
-msgstr "A velocidade de deslocação, entre -1500 e 1500 ticks / segundo"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
 
 msgctxt "func:move_to_position:brief"
 msgid "Set a goal position (in ticks) for the motor to move to."
-msgstr "Define uma posição de objetivo (em ticks) para o motor se deslocar."
+msgstr "设置电机要移动到的目标位置（以 ticks 为单位）。"
 
 msgctxt "func:move_to_position:detailed"
 msgid ""
 "There are approximately 1500 ticks per motor revolution.This function is "
 "more accurate if speeds between -1000 and 1000 are used."
-msgstr "Esta função é mais precisa se forem utilizadas velocidades entre -1000 e 1000."
-"Esta função é mais precisa se forem utilizadas velocidades entre -1000 e "
-"1000."
+msgstr "电机每转一圈大约有 1500 个刻度，如果速度在 -1000 和 1000 之间，该功能会更加精确。"
 
 msgctxt "func:move_to_position:param:goal_pos:description"
 msgid "The position to move to (in ticks)"
-msgstr "A posição para a qual te deves deslocar (em ticks)"
+msgstr "要移动到的位置（以 ticks 为单位）"
 
 msgctxt "func:move_to_position:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:move_to_position:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
-msgstr "A velocidade de deslocação, entre -1500 e 1500 ticks / segundo"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
 
 msgctxt "func:mrp:brief"
 msgid ""
 "Set a goal position (in ticks) for the motor to move to, relative to the "
 "current position."
-msgstr "Define uma posição de objetivo (em ticks) para o motor se mover, relativamente à posição atual."
-"Define uma posição de objetivo (em ticks) para o motor se mover, "
-"relativamente à posição atual."
+msgstr "设置电机相对于当前位置要移动到的目标位置（以 ticks 为单位）。"
 
 msgctxt "func:mrp:param:delta_pos:description"
 msgid "The position to move to (in ticks) given the current position"
-msgstr "A posição para a qual te deves deslocar (em ticks) dada a posição atual"
+msgstr "根据当前位置移动到的位置（以刻度为单位"
 
 msgctxt "func:mrp:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:mrp:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
-msgstr "A velocidade de deslocação, entre -1500 e 1500 ticks / segundo"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
 
 msgctxt "func:mtp:brief"
 msgid "Set a goal position (in ticks) for the motor to move to."
-msgstr "Define uma posição de objetivo (em ticks) para o motor se deslocar."
+msgstr "设置电机要移动到的目标位置（以 ticks 为单位）。"
 
 msgctxt "func:mtp:param:goal_pos:description"
 msgid "The position to move to (in ticks)"
-msgstr "A posição para a qual te deves deslocar (em ticks)"
+msgstr "要移动到的位置（以 ticks 为单位）"
 
 msgctxt "func:mtp:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:mtp:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
-msgstr "A velocidade de deslocação, entre -1500 e 1500 ticks / segundo"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
 
 msgctxt "func:off:brief"
 msgid "Turns the specified motor off."
-msgstr "Desliga o motor especificado."
+msgstr "关闭指定的电机。"
 
 msgctxt "func:off:param:motor:description"
 msgid "the motor's port."
-msgstr "a porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:push_button:detailed"
 msgid "Gets the ousg button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão ousg (premido ou não premido)"
+msgstr "获取 ousg 按钮的状态（按下或未按下）。"
 
 msgctxt "func:right_button:detailed"
 msgid "Gets the right button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão direito (pressionado ou não pressionado)"
+msgstr "获取右键的状态（按下或未按下）。"
 
 msgctxt "func:set_a_button_text:detailed"
 msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza o texto do botão A. Depreciadonão planeado para o Wallaby"
+msgstr "更新 A 按钮的文本。已废弃未计划用于 Wallaby"
 
 msgctxt "func:set_a_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
-msgstr "O texto a apresentar. Limite de 16 caracteres."
+msgstr "要显示的文本。最多 16 个字符。"
 
 msgctxt "func:set_analog_pullup:detailed"
 msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
-msgstr "Define o status do pullup analógico para uma porta. Depreciado não tem efeito no Wallaby"
-"Define o status do pullup analógico para uma porta. Depreciado não tem "
-"efeito no Wallaby"
+msgstr "设置一个端口的模拟上拉状态。已废弃，对 Wallaby 没有影响"
 
 msgctxt "func:set_analog_pullup:param:port:description"
 msgid "A value between 0 and 5 specifying the analog sensor to read from."
-msgstr "Um valor entre 0 e 5 que especifica o sensor analógico a partir do qual se efectua a leitura."
-"Um valor entre 0 e 5 que especifica o sensor analógico a partir do qual se "
-"efectua a leitura."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的模拟传感器。"
 
 msgctxt "func:set_analog_pullup:param:pullup:description"
 msgid "A value of 0 (inactive) or 1 (active)."
-msgstr "Um valor de 0 (inativo) ou 1 (ativo)."
+msgstr "数值为 0（非活动）或 1（活动）。"
 
 msgctxt "func:set_b_button_text:detailed"
 msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza o texto do botão B. Depreciadonão planeado para o Wallaby"
+msgstr "更新 B 按钮的文字。已废弃未计划用于 Wallaby"
 
 msgctxt "func:set_b_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
-msgstr "O texto a apresentar. Limite de 16 caracteres."
+msgstr "要显示的文本。最多 16 个字符。"
 
 msgctxt "func:set_c_button_text:detailed"
 msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza o texto do botão C. Depreciadonão planeado para o Wallaby"
+msgstr "更新 C 按钮的文本。已废弃未计划用于 Wallaby"
 
 msgctxt "func:set_c_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
-msgstr "O texto a apresentar. Limite de 16 caracteres."
+msgstr "要显示的文本。最多 16 个字符。"
 
 msgctxt "func:set_digital_output:detailed"
 msgid "Sets the digital mode."
-msgstr "Define o modo digital."
+msgstr "设置数字模式。"
 
 msgctxt "func:set_digital_output:param:out:description"
 msgid "1 for output mode, 0 for input mode."
-msgstr "1 para o modo de saída, 0 para o modo de entrada."
+msgstr "1 表示输出模式，0 表示输入模式。"
 
 msgctxt "func:set_digital_output:param:port:description"
 msgid "The port to modify."
-msgstr "A porta a modificar."
+msgstr "要修改的端口。"
 
 msgctxt "func:set_digital_pullup:detailed"
 msgid ""
 "Sets the current digital pullup state Deprecatednot applicable on the "
 "Wallaby"
-msgstr "Define o estado atual do pullup digital Depreciadonão aplicável no Wallaby"
+msgstr "设置当前数字上拉状态 过时不适用于 Wallaby"
 
 msgctxt "func:set_digital_pullup:param:port:description"
 msgid "The port to modify"
-msgstr "A porta a modificar"
+msgstr "要修改的端口"
 
 msgctxt "func:set_digital_pullup:param:pullup:description"
 msgid "The pullup state 1: active 0: inactive"
-msgstr "O estado do pullup 1: ativo 0: inativo"
+msgstr "上拉状态 1：激活 0：不激活"
 
 msgctxt "func:set_digital_value:detailed"
 msgid "Sets the value of the digital port in output mode."
-msgstr "Define o valor da porta digital no modo de saída."
+msgstr "在输出模式下设置数字端口的值。"
 
 msgctxt "func:set_extra_buttons_visible:detailed"
 msgid "Sets whether or not the X, Y, and Z buttons are visible."
-msgstr "Define se os botões X, Y e Z são visíveis ou não."
+msgstr "设置 X、Y 和 Z 按钮是否可见。"
 
 msgctxt "func:set_pid_gains:brief"
 msgid "Set the motor PID gains, represented as fractions."
-msgstr "Define os ganhos PID do motor, representados como fracções."
+msgstr "设置电机 PID 增益，以分数表示。"
 
 msgctxt "func:set_pid_gains:param:d:description"
 msgid "The D (derivative) gain numerator"
-msgstr "O numerador do ganho D (derivado)"
+msgstr "D（导数）增益分子"
 
 msgctxt "func:set_pid_gains:param:dd:description"
 msgid "The D (derivative) gain denominator"
-msgstr "O denominador do ganho D (derivada)"
+msgstr "D（导数）增益分母"
 
 msgctxt "func:set_pid_gains:param:i:description"
 msgid "The I (integral) gain numerator"
-msgstr "O numerador do ganho I (integral)"
+msgstr "I（积分）增益分子"
 
 msgctxt "func:set_pid_gains:param:id:description"
 msgid "The I (integral) gain denominator"
-msgstr "O denominador do ganho I (integral)"
+msgstr "I（积分）增益分母"
 
 msgctxt "func:set_pid_gains:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:set_pid_gains:param:p:description"
 msgid "The P (proportional) gain numerator"
-msgstr "O numerador do ganho P (proporcional)"
+msgstr "P（比例）增益分子"
 
 msgctxt "func:set_pid_gains:param:pd:description"
 msgid "The P (proportional) gain denominator"
-msgstr "O denominador do ganho P (proporcional)"
+msgstr "P（比例）增益分母"
 
 msgctxt "func:set_servo_enabled:brief"
 msgid "Enable or disable a specific servo."
-msgstr "Ativa ou desactiva um servo específico."
+msgstr "启用或禁用特定伺服。"
 
 msgctxt "func:set_servo_enabled:param:enabled:description"
 msgid "The new enable setting 0: disabled 1: enabled"
-msgstr "A nova definição de ativação 0: desativado 1: ativado"
+msgstr "新的启用设置 0：禁用 1：启用"
 
 msgctxt "func:set_servo_enabled:param:port:description"
 msgid "The port, between 0 and 3, to enable"
-msgstr "A porta, entre 0 e 3, a ativar"
+msgstr "要启用的端口，介于 0 和 3 之间"
 
 msgctxt "func:set_servo_position:brief"
 msgid "Set a new servo goal position."
-msgstr "Define uma nova posição de meta do servo."
+msgstr "设置新的伺服目标位置。"
 
 msgctxt "func:set_servo_position:param:port:description"
 msgid "The port of the servo"
-msgstr "A porta do servo"
+msgstr "伺服端口"
 
 msgctxt "func:set_servo_position:param:position:description"
 msgid "The new servo position, between 0 and 2047"
-msgstr "A nova posição do servo, entre 0 e 2047"
+msgstr "新的伺服位置，介于 0 和 2047 之间"
 
 msgctxt "func:set_x_button_text:detailed"
 msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza o texto do botão X. Depreciadonão planeado para o Wallaby"
+msgstr "更新 X 按钮的文本。已废弃未计划用于 Wallaby"
 
 msgctxt "func:set_x_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
-msgstr "O texto a apresentar. Limite de 16 caracteres."
+msgstr "要显示的文本。最多 16 个字符。"
 
 msgctxt "func:set_y_button_text:detailed"
 msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza o texto do botão Y. Depreciadonão planeado para o Wallaby"
+msgstr "更新 Y 按钮的文字。已弃用未计划用于 Wallaby"
 
 msgctxt "func:set_y_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
-msgstr "O texto a apresentar. Limite de 16 caracteres."
+msgstr "要显示的文本。最多 16 个字符。"
 
 msgctxt "func:set_z_button_text:detailed"
 msgid "Updates the Z button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza o texto do botão Z. Depreciadonão planeado para o Wallaby"
+msgstr "更新 Z 按钮的文字。已废弃未计划用于 Wallaby"
 
 msgctxt "func:set_z_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
-msgstr "O texto a apresentar. Limite de 16 caracteres."
+msgstr "要显示的文本。最多 16 个字符。"
 
 msgctxt "func:setpwm:brief"
 msgid "Set the motor pwm (percent power) command."
-msgstr "Define o comando pwm (percentagem de potência) do motor."
+msgstr "设置电机 pwm（百分比功率）指令。"
 
 msgctxt "func:setpwm:param:motor:description"
 msgid "The motor port."
-msgstr "A porta do motor."
+msgstr "电机端口。"
 
 msgctxt "func:setpwm:param:pwm:description"
 msgid "A new motor pwm command between 0 and 100"
-msgstr "Um novo comando pwm do motor entre 0 e 100"
+msgstr "一个介于 0 和 100 之间的新电机 pwm 命令"
 
 msgctxt "func:shut_down_in:detailed"
 msgid "Register an event to stop the user program after s seconds"
-msgstr "Regista um evento para parar o programa do utilizador após s segundos"
+msgstr "注册一个事件，以便在 s 秒后停止用户程序"
 
 msgctxt "func:shut_down_in:param:s:description"
 msgid "The number of seconds to wait before the end of program"
-msgstr "O número de segundos a esperar antes do fim do programa"
+msgstr "程序结束前的等待秒数"
 
 msgctxt "func:side_button:detailed"
 msgid ""
 "Gets the side button's state (pressed or not pressed.) DeprecatedNot "
 "present on the Wallaby"
-msgstr "Obtém o estado do botão lateral (pressionado ou não pressionado). DepreciadoNão está presente no Wallaby"
-"Obtém o estado do botão lateral (pressionado ou não pressionado). "
-"DepreciadoNão está presente no Wallaby"
+msgstr "获取侧边按钮的状态（按下或未按下）。"
 
 msgctxt "func:side_button_clicked:detailed"
 msgid "Gets the Z button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão Z (premido ou não premido)"
+msgstr "获取 Z 按钮的状态（按下或未按下）。"
 
 msgctxt "func:wait_for_a_button:detailed"
 msgid "Waits (blocks) until the a button has been pressed."
-msgstr "Espera (bloqueia) até que o botão a seja premido."
+msgstr "等待（阻塞），直到按下一个按钮。"
 
 msgctxt "func:wait_for_a_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the a button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que um botão seja premido e depois libertado."
+msgstr "等待（阻塞），直到按下按钮并随后松开。"
 
 msgctxt "func:wait_for_any_button:detailed"
 msgid "Waits (blocks) until any system button has been pressed."
-msgstr "Espera (bloqueia) até que qualquer botão do sistema tenha sido premido."
+msgstr "等待（阻止）直到任何系统按钮被按下。"
 
 msgctxt "func:wait_for_b_button:detailed"
 msgid "Waits (blocks) until the b button has been pressed."
-msgstr "Espera (bloqueia) até que o botão b seja premido."
+msgstr "等待（阻止）直到按下 b 按钮。"
 
 msgctxt "func:wait_for_b_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the b button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que o botão b tenha sido premido e depois libertado."
+msgstr "等待（阻止）按下 b 按钮，然后松开。"
 
 msgctxt "func:wait_for_c_button:detailed"
 msgid "Waits (blocks) until the c button has been pressed."
-msgstr "Espera (bloqueia) até que o botão c seja premido."
+msgstr "等待（阻止）直到按下 c 按钮。"
 
 msgctxt "func:wait_for_c_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the c button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que o botão c tenha sido premido e depois libertado."
+msgstr "等待（阻塞）直到按下 c 按钮，然后松开。"
 
 msgctxt "func:wait_for_light:detailed"
 msgid ""
 "Initiate a calibration and wait for light sequence which is a normal early "
 "step in Botball programs"
-msgstr "Inicia uma sequência de calibração e espera pela luz, que é um passo inicial normal nos programas Botball"
-"Inicia uma sequência de calibração e espera pela luz, que é um passo "
-"inicial normal nos programas Botball"
+msgstr "启动校准并等待光照序列，这是 Botball 程序的正常早期步骤"
 
 msgctxt "func:wait_for_light:param:light_port_:description"
 msgid "The analog port and light sensor to use."
-msgstr "Utiliza a porta analógica e o sensor de luz."
+msgstr "使用模拟端口和光线传感器。"
 
 msgctxt "func:wait_for_milliseconds:detailed"
 msgid "Waits (blocks) for the given number of milliseconds."
-msgstr "Espera (bloqueia) durante o número de milissegundos indicado."
+msgstr "等待（阻塞）给定的毫秒数。"
 
 msgctxt "func:wait_for_milliseconds:param:msecs:description"
 msgid "the number of milliseconds to sleep"
-msgstr "o número de milissegundos para dormir"
+msgstr "睡眠毫秒数"
 
 msgctxt "func:wait_for_side_button:detailed"
 msgid "Waits (blocks) until the side button has been pressed."
-msgstr "Espera (bloqueia) até que o botão lateral seja premido."
+msgstr "等待（阻止）直到按下侧边按钮。"
 
 msgctxt "func:wait_for_side_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the side button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que o botão lateral tenha sido premido e depois libertado."
-"Espera (bloqueia) até que o botão lateral tenha sido premido e depois "
-"libertado."
+msgstr "等待（阻止）按下侧边按钮，然后松开。"
 
 msgctxt "func:wait_for_touch:detailed"
 msgid ""
 "Waits (blocks) until the digital sensor on the given port has been "
 "activated."
-msgstr "Aguarda (bloqueia) até que o sensor digital na porta indicada seja ativado."
+msgstr "等待（阻塞），直到给定端口上的数字传感器被激活。"
 
 msgctxt "func:wait_for_touch:param:port:description"
 msgid "The port to wait for activation on"
-msgstr "A porta para aguardar a ativação em"
+msgstr "等待激活的端口"
 
 msgctxt "func:wait_for_x_button:detailed"
 msgid "Waits (blocks) until the x button has been pressed."
-msgstr "Espera (bloqueia) até que o botão x seja premido."
+msgstr "等待（阻止）直到按下 x 按钮。"
 
 msgctxt "func:wait_for_x_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the x button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que o botão x seja premido e depois libertado."
+msgstr "等待（阻止）按下 x 按钮，然后松开。"
 
 msgctxt "func:wait_for_y_button:detailed"
 msgid "Waits (blocks) until the y button has been pressed."
-msgstr "Espera (bloqueia) até que o botão y seja premido."
+msgstr "等待（阻止）直到按下 y 按钮。"
 
 msgctxt "func:wait_for_y_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the y button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que o botão y tenha sido premido e depois libertado."
+msgstr "等待（阻止）按下 y 按钮，然后松开。"
 
 msgctxt "func:wait_for_z_button:detailed"
 msgid "Waits (blocks) until the z button has been pressed."
-msgstr "Espera (bloqueia) até que o botão z seja premido."
+msgstr "等待（阻止）直到按下 z 按钮。"
 
 msgctxt "func:wait_for_z_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the z button has been pressed and then subsequently "
 "released."
-msgstr "Espera (bloqueia) até que o botão z tenha sido premido e depois libertado."
+msgstr "等待（阻止）按下 z 按钮，然后松开。"
 
 msgctxt "func:x_button:detailed"
 msgid "Gets the C button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão C (pressionado ou não pressionado)"
+msgstr "获取 C 按钮的状态（按下或未按下）。"
 
 msgctxt "func:x_button_clicked:detailed"
 msgid "Gets the C button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão C (pressionado ou não pressionado)"
+msgstr "获取 C 按钮的状态（按下或未按下）。"
 
 msgctxt "func:y_button:detailed"
 msgid "Gets the Y button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão Y (premido ou não premido)"
+msgstr "获取 Y 按钮的状态（按下或未按下）。"
 
 msgctxt "func:y_button_clicked:detailed"
 msgid "Gets the X button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão X (pressionado ou não pressionado)"
+msgstr "获取 X 按钮的状态（按下或未按下）。"
 
 msgctxt "func:z_button:detailed"
 msgid "Gets the Z button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão Z (premido ou não premido)"
+msgstr "获取 Z 按钮的状态（按下或未按下）。"
 
 msgctxt "func:z_button_clicked:detailed"
 msgid "Gets the Y button's state (pressed or not pressed.)"
-msgstr "Obtém o estado do botão Y (premido ou não premido)"
+msgstr "获取 Y 按钮的状态（按下或未按下）。"
 
 msgctxt "struct:kipr::create::CreatePackets::_101:detailed"
 msgid "Create OI Packet 101"
-msgstr "Criar pacote OI 101"
+msgstr "创建 OI 数据包 101"
 
 msgctxt "struct:kipr::create::CreatePackets::_1:detailed"
 msgid "Create OI Packet 1"
-msgstr "Cria o pacote OI 1"
+msgstr "创建 OI 数据包 1"
 
 msgctxt "struct:kipr::create::CreatePackets::_2:detailed"
 msgid "Create OI Packet 2"
-msgstr "Cria o pacote OI 2"
+msgstr "创建 OI 数据包 2"
 
 msgctxt "struct:kipr::create::CreatePackets::_3:detailed"
 msgid "Create OI Packet 3"
-msgstr "Cria o pacote OI 3"
+msgstr "创建 OI 数据包 3"
 
 msgctxt "struct:kipr::create::CreatePackets::_4:detailed"
 msgid "Create OI Packet 4"
-msgstr "Cria o pacote OI 4"
+msgstr "创建 OI 数据包 4"
 
 msgctxt "struct:kipr::create::CreatePackets::_5:detailed"
 msgid "Create OI Packet 5"
-msgstr "Cria o pacote OI 5"
+msgstr "创建 OI 数据包 5"
 
 msgctxt "struct:kipr::create::CreateState:detailed"
 msgid "Locally stored state information"
-msgstr "Informação de estado armazenada localmente"
+msgstr "本地存储的状态信息"
 
 msgctxt "struct:mutex:brief"
 msgid "A mutex, or lock."
-msgstr "Um mutex, ou bloqueio."
+msgstr "互斥或锁。"
 
 msgctxt "struct:mutex:detailed"
 msgid ""
 "mutexes are used to prevent memory errors when two programs or threads need "
 "to access the same variable."
-msgstr "os mutexes são utilizados para evitar erros de memória quando dois programas ou threads precisam de aceder à mesma variável."
-"os mutexes são utilizados para evitar erros de memória quando dois "
-"programas ou threads precisam de aceder à mesma variável."
+msgstr "当两个程序或线程需要访问同一个变量时，互斥用来防止内存出错。"
 
 msgctxt "struct:mutex:member:data:brief"
 msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
-msgstr "um objeto C++ Mutex convertido num void*. Não se destina a ser acedido."
+msgstr "一个 C++ Mutex 对象被转换为 void*。不用于访问。"
 
 msgctxt "struct:point2:brief"
 msgid "A 2D point; has x and y."
-msgstr "Um ponto 2D; tem x e y."
+msgstr "二维点；有 x 和 y。"
 
 msgctxt "struct:point2:member:x:brief"
 msgid "the x value of the point"
-msgstr "o valor x do ponto"
+msgstr "点的 x 值"
 
 msgctxt "struct:point2:member:y:brief"
 msgid "the y value of the point"
-msgstr "o valor y do ponto"
+msgstr "点的 y 值"
 
 msgctxt "struct:point3:brief"
 msgid "A 3D point; has x, y, and z."
-msgstr "Um ponto 3D; tem x, y e z."
+msgstr "三维点；具有 x、y 和 z。"
 
 msgctxt "struct:point3:member:x:brief"
 msgid "the x value of the point"
-msgstr "o valor x do ponto"
+msgstr "点的 x 值"
 
 msgctxt "struct:point3:member:y:brief"
 msgid "the y value of the point"
-msgstr "o valor y do ponto"
+msgstr "点的 y 值"
 
 msgctxt "struct:point3:member:z:brief"
 msgid "the z value of the point"
-msgstr "o valor z do ponto"
+msgstr "点的 Z 值"
 
 msgctxt "struct:rectangle:brief"
 msgid "A rectangle object."
-msgstr "Um objeto retângulo."
+msgstr "一个矩形对象。"
 
 msgctxt "struct:rectangle:member:height:brief"
 msgid "the height of the rectangle"
-msgstr "a altura do retângulo"
+msgstr "矩形的高度"
 
 msgctxt "struct:rectangle:member:ulx:brief"
 msgid "the x value of the rectangle's upper left"
-msgstr "o valor x do canto superior esquerdo do retângulo"
+msgstr "矩形左上角的 x 值"
 
 msgctxt "struct:rectangle:member:uly:brief"
 msgid "the y value of the rectangle's upper left"
-msgstr "o valor y do canto superior esquerdo do retângulo"
+msgstr "矩形左上角的 y 值"
 
 msgctxt "struct:rectangle:member:width:brief"
 msgid "the width of the rectangle"
-msgstr "a largura do retângulo"
+msgstr "矩形的宽度"
 
 msgctxt "struct:thread:brief"
 msgid "A thread, or separate process."
-msgstr "Um thread, ou processo separado."
+msgstr "线程或独立进程。"
 
 msgctxt "struct:thread:detailed"
 msgid ""
 "a thread runs a function \"in the background\" (while another function is "
 "executing)."
-msgstr "uma thread executa uma função \\\\executando)."
+msgstr "线程运行一个函数（executing）。"
 
 msgctxt "struct:thread:member:data:brief"
 msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
-msgstr "um objeto Thread C++ convertido num void*. Não se destina a ser acedido."
+msgstr "一个 C++ 线程对象被转换为 void*。不用于访问。"

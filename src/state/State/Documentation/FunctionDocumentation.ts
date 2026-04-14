@@ -11,14 +11,15 @@ interface FunctionDocumentation {
 }
 
 namespace FunctionDocumentation {
-  
+
   export const compare = (a: FunctionDocumentation, b: FunctionDocumentation) => a.name.localeCompare(b.name);
-  
+
   export interface Parameter {
     name: string;
     type: string;
     description: string;
     description_key?: string;
+    detailed_description_key?: string;
   }
 }
 

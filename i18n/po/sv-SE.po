@@ -523,6 +523,9 @@ msgstr ""
 msgid "Full Documentation"
 msgstr ""
 
+msgid "Challenge Progress"
+msgstr ""
+
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
 msgstr ""

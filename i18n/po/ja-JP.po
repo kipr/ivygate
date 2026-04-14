@@ -124,7 +124,7 @@ msgid "Source Files"
 msgstr "ソースファイル"
 
 msgid "User Data Files"
-msgstr "ユーザー・データ・ファイル"
+msgstr "ユーザーデータファイル"
 
 msgid "Selected Project Folder: "
 msgstr "厳選されたプロジェクトフォルダー"
@@ -151,7 +151,7 @@ msgid "Create Project"
 msgstr "プロジェクトを作成する"
 
 msgid "Create File"
-msgstr "ファイル作成"
+msgstr "ファイルを作成する"
 
 msgid "Create Classroom"
 msgstr "教室を作る"
@@ -176,7 +176,7 @@ msgstr "インターフェイスモードで検出されたファイルが、プ
 msgid ""
 "File detected as different language than project language. Please ensure "
 "all source files match the project language."
-msgstr "ファイルがプロジェクトの言語と異なる言語として検出された。すべてのソースファイルがプロジェクトの言語と一致していることを確認してほしい。"
+msgstr "ファイルがプロジェクトの言語と異なる言語として検出された。すべてのソースファイルがプロジェクトの言語と一致していることを確認してください。"
 
 msgid "Unknown file type, defaulting to plaintext."
 msgstr "不明なファイルタイプで、デフォルトはプレーンテキストである。"
@@ -200,7 +200,7 @@ msgid "Project Name 2"
 msgstr "プロジェクト名 2"
 
 msgid "Select User Interface Mode:"
-msgstr "ユーザーインターフェースモードを選択する："
+msgstr "ユーザーインターフェイスモードを選択する："
 
 msgid "Selected User Folder: "
 msgstr "選択されたユーザーフォルダ："
@@ -523,6 +523,9 @@ msgstr "共通機能"
 msgid "Full Documentation"
 msgstr "完全ドキュメント"
 
+msgid "Challenge Progress"
+msgstr "チャレンジの進捗状況"
+
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
 msgstr "Aボタンの状態（押されているか、押されていないか）を取得する。"
@@ -572,6 +575,8 @@ msgid ""
 "Gets the 10-bit analog value of an ET sensor on the given port. "
 "Deprecateddefaulting to analog() on the Wallaby"
 msgstr "与えられたポートのETセンサーの10ビットアナログ値を取得する。Deprecateddefaulting to analog() on the Wallaby"
+"与えられたポートのETセンサーの10ビットアナログ値を取得する。Deprecateddefaulting to analog() on the "
+"Wallaby"
 
 msgctxt "func:analog_et:param:port:description"
 msgid "A value between 0 and 7 specifying the ET sensor to read from."
