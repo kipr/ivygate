@@ -523,6 +523,9 @@ msgstr "常用功能"
 msgid "Full Documentation"
 msgstr "完整文件"
 
+msgid "Challenge Progress"
+msgstr "挑戰進度"
+
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
 msgstr "取得 A 按鈕的狀態 (按下或未按下)。"
