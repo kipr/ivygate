@@ -48,13 +48,14 @@ const ParameterPrototype = styled('span', {
 });
 
 const FunctionDocumentation = ({ language, func, style, className, theme, locale }: Props) => {
+
   return (
     <Container className={className} style={style}>
       <StyledFunctionPrototype language={language} theme={theme} func={func} />
       {func.brief_description && func.brief_description.length > 0 && (
         <BriefDescription theme={theme}>
           {func.brief_description_key && DOC_TR[func.brief_description_key] ? (
-           <div>{ LocalizedString.lookup(DOC_TR[func.brief_description_key], locale)}</div>
+            <div>{LocalizedString.lookup(DOC_TR[func.brief_description_key], locale)}</div>
           ) : (
             <div>{func.brief_description}</div>
           )}
