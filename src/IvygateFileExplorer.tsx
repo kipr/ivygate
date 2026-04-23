@@ -5,7 +5,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from './components/constants/style';
 import { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER, UploadedUser } from './types/user';
-import { Project, BLANK_PROJECT, UploadedProject, SimClassroomProject, SimEditorProject } from './types/project';
+import { Project, BLANK_PROJECT, UploadedProject, SimClassroomProject, SimEditorProject, isSimEditorProject } from './types/project';
 import { InterfaceMode } from './types/interface';
 import { faUsersRectangle, faUser, faFolderOpen, faFileCode, faTrash, faUserTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -85,13 +85,12 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onAddNewProject?: (user: User, classroom?: Classroom) => void;
   onAddNewFile?: (user: User, project: Project, activeLanguage: ProgrammingLanguage, fileType: string) => void;
   onAddNewSimFile?: (project: SimEditorProject, fileType: string) => void;
-  onDeleteSimFile?: (projectId: string, fileId: string) => void;
-  onDownloadSimFile?: (projectId: string, fileId: string) => void;
   onDeleteClassroom?: (classroom: Classroom) => void;
   onDeleteUser?: (user: User, deleteUserFlag: boolean) => void;
   onDeleteProject?: (user: User, project: Project | SimEditorProject, deleteProjectFlag: boolean) => void;
   onDeleteSimProject?: (project: SimEditorProject) => void;
   onDeleteFile?: (user: User, project: Project | SimEditorProject, fileName: string, deleteFileFlag: boolean) => void;
+  onDeleteSimFile?: (project: SimEditorProject, fileId: string) => void;
   onDownloadUser?: (user: User) => void;
   onRenameUser?: (user: User) => void;
   onRemoveUserFromClassroom?: (user: User, classroom: Classroom) => void;
@@ -100,6 +99,7 @@ export interface IvygateFileExplorerProps extends StyleProps, ThemeProps {
   onMoveProject?: (user: User, project: Project) => void;
   onMoveUserToClassroom?: (user: User) => void;
   onDownloadFile?: (user: User, project: Project | SimEditorProject, fileName: string) => void;
+  onDownloadSimFile?: (project: SimEditorProject, fileId: string) => void;
   onRenameFile?: (user: User, project: Project | SimEditorProject, fileName: string) => void;
   onResetHighlightFlag?: () => void;
   onReloadProjects?: (user: User) => Promise<void>;
@@ -136,7 +136,7 @@ interface IvygateFileExplorerState {
   showUserUploader: boolean;
   currentUserSelected: boolean;
   activeLanguage: ProgrammingLanguage;
-  contextMenuProject?: Project | SimClassroomProject;
+  contextMenuProject?: Project | SimClassroomProject | SimEditorProject;
   contextMenuPosition: { x: number; y: number } | null;
   fileCreationTypeAction: FileCreationTypeAction | null;
   includeFiles: [];
@@ -853,11 +853,9 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   deleteFile = (file: string) => {
     const { selectedProject } = this.state;
-    if (this.props.onDeleteSimFile && 'id' in selectedProject) {
-      // SimEditorProject - file is a file ID
-      this.props.onDeleteSimFile(selectedProject.id, file);
+    if (this.props.onDeleteSimFile && isSimEditorProject(selectedProject)) {
+      this.props.onDeleteSimFile(selectedProject, file);
     } else if ('srcFolderFiles' in selectedProject) {
-      // Old Project format - file is a file name
       this.props.onDeleteFile?.(this.state.selectedUser, selectedProject, file, true);
     }
   }
@@ -898,11 +896,9 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
   downloadFile = (file: string) => {
     const { selectedProject } = this.state;
-    if (this.props.onDownloadSimFile && 'id' in selectedProject) {
-      // SimEditorProject - file is a file ID
-      this.props.onDownloadSimFile(selectedProject.id, file);
+    if (this.props.onDownloadSimFile && isSimEditorProject(selectedProject)) {
+      this.props.onDownloadSimFile(selectedProject, file);
     } else if ('srcFolderFiles' in selectedProject) {
-      // Old Project format - file is a file name
       this.props.onDownloadFile?.(this.state.selectedUser, selectedProject, file);
     }
   }
@@ -1066,7 +1062,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              this.deleteProject(this.state.contextMenuProject as Project);
+              this.deleteProject(this.state.contextMenuProject as Project | SimEditorProject);
             }}
           >
             {LocalizedString.lookup(tr("Delete Project"), this.props.locale)}
@@ -1580,12 +1576,10 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       // Check if clicking the same project
       // For SimEditorProject, compare by ID; for others, use object equality
       let isSameProject = false;
-      if ('id' in project) {
-        // SimEditorProject - compare by ID
-        isSameProject = 'id' in prevState.selectedProject &&
-                       (project as SimEditorProject).id === (prevState.selectedProject as SimEditorProject).id;
+      if (isSimEditorProject(project)) {
+        isSameProject = isSimEditorProject(prevState.selectedProject) &&
+                       project.id === prevState.selectedProject.id;
       } else {
-        // Other project types - use object equality
         isSameProject = prevState.selectedProject === project;
       }
 
@@ -1594,8 +1588,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         selectedProject: isSameProject ? BLANK_PROJECT : project,
         activeLanguage: isSameProject ? null : language
       };
-    }, () => {
-      console.log("handleProjectClick updated state:", this.state);
     });
 
   };
@@ -1688,7 +1680,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
    * @param event - right click event
    * @param project - project name
    */
-  handleProjectRightClick = (event: React.MouseEvent, project: Project | SimClassroomProject) => {
+  handleProjectRightClick = (event: React.MouseEvent, project: Project | SimClassroomProject | SimEditorProject) => {
     event.preventDefault();
     this.setState({
       showProjectContextMenu: true,
@@ -1871,7 +1863,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               <ProjectItem
                 selected={
                   config?.component === 'SimEditor'
-                    ? ('id' in this.state.selectedProject && 'id' in project &&
+                    ? (isSimEditorProject(this.state.selectedProject) && isSimEditorProject(project) &&
                        this.state.selectedProject.id === project.id)
                     : (this.state.selectedProject?.projectName === project.projectName ||
                        this.props.propsSelectedProjectName === project.projectName ||
@@ -1893,7 +1885,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
               </ProjectItem>
 
               {(config?.component === 'SimEditor'
-                ? ('id' in this.state.selectedProject && 'id' in project &&
+                ? (isSimEditorProject(this.state.selectedProject) && isSimEditorProject(project) &&
                    this.state.selectedProject.id === project.id)
                 : this.state.selectedProject?.projectName === project.projectName) &&
                this.state.showProjectFiles &&

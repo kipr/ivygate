@@ -24,11 +24,23 @@ export interface SimClassroomProject extends ProjectBase {
 }
 
 export interface SimEditorProject extends ProjectBase {
-  id: string; // Project ID for integration with Firestore-based architecture
+  kind: 'sim-editor';
+  id: string;
   srcFiles: Dict<{fileName: string, fileContent: string}>;
   includeFiles?: Dict<{fileName: string, fileContent: string}>;
   userDataFiles?: Dict<{fileName: string, fileContent: string}>;
+}
 
+export function isSimEditorProject(
+  project: Project | SimEditorProject | SimClassroomProject
+): project is SimEditorProject {
+  return 'kind' in project && project.kind === 'sim-editor';
+}
+
+export function createSimEditorProject(
+  params: Omit<SimEditorProject, 'kind'>
+): SimEditorProject {
+  return { ...params, kind: 'sim-editor' };
 }
 
 
