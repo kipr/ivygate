@@ -1,17 +1,9 @@
 import * as React from 'react';
 import { TourRegistry } from "../../tours/TourRegistry";
 
-type Props = {
-  registry: TourRegistry;
-  targetKey: string;
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-};
-
 interface TourTargetProps {
-  registry: TourRegistry;
-  targetKey: string;
+  registry?: TourRegistry | null;
+  targetKey?: string | null;
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -35,19 +27,24 @@ export class TourTarget extends React.PureComponent<TourTargetProps> {
     return this.wrapperEl;
   }
 
+  private registerTarget(key: string | null | undefined, el: HTMLElement | null, registry = this.props.registry) {
+    if (!registry || !key) return;
+    registry.register(key, el);
+  }
+
   componentDidMount() {
-    this.props.registry.register(this.props.targetKey, this.getMeasuredElement());
+    this.registerTarget(this.props.targetKey, this.getMeasuredElement());
   }
 
   componentDidUpdate(prevProps: TourTargetProps) {
-    if (prevProps.targetKey !== this.props.targetKey) {
-      this.props.registry.register(prevProps.targetKey, null);
+    if (prevProps.registry !== this.props.registry || prevProps.targetKey !== this.props.targetKey) {
+      this.registerTarget(prevProps.targetKey, null, prevProps.registry);
     }
-    this.props.registry.register(this.props.targetKey, this.getMeasuredElement());
+    this.registerTarget(this.props.targetKey, this.getMeasuredElement());
   }
 
   componentWillUnmount() {
-    this.props.registry.register(this.props.targetKey, null);
+    this.registerTarget(this.props.targetKey, null);
   }
 
   render() {

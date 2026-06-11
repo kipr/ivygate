@@ -229,7 +229,23 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
               </DropDown>
             )) :
               (
-                undefined
+                <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
+                  {options.map((option, i) => (
+                    <OptionContainer
+                      $selected={i === index}
+                      theme={theme}
+                      key={i}
+                      onClick={this.onOptionClick_(i)}
+                      $height={props.mainHeight}
+                      $tour={true}
+                    >
+                      <Text
+                        style={{ fontSize: props.mainFontSize, lineHeight: '1' }}
+                        text={option.text}
+                      />
+                    </OptionContainer>
+                  ))}
+                </DropDown>
               )
           )
           : null
