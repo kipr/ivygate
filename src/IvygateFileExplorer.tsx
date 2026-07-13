@@ -588,7 +588,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount(): Promise<void> {
-
     if (this.props.propUserShown !== undefined) {
 
       if (this.props.propsSelectedProjectName !== '') {
@@ -1662,10 +1661,11 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const { style, tour } = this.props;
     const targetKey = targetName ? tour?.targets?.[targetName] : undefined;
     if (!tour?.registry || !targetKey) return node;
+    const wrapperKey = remountKey ? `${targetKey}-${remountKey}` : targetKey;
 
     return (
       <TourTarget
-        key={targetKey}
+        key={wrapperKey}
         registry={tour.registry}
         targetKey={targetKey}
         style={style}
@@ -1733,16 +1733,14 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
       <ProjectHeaderContainer theme={theme}>
         <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Users"), locale)}</ProjectTitle>
         {hostApp === 'Simulator' ?
-          <TourTarget key={`invite-code-${classroom.classroomInvitationCode}`} registry={this.props.tour?.registry} targetKey={this.props.tour?.targets?.inviteCode} style={this.props.style}>
-
-
+          this.wrapTourTarget(
             <InvitationCodeContainer theme={theme}>
               <ProjectTitle theme={theme}>{LocalizedString.lookup(tr("Classroom Invitation Code:"), locale)}</ProjectTitle>
-
               <InviteCode theme={theme}>{classroom.classroomInvitationCode}</InviteCode>
-
-            </InvitationCodeContainer>
-          </TourTarget>
+            </InvitationCodeContainer>,
+            'inviteCode',
+            classroom.classroomInvitationCode
+          )
           : <StyledResizeableComboBox
             options={USER_OPTIONS}
             index={USER_OPTIONS.findIndex(opt => opt.data === userCreationType)}
@@ -1794,11 +1792,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
 
     // MAKE LIST OF ALL STATE.USERS IN GIVEN CLASSROOM
-    return (
-      <TourTarget key={classroom.name} registry={this.props.tour?.registry} targetKey={this.props.tour?.targets?.classroomUsers} style={this.props.style}>
-        {userSec}
-      </TourTarget>
-    );
+    return this.wrapTourTarget(userSec, 'classroomUsers', classroom.name);
   };
 
   renderSimClassroomsProject(project: SimClassroomProject) {
@@ -2159,7 +2153,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     });
 
     const classroomSections = (propClassrooms || []).map((classroom: Classroom) => {
-      const classSec = (<SectionsColumn theme={theme}>
+      const classSec = (<SectionsColumn theme={theme} key={classroom.name}>
         <UserTitleContainer
           theme={theme}
           selected={selectedClassroom?.name === classroom.name}
@@ -2184,20 +2178,13 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
 
 
       </SectionsColumn>);
-      return classroom?.name === this.state.addedClassroom?.name ? (
-        <TourTarget
-          key={classroom.name}
-          registry={tour.registry}
-          targetKey={tour?.targets?.seeCreatedClassroom}
-          style={this.props.style}
-        >
-          {classSec}
-        </TourTarget>
-      ) : (
-        <React.Fragment key={classroom.name}>
-          {classSec}
-        </React.Fragment>
-      );
+      return classroom?.name === this.state.addedClassroom?.name
+        ? this.wrapTourTarget(classSec, 'seeCreatedClassroom', classroom.name)
+        : (
+          <React.Fragment key={classroom.name}>
+            {classSec}
+          </React.Fragment>
+        );
     });
 
 
@@ -2349,4 +2336,3 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     );
   }
 }
-
