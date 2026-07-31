@@ -207,8 +207,8 @@ export const LIGHT: Theme = {
   confirmMessageBackground: '#ff4d4d',
   successMessageBackground: '#5dd5cb',
 
-  selectedUserBackground: '#dadada',
-  selectedProjectBackground: '#dadada',
+  selectedUserBackground: '#c0c0c0',
+  selectedProjectBackground: '#c0c0c0',
   selectedFileBackground: '#d3e8f9',
 
   hoverFileBackground: '#e4f1fb',

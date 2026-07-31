@@ -13,7 +13,7 @@ import { TourRegistry } from "../tours/TourRegistry";
 import { TourTarget } from "./Tours/TourTarget";
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; $width?: string; $height?: string }) => ({
   // width: props.$width ?? '100%',
-  height: props.$height ?? '100%',
+  height: props.$height ?? null,
   minWidth: props.$width ?? '100%',
   paddingLeft: `${props.theme.itemPadding * 2}px`,
   paddingRight: `${props.theme.itemPadding * 4}px`,
@@ -47,7 +47,8 @@ const DropDown = styled('div', (props: ThemeProps) => ({
   borderLeft: `1px solid ${props.theme.borderColor}`,
   borderRight: `1px solid ${props.theme.borderColor}`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
-  backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
+  // backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
+  backgroundColor: '#202020',
   zIndex: 10001
 }));
 
@@ -72,7 +73,7 @@ const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean
   display: 'flex',
   alignItems: 'center',
   height: 'auto',
-  backgroundColor: props.$selected ? props.$tour ? '#707070' : `rgba(255, 255, 255, 0.1)` : props.$tour ? '#dcdcdc' : 'undefined',
+  backgroundColor: props.$selected ? props.$tour ? '#707070' : `rgba(255, 255, 255, 0.1)` : props.$tour ? 'rgb(32, 31, 31)' : 'undefined',
   ':hover': {
     backgroundColor: props.$tour ? '#dcdcdcab' : props.theme.hoverOptionBackground,
   },

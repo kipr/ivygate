@@ -3,7 +3,7 @@ import LocalizedString from './util/LocalizedString';
 import tr from './i18n';
 import { styled } from 'styletron-react';
 import { StyleProps } from './components/constants/style';
-import { ThemeProps } from './components/constants/theme';
+import type { ThemeProps } from './components/constants/theme';
 import { User, BLANK_USER, UploadedUser } from './types/user';
 import { Project, BLANK_PROJECT, UploadedProject, SimClassroomProject, SimEditorProject } from './types/project';
 import { InterfaceMode } from './types/interface';
@@ -168,9 +168,9 @@ const FileExplorerContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   minWidth: '12vw',
   width: '100%',
-  height: 'calc(100vh - 210px)',
+  height: 'calc(100vh - 100px)',
   overflow: 'hidden',
-  paddingBottom: '5em'
+  //paddingBottom: '5em'
 }));
 
 const ItemIcon = styled(Fa, {
@@ -196,6 +196,7 @@ const Container = styled('ul', {
   overflow: 'hidden',
   padding: '0',
   margin: '0px 0px 0px -40px',
+  alignItems: 'center',
   listStyleType: 'none',
 });
 
@@ -219,12 +220,12 @@ const ProjectContainer = styled('div', (props: ThemeProps) => ({
   position: 'relative',
   //flex: '0 0 25rem',
   padding: '1px',
-  marginLeft: '3px',
+  // marginLeft: '3px',
   marginRight: '3px',
-  boxShadow: '4px 4px 4px rgba(0,0,0,0.2)',
+  // boxShadow: '4px 4px 4px rgba(0,0,0,0.2)',
   //width: '99%',
   //height: '100vh',
-
+  // backgroundColor: '#dadada'
 }));
 
 const ProjectHeaderContainer = styled('div', (props: ThemeProps) => ({
@@ -294,15 +295,6 @@ const StyledResizeableComboBox = styled(ResizeableComboBox, (props: ThemeProps &
 
 
 
-const AddProjectItemIcon = styled(FontAwesomeIcon, {
-  paddingLeft: '3px',
-  paddingRight: '5px',
-  height: '1.4em',
-  '@media (max-width: 850px)': {
-    width: '1.2rem',
-  },
-});
-
 const ProjectItem = styled('li', (props: ThemeProps & { selected: boolean, }) => ({
   display: 'flex',
   color: props.theme.color,
@@ -334,13 +326,6 @@ const ChallengeProgressContainer = styled('div', (props: ThemeProps) => ({
 
 }));
 
-const ChallengeContainer = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: '1 1',
-  color: props.theme.color,
-}));
-
 const ChallengeProgressTitle = styled('div', (props: ThemeProps) => ({
   fontSize: '1.2em',
   textAlign: 'center',
@@ -358,18 +343,20 @@ const FileTypeTitleContainer = styled('div', (props: ThemeProps) => ({
 }));
 
 const FileTypeContainer = styled('span', (props: ThemeProps & { selected: boolean }) => ({
-  width: '100%',
+  width: '95%',
   backgroundColor: props.selected ? props.theme.selectedUserBackground : props.theme.unselectedBackground,
+
   padding: `5px`,
-  border: `3px solid ${props.theme.borderColor}`,
+  border: `3px solid #2c2c2c`,
   userSelect: 'none',
 }));
 
 const FileTypeItem = styled('li', (props: ThemeProps) => ({
   listStyleType: 'none',
-  padding: '3px',
+  // padding: '3px',
   borderRadius: '5px',
-  boxShadow: props.theme.themeName === "DARK" ? ' 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12)' : undefined,
+  //backgroundColor: 'pink',
+  //boxShadow: props.theme.themeName === "DARK" ? ' 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12)' : undefined,
 }));
 
 const FileContainer = styled('div', (props: ThemeProps) => ({
@@ -395,7 +382,7 @@ const IndividualFile = styled('div', (props: ThemeProps & { selected: boolean, }
   alignItems: 'center',
   fontWeight: props.selected ? 500 : undefined,
   cursor: 'pointer',
-  width: '97%',
+  width: '90%',
   fontSize: '1.15em',
   backgroundColor: (props.selected) ? props.theme.selectedFileBackground : props.theme.unselectedBackground,
   padding: '3px',
@@ -448,7 +435,7 @@ const UsersContainer = styled('div', (props: ThemeProps) => ({
 
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
-  paddingBottom: '4em',
+  //paddingBottom: '4em',
 }));
 
 const SectionsColumn = styled('div', (props: ThemeProps) => ({
@@ -466,7 +453,7 @@ const SectionName = styled('div', (props: ThemeProps) => ({
   flexWrap: 'wrap',
   alignItems: 'flex-start',
 
-  boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
+  //boxShadow: props.theme.themeName === 'DARK' ? '0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12)' : undefined,
   padding: `5px`,
   userSelect: 'none',
   wordBreak: 'break-word',
@@ -533,6 +520,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
   private hostApp: string;
   private addedClassroom: Classroom;
   constructor(props: Props) {
+    console.log("theme:", props.theme);
     super(props);
     this.state = {
       userName: '',
@@ -1817,6 +1805,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
     const renderedProjects = (this.hostApp === 'Simulator') && (config?.component === 'SimClassrooms')
       ? SimClassroomsProjects : config?.component === 'SimEditor' ? SimEditorProjects : userProjects;
     const projectOptions = getProjectCreationOptions(locale)
+    console.log("renderedProjects", renderedProjects, "userProjects", userProjects, "SimClassroomsProjects", SimClassroomsProjects, "SimEditorProjects", SimEditorProjects)
     return (
       <ProjectContainer theme={theme} >
         <ProjectHeaderContainer theme={theme}>
@@ -2194,7 +2183,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         onSelect={this.onClassroomCreationSelect}
         theme={theme}
         mainWidth="5.5em"
-        mainHeight="1.2em"
         mainFontSize="0.9em"
         tourstepid={this.props.activeTourStepId}
       />
@@ -2210,7 +2198,6 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         onSelect={this.onUserCreationSelect}
         theme={theme}
         mainWidth="4em"
-        mainHeight="1.2em"
         mainFontSize="0.9em"
       />
     );
