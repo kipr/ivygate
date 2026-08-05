@@ -8,6 +8,8 @@ interface FunctionDocumentation {
   brief_description_key?: string;
   detailed_description?: string;
   detailed_description_key?: string;
+  exampleDescription?: string;
+  example_code?: string;
 }
 
 namespace FunctionDocumentation {

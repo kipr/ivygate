@@ -48,7 +48,7 @@ const ParameterPrototype = styled('span', {
 });
 
 const FunctionDocumentation = ({ language, func, style, className, theme, locale }: Props) => {
-
+  console.log("FunctionDocumentation render", func);
   return (
     <Container className={className} style={style}>
       <StyledFunctionPrototype language={language} theme={theme} func={func} />
@@ -119,6 +119,15 @@ const FunctionDocumentation = ({ language, func, style, className, theme, locale
           )}
         </Section>
       )}
+
+      <Section name={LocalizedString.lookup(tr('Example'), locale)} theme={theme}>
+
+        {func.example_code && (
+          <pre style={{ margin: '2px' }}>
+            <code>{func.example_code}</code>
+          </pre>
+        )}
+      </Section>
 
     </Container>
   );
