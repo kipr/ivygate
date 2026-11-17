@@ -47,8 +47,8 @@ const DropDown = styled('div', (props: ThemeProps) => ({
   borderLeft: `1px solid ${props.theme.borderColor}`,
   borderRight: `1px solid ${props.theme.borderColor}`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
-  // backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
-  backgroundColor: '#202020',
+  backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
+  //backgroundColor: '#202020',
   zIndex: 10001
 }));
 
