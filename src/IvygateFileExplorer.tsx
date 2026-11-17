@@ -2184,6 +2184,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         theme={theme}
         mainWidth="5.5em"
         mainFontSize="0.9em"
+        mainHeight='1.5em'
         tourstepid={this.props.activeTourStepId}
       />
     );
@@ -2198,6 +2199,7 @@ export class IvygateFileExplorer extends React.PureComponent<Props, State> {
         onSelect={this.onUserCreationSelect}
         theme={theme}
         mainWidth="4em"
+        mainHeight='1.5em'
         mainFontSize="0.9em"
       />
     );
