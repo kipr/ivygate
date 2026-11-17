@@ -73,7 +73,7 @@ const OptionContainer = styled('div', (props: ThemeProps & { $selected?: boolean
   display: 'flex',
   alignItems: 'center',
   height: 'auto',
-  backgroundColor: props.$selected ? props.$tour ? '#707070' : `rgba(255, 255, 255, 0.1)` : props.$tour ? 'rgb(32, 31, 31)' : 'undefined',
+  backgroundColor: props.$selected ? props.$tour ? '#707070' : `rgba(255, 255, 255, 0.1)` : props.$tour ? props.theme.backgroundColor : 'undefined',
   ':hover': {
     backgroundColor: props.$tour ? '#dcdcdcab' : props.theme.hoverOptionBackground,
   },
